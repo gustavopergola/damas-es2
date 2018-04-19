@@ -11,6 +11,7 @@ public class Movimentacao : MonoBehaviour {
 	public LayerMask layerPedras;
 
 	public float timeToMove = 1f;
+	public float speed = 1f;
 
 	private Transform transformPedraEmMovimento;
 	private Vector3 startPosition;
@@ -97,7 +98,8 @@ public class Movimentacao : MonoBehaviour {
 	private void controlaMovimento(){
 		if (this.timeSpent <= this.timeToMove) {
 			this.timeSpent += Time.deltaTime / this.timeToMove;	
-			transformPedraEmMovimento.position = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent);
+			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * this.speed);
+			this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
 		}
 
 
