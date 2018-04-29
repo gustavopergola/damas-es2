@@ -18,9 +18,12 @@ public class Movimentacao : MonoBehaviour {
 	private Vector3 finalPosition;
 	private float timeSpent = 9999f;
 
-	// Use this for initialization
-	void Start () {
-		pedraSelecionada = null;
+    ControleTurnos controleTurnos;
+
+    // Use this for initialization
+    void Start () {
+        controleTurnos = GameObject.Find("Turno").GetComponent<ControleTurnos>();
+        pedraSelecionada = null;
 	}
 	
 	// Update is called once per frame
@@ -35,7 +38,11 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	private void processaClique(){
-		if (Input.GetMouseButtonDown(0)) {
+        if (!controleTurnos.getTurnoJogador())
+        {
+            return;//turno IA
+        }
+        if (Input.GetMouseButtonDown(0)) {
 			GameObject objeto_resposta = checaClique ();
 			if (objeto_resposta != null) {
 				if (comparaLayerMaskValue (objeto_resposta.layer, this.layerPedras.value)) {
