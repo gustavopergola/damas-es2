@@ -11,7 +11,7 @@ public class ControleTurnos : MonoBehaviour {
 	// called before Start()
 	void Awake (){
 		turnoJogador = false;
-		passarTurno ();
+		passarTurno();
 	}
 
 	// Use this for initialization
