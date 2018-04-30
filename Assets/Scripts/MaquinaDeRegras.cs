@@ -35,7 +35,7 @@ public class MaquinaDeRegras : MonoBehaviour
             damaInimiga = 2;
         }
         if (tabuleiro[x, y] == dama)
-            return HighlightDamas(tabuleiro, x, y, dama, pecaInimiga, damaInimiga);
+            return HighlightDamas(tabuleiro, x, y, pecaInimiga, damaInimiga);
         bool comer = false;
         List<List<int>> posicoes = new List<List<int>>();
         if (x + 2 < 8 && y + 2 < 8 && (tabuleiro[x + 1, y + 1] == pecaInimiga || tabuleiro[x + 1, y + 1] == damaInimiga))
@@ -66,32 +66,49 @@ public class MaquinaDeRegras : MonoBehaviour
         return posicoes;
     }
 
-    private List<List<int>> HighlightDamas(int[,] tabuleiro, int x, int y, int dama, int pecaInimiga, int damaInimiga)
+    private List<List<int>> HighlightDamas(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
     {
-        // TODO verificação comer
         List<List<int>> posicoes = new List<List<int>>();
         int i, j;
+        bool[] controle = {false, true};
         for(i = x, j = y; i < 8 && j < 8; i++, j++){
-            if (tabuleiro[i, j] == 0)
-                posicoes.Add(new List<int> { i, j });
-            else break;
+            controle = checkFor(posicoes, tabuleiro, i, j, pecaInimiga, damaInimiga, controle[0]);
+            if(!controle[1]) 
+                break;
         }
         for(i = x, j = y; i < 8 && j >= 0; i++, j--){
-            if (tabuleiro[i, j] == 0)
-                posicoes.Add(new List<int> { i, j });
-            else break;
+            controle = checkFor(posicoes, tabuleiro, i, j, pecaInimiga, damaInimiga, controle[0]);
+            if(!controle[1]) 
+                break;
         }
         for(i = x, j = y; i >= 0 && j < 8; i--, j++){
-            if (tabuleiro[i, j] == 0)
-                posicoes.Add(new List<int> { i, j });
-            else break;
+            controle = checkFor(posicoes, tabuleiro, i, j, pecaInimiga, damaInimiga, controle[0]);
+            if(!controle[1]) 
+                break;
         }
         for(i = x, j = y; i >= 0 && j >= 0; i--, j--){
-            if (tabuleiro[i, j] == 0)
-                posicoes.Add(new List<int> { i, j });
-            else break;
+            controle = checkFor(posicoes, tabuleiro, i, j, pecaInimiga, damaInimiga, controle[0]);
+            if(!controle[1]) 
+                break;
         }
         return posicoes;
+    }
+
+    private bool[] checkFor(List<List<int>> posicoes, int[,] tabuleiro, int i, int j, int pecaInimiga, int damaInimiga, bool comer){
+        bool[] retorno = {comer, true};
+        if (!retorno[0] && tabuleiro[i, j] == 0){
+            posicoes.Add(new List<int> { i, j });
+            return retorno;
+        }
+        else if(tabuleiro[i, j] == damaInimiga || tabuleiro[i, j] == pecaInimiga){
+            retorno[0] = true;
+            posicoes.Add(new List<int> { i, j });
+            return retorno;
+        }
+        else{
+            retorno[1] = false;
+            return retorno;
+        }
     }
 }
 
