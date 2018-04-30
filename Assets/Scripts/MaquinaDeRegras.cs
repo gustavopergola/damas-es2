@@ -21,16 +21,14 @@ public class MaquinaDeRegras : MonoBehaviour
     {
         // TODO função para checar se alguma peça qlq deve comer
         // comer é obrigatório
-        int dama = 2, pecaInimiga = 3, damaInimiga = 4;
-        /*
+        int dama, pecaInimiga, damaInimiga;
         if (jogador == 1)
         {
             dama = 2;
             pecaInimiga = 3;
             damaInimiga = 4;
         }
-        */
-        if (jogador == 2)
+        else
         {
             dama = 4;
             pecaInimiga = 1;
@@ -72,13 +70,26 @@ public class MaquinaDeRegras : MonoBehaviour
     {
         // TODO verificação comer
         List<List<int>> posicoes = new List<List<int>>();
-        for(int i = x; i < 8; i++)
-        {
-            for(int j = y; j < 8; j++)
-            {
-                if (tabuleiro[i, j] == 0)
-                    posicoes.Add(new List<int> { i, j });
-            }
+        int i, j;
+        for(i = x, j = y; i < 8 && j < 8; i++, j++){
+            if (tabuleiro[i, j] == 0)
+                posicoes.Add(new List<int> { i, j });
+            else break;
+        }
+        for(i = x, j = y; i < 8 && j >= 0; i++, j--){
+            if (tabuleiro[i, j] == 0)
+                posicoes.Add(new List<int> { i, j });
+            else break;
+        }
+        for(i = x, j = y; i >= 0 && j < 8; i--, j++){
+            if (tabuleiro[i, j] == 0)
+                posicoes.Add(new List<int> { i, j });
+            else break;
+        }
+        for(i = x, j = y; i >= 0 && j >= 0; i--, j--){
+            if (tabuleiro[i, j] == 0)
+                posicoes.Add(new List<int> { i, j });
+            else break;
         }
         return posicoes;
     }
