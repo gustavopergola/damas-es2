@@ -21,10 +21,9 @@ public class GameController : MonoBehaviour {
 
         jogadorAtual = isJogadorAtual(jogador1) ? jogador2 : jogador1;
 
-        if (this.jogadorAtual.isPlayer())
+        if (this.jogadorAtual.isPlayer()){
             setTextoTurno("Turno: Jogador");
-        else
-        {  
+        }else{  
             setTextoTurno("Turno: IA " + jogadorAtual.getNomeJogador());
             //TODO get IA input here?
             disablePassarTurnoBtn();
@@ -46,7 +45,7 @@ public class GameController : MonoBehaviour {
     }
 
     public bool isJogadorAtual(Jogador jogador){
-        jogador == this.jogadorAtual;
+        return jogador == this.jogadorAtual;
     }
 
     public void defineJogadores(Jogador jogador1, Jogador jogador2){        
