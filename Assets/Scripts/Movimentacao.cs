@@ -18,27 +18,23 @@ public class Movimentacao : MonoBehaviour {
 	private Vector3 finalPosition;
 	private float timeSpent = 9999f;
 
-    ControleTurnos controleTurnos;
+    GameController gameController;
 
-    // Use this for initialization
     void Start () {
-        controleTurnos = GameObject.Find("Turno").GetComponent<ControleTurnos>();
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
         pedraSelecionada = null;
 	}
-	
-	// Update is called once per frame
+		
 	void Update () {
 		processaClique ();
 	}
 
-	// FixedUpdate: same as Update but with normalized FPS
-	// meaning you can make safe operations based on delta time 
 	void FixedUpdate(){
 		controlaMovimento ();
 	}
 
 	private void processaClique(){
-        if (!controleTurnos.getTurnoJogador())
+        if (!gameController.getTurnoJogador())
         {
             return;//turno IA
         }
