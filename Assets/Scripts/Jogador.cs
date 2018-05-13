@@ -4,12 +4,19 @@ using System.Collections.Generic;
 public class Jogador {
 
     private string nome;
-    private bool is_player;
+    private IA ia;
     
+    public Jogador(string nome, IA ia = null){
+        this.nome = nome;
+        this.ia = ia;
+    }
 
     public bool isPlayer(){
-        return this.is_player;
-        //TODO substituir por return !ia;
+        return this.ia == null;
+    }
+
+    public bool isIA(){
+        return !this.isPlayer();
     }
 
     public string getNomeJogador(){
@@ -17,7 +24,6 @@ public class Jogador {
     }
 
     public void callAIAction(){
-        //TODO ia.CallAction();
+        this.ia.getAction();
     }
-
 }

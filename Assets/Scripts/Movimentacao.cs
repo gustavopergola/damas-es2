@@ -18,10 +18,10 @@ public class Movimentacao : MonoBehaviour {
 	private Vector3 finalPosition;
 	private float timeSpent = 9999f;
 
-    GameController gameController;
+    private GameController gameController;
 
     void Start () {
-        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        gameController = gameObject.GetComponent<GameController>();
         pedraSelecionada = null;
 	}
 		
@@ -34,17 +34,16 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	private void processaClique(){
-        if (!gameController.getTurnoJogador())
-        {
-            return;//turno IA
-        }
         if (Input.GetMouseButtonDown(0)) {
+			if (!gameController.getTurnoJogador()) return; //turno IA
+		
 			GameObject objeto_resposta = checaClique ();
 			if (objeto_resposta != null) {
 				if (comparaLayerMaskValue (objeto_resposta.layer, this.layerPedras.value)) {
 					seleciona_pedra (objeto_resposta);
 				} else if (comparaLayerMaskValue (objeto_resposta.layer, this.layerPosicao.value)) {
 					movimenta (this.pedraSelecionada, objeto_resposta);
+					gameController.passarTurno();
 				}
 			} else {
 				descelecionar_pedra_atual ();
