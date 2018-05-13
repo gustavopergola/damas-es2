@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour {
 
     public const int GAME_MODE_PLAYER_VS_IA = 1;
     public const int GAME_MODE_IA_VS_IA = 2;
+    public const int GAME_MODE_PLAYER_VS_PLAYER = 3;
 
     private static bool created = false;
 
@@ -60,19 +61,24 @@ public class GameController : MonoBehaviour {
         return jogador == this.jogadorAtual;
     }
 
-    public void switchScene(bool IAvsIA){
-        if (IAvsIA) PlayerPrefs.SetInt("GameMode", GAME_MODE_IA_VS_IA);
-        else PlayerPrefs.SetInt("GameMode", GAME_MODE_PLAYER_VS_IA);
+    public void switchScene(int gameMode){
+        PlayerPrefs.SetInt("GameMode", gameMode);
         loadGameScene();
     }
 
-    public void loadPlayervsIAGame(){
+    private void loadPlayervsPlayerGame(){
+        Jogador player1 = new Jogador("Jogador1"); 
+        Jogador player2 = new Jogador("Jogador2"); 
+        defineJogadores(player1, player2);
+    }
+
+    private void loadPlayervsIAGame(){
         Jogador player = new Jogador("Jogador"); 
         Jogador ia = new Jogador("IA 1", new IA());
         defineJogadores(player, ia);
     }
 
-    public void loadIAvsIAGame(){
+    private void loadIAvsIAGame(){
         Jogador ia1 = new Jogador("IA 1", new IA());
         Jogador ia2 = new Jogador("IA 2", new IA());
         defineJogadores(ia1, ia2);
@@ -90,9 +96,11 @@ public class GameController : MonoBehaviour {
 
     private void loadGameMode(){
         int gameMode = PlayerPrefs.GetInt("GameMode");
-        Debug.Log(gameMode);
+        Debug.Log("GameMode loaded = " + gameMode);
         if (gameMode == GAME_MODE_PLAYER_VS_IA) loadPlayervsIAGame();
-        else loadIAvsIAGame();
+        else if (gameMode == GAME_MODE_IA_VS_IA) loadIAvsIAGame();
+        else loadPlayervsPlayerGame();
+        Debug.Log("Turno: " + jogadorAtual.getNomeJogador());
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
     }
 
