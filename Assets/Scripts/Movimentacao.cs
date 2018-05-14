@@ -18,37 +18,32 @@ public class Movimentacao : MonoBehaviour {
 	private Vector3 finalPosition;
 	private float timeSpent = 9999f;
 
-    ControleTurnos controleTurnos;
+    private GameController gameController;
 
-    // Use this for initialization
     void Start () {
-        controleTurnos = GameObject.Find("Turno").GetComponent<ControleTurnos>();
+        gameController = gameObject.GetComponent<GameController>();
         pedraSelecionada = null;
 	}
-	
-	// Update is called once per frame
+		
 	void Update () {
 		processaClique ();
 	}
 
-	// FixedUpdate: same as Update but with normalized FPS
-	// meaning you can make safe operations based on delta time 
 	void FixedUpdate(){
 		controlaMovimento ();
 	}
 
 	private void processaClique(){
-        if (!controleTurnos.getTurnoJogador())
-        {
-            return;//turno IA
-        }
         if (Input.GetMouseButtonDown(0)) {
+			if (!gameController.getTurnoJogador()) return; //turno IA
+		
 			GameObject objeto_resposta = checaClique ();
 			if (objeto_resposta != null) {
 				if (comparaLayerMaskValue (objeto_resposta.layer, this.layerPedras.value)) {
 					seleciona_pedra (objeto_resposta);
 				} else if (comparaLayerMaskValue (objeto_resposta.layer, this.layerPosicao.value)) {
 					movimenta (this.pedraSelecionada, objeto_resposta);
+					gameController.passarTurno();
 				}
 			} else {
 				descelecionar_pedra_atual ();
