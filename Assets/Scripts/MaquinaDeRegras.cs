@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class MaquinaDeRegras : MonoBehaviour
 {
-
+    
     // Use this for initialization
     void Start()
     {
@@ -17,10 +17,8 @@ public class MaquinaDeRegras : MonoBehaviour
 
     }
 
-    public List<List<int>> Highlight(int[,] tabuleiro, int x, int y, int jogador)
+    public List<List<int>> PossiveisMovimentos(int[,] tabuleiro, int jogador, List<List<int>> posPecas)
     {
-        // TODO função para checar se alguma peça qlq deve comer
-        // comer é obrigatório
         int dama, pecaInimiga, damaInimiga;
         if (jogador == 1)
         {
@@ -34,16 +32,53 @@ public class MaquinaDeRegras : MonoBehaviour
             pecaInimiga = 1;
             damaInimiga = 2;
         }
+        List<List<int>> possiveisMovimentos = new List<List<int>>();
+        List<List<int>> movimentosAuxiliares = new List<List<int>>();
+        bool comer = false;
+        foreach (List<int> peca in posPecas)
+        {
+            movimentosAuxiliares = Highlight(tabuleiro, peca[0], peca[1], jogador, dama, pecaInimiga, damaInimiga);
+            
+            if (movimentosAuxiliares[movimentosAuxiliares.Count -1][0] == -1)
+            {
+                possiveisMovimentos = new List<List<int>>();
+                comer = true;
+            }
+            if (comer == true)
+            {
+                if (movimentosAuxiliares.Count > possiveisMovimentos.Count)
+                    possiveisMovimentos = movimentosAuxiliares;
+            }
+            else {
+                foreach (List<int> pecaAuxiliar in movimentosAuxiliares)
+                    possiveisMovimentos.Add(pecaAuxiliar);
+            }
+        }
+        return possiveisMovimentos;
+    }
+
+    public List<List<int>> Highlight(int[,] tabuleiro, int x, int y, int jogador, int dama, int pecaInimiga, int damaInimiga)
+    {
+        // TODO função para checar se alguma peça qlq deve comer
+        // comer é obrigatório
         if (tabuleiro[x, y] == dama)
             return HighlightDamas(tabuleiro, x, y, pecaInimiga, damaInimiga);
         List<List<int>> posicoes = new List<List<int>>();
         posicoes = LeiDaMaioria(tabuleiro, x, y, pecaInimiga, damaInimiga);
         if (posicoes.Count > 0)
             return posicoes;
-        if (x + 1 < 8 && y + 1 < 8 && tabuleiro[x + 1, y + 1] == 0)
-            posicoes.Add(new List<int> { x + 1, y + 1 });
-        if (x - 1 >= 0 && y + 1 < 8 && tabuleiro[x - 1, y + 1] == 0)
-            posicoes.Add(new List<int> { x - 1, y + 1 });
+        if(jogador == 1) {
+            if (x + 1 < 8 && y + 1 < 8 && tabuleiro[x + 1, y + 1] == 0)
+                posicoes.Add(new List<int> { x + 1, y + 1 });
+            if (x - 1 >= 0 && y + 1 < 8 && tabuleiro[x - 1, y + 1] == 0)
+                posicoes.Add(new List<int> { x - 1, y + 1 });
+        }
+        else {
+            if (x + 1 < 8 && y - 1 >= 0 && tabuleiro[x + 1, y - 1] == 0)
+                posicoes.Add(new List<int> { x + 1, y - 1 });
+            if (x - 1 >= 0 && y - 1 >= 0 && tabuleiro[x - 1, y - 1] == 0)
+                posicoes.Add(new List<int> { x - 1, y - 1 });
+        }
         return posicoes;
     }
 
@@ -51,7 +86,7 @@ public class MaquinaDeRegras : MonoBehaviour
     {
         List<List<int>> posicoes = new List<List<int>>();
         int i, j;
-        bool[] controle = {false, true};
+        bool[] controle = {false, true}; // comer, podeMover
         for(i = x, j = y; i < 8 && j < 8; i++, j++){
             controle = checkFor(posicoes, tabuleiro, i, j, pecaInimiga, damaInimiga, controle[0]);
             if(!controle[1]) // não há movimentação nessa diagonal
@@ -94,6 +129,7 @@ public class MaquinaDeRegras : MonoBehaviour
     }
 
     private List<List<int>> LeiDaMaioria(int [,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga) {
+        // ultima posição se for (-1,-1), indica comer
         List<List<int>> pos1 = new List<List<int>>();
         List<List<int>> pos2 = new List<List<int>>();
         List<List<int>> pos3 = new List<List<int>>();
@@ -108,7 +144,10 @@ public class MaquinaDeRegras : MonoBehaviour
                 {
                     pos1.Add(pos);
                 }
+                List<int> indicativoComer = new List<int>(new int[]{-1,-1});
+                pos1.Add(indicativoComer);
             }
+            
         }
         if (x - 2 >= 0 && y + 2 < 8 && (tabuleiro[x - 1, y + 1] == pecaInimiga || tabuleiro[x + 1, y + 1] == damaInimiga))
         {
@@ -119,6 +158,8 @@ public class MaquinaDeRegras : MonoBehaviour
                 {
                     pos2.Add(pos);
                 }
+                List<int> indicativoComer = new List<int>(new int[]{-1,-1});
+                pos2.Add(indicativoComer);
             }
         }
         if (x + 2 < 8 && y - 2 >= 0 && (tabuleiro[x + 1, y - 1] == pecaInimiga || tabuleiro[x + 1, y - 1] == damaInimiga)){
@@ -129,6 +170,8 @@ public class MaquinaDeRegras : MonoBehaviour
                 {
                     pos3.Add(pos);
                 }
+                List<int> indicativoComer = new List<int>(new int[]{-1,-1});
+                pos3.Add(indicativoComer);
             }
         }
         if (x - 2 < 8 && y - 2 >= 0 && (tabuleiro[x - 1, y - 1] == pecaInimiga || tabuleiro[x - 1, y - 1] == damaInimiga))
@@ -140,6 +183,8 @@ public class MaquinaDeRegras : MonoBehaviour
                 {
                     pos4.Add(pos);
                 }
+                List<int> indicativoComer = new List<int>(new int[]{-1,-1});
+                pos4.Add(indicativoComer);
             }
         }
         return max(pos1, pos2, pos3, pos4);
