@@ -4,19 +4,6 @@ using System.Collections.Generic;
 
 public class MaquinaDeRegras : MonoBehaviour
 {
-    
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public List<List<int>> PossiveisMovimentos(int[,] tabuleiro, int jogador, List<List<int>> posPecas)
     {
         int dama, pecaInimiga, damaInimiga;
