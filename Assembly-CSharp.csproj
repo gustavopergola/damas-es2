@@ -56,13 +56,15 @@
      <Compile Include="Assets\Scripts\Jogador.cs" />
      <Compile Include="Assets\Scripts\MaquinaDeRegras.cs" />
      <Compile Include="Assets\Scripts\Movimentacao.cs" />
+     <Compile Include="Assets\Scripts\Peca.cs" />
+     <Compile Include="Assets\Scripts\Posicao.cs" />
      <Compile Include="Assets\Scripts\Tabuleiro.cs" />
      <Compile Include="Assets\Scripts\Tipos.cs" />
- <Reference Include="UnityEditor.StandardEvents">
- <HintPath>C:/Users/João Pedro/Documents/UFF/2018.1/ES2/TRABALHO/damas-es2/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
- </Reference>
  <Reference Include="Unity.PackageManagerUI.Editor">
  <HintPath>C:/Users/João Pedro/Documents/UFF/2018.1/ES2/TRABALHO/damas-es2/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.StandardEvents">
+ <HintPath>C:/Users/João Pedro/Documents/UFF/2018.1/ES2/TRABALHO/damas-es2/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>

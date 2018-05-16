@@ -7,8 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour {
 
 	public Jogador jogadorAtual;
-    private Jogador jogador1;
-    private Jogador jogador2;
+    private static Jogador jogador1;
+    private static Jogador jogador2;
 	private Text textIndicator;
     private Button passarTurnoBtn;
 
@@ -88,9 +88,9 @@ public class GameController : MonoBehaviour {
         SceneManager.LoadScene("initial", LoadSceneMode.Single);
     }
 
-    private void defineJogadores(Jogador jogador1, Jogador jogador2){        
-        this.jogador1 = jogador1;
-        this.jogador2 = jogador2;
+    private void defineJogadores(Jogador player1, Jogador player2){        
+        jogador1 = player1;
+        jogador2 = player2;
         this.jogadorAtual = jogador1;
     }
 
@@ -102,6 +102,13 @@ public class GameController : MonoBehaviour {
         else loadPlayervsPlayerGame();
         Debug.Log("Turno: " + jogadorAtual.getNomeJogador());
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
+    }
+
+    public static Jogador getJogador1(){
+        return jogador1;
+    }
+    public static Jogador getJogador2(){
+        return jogador2;
     }
 
 
