@@ -27,10 +27,10 @@ public class MaquinaDeRegras : MonoBehaviour
         {
             movimentosAuxiliares = Highlight(tabuleiro, peca[0], peca[1], jogador, dama, pecaInimiga, damaInimiga);
             
-            if (movimentosAuxiliares[movimentosAuxiliares.Count -1][0] == -1)
+            if (HaveComido(tabuleiro,movimentosAuxiliares[0], pecaInimiga, damaInimiga))
             {
-                possiveisMovimentos = new List<List<int>>();
                 comer = true;
+                possiveisMovimentos = new List<List<int>>();
             }
             if (comer == true)
             {
@@ -45,6 +45,23 @@ public class MaquinaDeRegras : MonoBehaviour
         return possiveisMovimentos;
     }
 
+    private bool HaveComido(int [,] tabuleiro, List<int> posicao, int pecaInimiga, int damaInimiga)
+    {
+        // TODO isso aqui só funciona se a peça não for dama
+        
+        int x = posicao[0], y = posicao[1];
+
+        if((x - 2 >= 0 && y - 2 >= 0) && (tabuleiro[x-2,y-2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+            return true;
+        if((x - 2 >= 0 && y + 2 < 8) && (tabuleiro[x-2,y+2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+            return true;
+        if((x + 2 < 8 && y - 2 >= 0) && (tabuleiro[x+2,y-2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+            return true;
+        if((x + 2 < 8 && y + 2 < 8) && (tabuleiro[x+2,y+2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+            return true;
+        return false;
+    }
+    
     public List<List<int>> Highlight(int[,] tabuleiro, int x, int y, int jogador, int dama, int pecaInimiga, int damaInimiga)
     {
         // TODO função para checar se alguma peça qlq deve comer
