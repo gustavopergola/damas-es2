@@ -5,21 +5,58 @@ using TiposNS;
 
 public class MaquinaDeRegras : MonoBehaviour
 {
-    public List<List<int>> PossiveisMovimentos(int[,] tabuleiro, int jogador, List<List<int>> posPecas)
+    
+    private int[] SetValoresPecas(int jogador)
     {
-        int dama, pecaInimiga, damaInimiga;
+        int[] valoresPecas = new int[3];
         if (jogador == 1)
         {
-            dama = Tipos.getDamaJogador1();
-            pecaInimiga = Tipos.getPecaJogador2();
-            damaInimiga = Tipos.getDamaJogador2();
+            valoresPecas[0] = Tipos.getDamaJogador1();
+            valoresPecas[1] = Tipos.getPecaJogador2();
+            valoresPecas[2] = Tipos.getDamaJogador2();
         }
         else
         {
-            dama = Tipos.getDamaJogador2();
-            pecaInimiga = Tipos.getPecaJogador1();
-            damaInimiga = Tipos.getDamaJogador1();
+            valoresPecas[0] = Tipos.getDamaJogador2();
+            valoresPecas[1] = Tipos.getPecaJogador1();
+            valoresPecas[2] = Tipos.getDamaJogador1();
         }
+        return valoresPecas;
+    }
+
+    public List<List<int>> HasToComer(int[][] tabuleiro, List<List<int>> posPecas, int jogador)
+    {
+        List<List<int>> pecasQueComem = new List<List<int>>();
+        int[] valoresPecas = SetValoresPecas(jogador);
+        int x, y;
+        foreach (List<int> peca in posPecas)
+        {
+            x = peca[0];
+            y = peca[1];
+            if((x + 1 < 8 && y + 1 < 8) && (tabuleiro[x+1][y+1] == valoresPecas[1] || tabuleiro[x+1][y+1] == valoresPecas[2]))
+            {
+                pecasQueComem.Add(new List<int>{x,y});
+            }
+            if((x + 1 < 8 && y - 1 >= 0) && (tabuleiro[x+1][y-1] == valoresPecas[1] || tabuleiro[x+1][y-1] == valoresPecas[2]))
+            {
+                pecasQueComem.Add(new List<int>{x,y});
+            }
+            if((x - 1 >= 0 && y + 1 < 8) && (tabuleiro[x-1][y+1] == valoresPecas[1] || tabuleiro[x-1][y+1] == valoresPecas[2]))
+            {
+                pecasQueComem.Add(new List<int>{x,y});
+            }
+            if((x - 1 >= 0 && y - 1 >= 0) && (tabuleiro[x-1][y-1] == valoresPecas[1] || tabuleiro[x-1][y-1] == valoresPecas[2]))
+            {
+                pecasQueComem.Add(new List<int>{x,y});
+            }
+        }
+        return pecasQueComem;
+    }
+
+    public List<List<int>> PossiveisMovimentos(int[,] tabuleiro, int jogador, List<List<int>> posPecas)
+    {
+        int[] valoresPecas = SetValoresPecas(jogador);
+        int dama = valoresPecas[0], pecaInimiga = valoresPecas[1], damaInimiga = valoresPecas[2];
         List<List<int>> possiveisMovimentos = new List<List<int>>();
         List<List<int>> movimentosAuxiliares = new List<List<int>>();
         bool comer = false;
