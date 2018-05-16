@@ -53,7 +53,7 @@ public class MaquinaDeRegras : MonoBehaviour
         return pecasQueComem;
     }
 
-    public List<List<int>> PossiveisMovimentos(int[,] tabuleiro, int jogador, List<List<int>> posPecas)
+    public List<List<int>> PossiveisMovimentos(int[][] tabuleiro, int jogador, List<List<int>> posPecas)
     {
         int[] valoresPecas = SetValoresPecas(jogador);
         int dama = valoresPecas[0], pecaInimiga = valoresPecas[1], damaInimiga = valoresPecas[2];
@@ -82,49 +82,49 @@ public class MaquinaDeRegras : MonoBehaviour
         return possiveisMovimentos;
     }
 
-    private bool HaveComido(int [,] tabuleiro, List<int> posicao, int pecaInimiga, int damaInimiga)
+    private bool HaveComido(int[][] tabuleiro, List<int> posicao, int pecaInimiga, int damaInimiga)
     {
         // TODO isso aqui só funciona se a peça não for dama
         
         int x = posicao[0], y = posicao[1];
 
-        if((x - 2 >= 0 && y - 2 >= 0) && (tabuleiro[x-2,y-2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+        if((x - 2 >= 0 && y - 2 >= 0) && (tabuleiro[x-2][y-2] == pecaInimiga || tabuleiro[x-2][y-2] == damaInimiga))
             return true;
-        if((x - 2 >= 0 && y + 2 < 8) && (tabuleiro[x-2,y+2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+        if((x - 2 >= 0 && y + 2 < 8) && (tabuleiro[x-2][y+2] == pecaInimiga || tabuleiro[x-2][y-2] == damaInimiga))
             return true;
-        if((x + 2 < 8 && y - 2 >= 0) && (tabuleiro[x+2,y-2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+        if((x + 2 < 8 && y - 2 >= 0) && (tabuleiro[x+2][y-2] == pecaInimiga || tabuleiro[x-2][y-2] == damaInimiga))
             return true;
-        if((x + 2 < 8 && y + 2 < 8) && (tabuleiro[x+2,y+2] == pecaInimiga || tabuleiro[x-2,y-2] == damaInimiga))
+        if((x + 2 < 8 && y + 2 < 8) && (tabuleiro[x+2][y+2] == pecaInimiga || tabuleiro[x-2][y-2] == damaInimiga))
             return true;
         return false;
     }
     
-    public List<List<int>> Highlight(int[,] tabuleiro, int x, int y, int jogador, int dama, int pecaInimiga, int damaInimiga)
+    public List<List<int>> Highlight(int[][] tabuleiro, int x, int y, int jogador, int dama, int pecaInimiga, int damaInimiga)
     {
         // TODO função para checar se alguma peça qlq deve comer
         // comer é obrigatório
-        if (tabuleiro[x, y] == dama)
+        if (tabuleiro[x][y] == dama)
             return HighlightDamas(tabuleiro, x, y, pecaInimiga, damaInimiga);
         List<List<int>> posicoes = new List<List<int>>();
         posicoes = LeiDaMaioria(tabuleiro, x, y, pecaInimiga, damaInimiga);
         if (posicoes.Count > 0)
             return posicoes;
         if(jogador == 1) {
-            if (x + 1 < 8 && y + 1 < 8 && Tipos.isVazio(tabuleiro[x + 1, y + 1]))
+            if (x + 1 < 8 && y + 1 < 8 && Tipos.isVazio(tabuleiro[x + 1][y + 1]))
                 posicoes.Add(new List<int> { x + 1, y + 1 });
-            if (x - 1 >= 0 && y + 1 < 8 && tabuleiro[x - 1, y + 1] == 0)
+            if (x - 1 >= 0 && y + 1 < 8 && tabuleiro[x - 1][y + 1] == 0)
                 posicoes.Add(new List<int> { x - 1, y + 1 });
         }
         else {
-            if (x + 1 < 8 && y - 1 >= 0 && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
+            if (x + 1 < 8 && y - 1 >= 0 && Tipos.isVazio(tabuleiro[x + 1][y - 1]))
                 posicoes.Add(new List<int> { x + 1, y - 1 });
-            if (x - 1 >= 0 && y - 1 >= 0 && tabuleiro[x - 1, y - 1] == 0)
+            if (x - 1 >= 0 && y - 1 >= 0 && tabuleiro[x - 1][y - 1] == 0)
                 posicoes.Add(new List<int> { x - 1, y - 1 });
         }
         return posicoes;
     }
 
-    private List<List<int>> HighlightDamas(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
+    private List<List<int>> HighlightDamas(int[][] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
     {
         List<List<int>> posicoesCimaDireita = new List<List<int>>();
         List<List<int>> posicoesCimaEsquerda = new List<List<int>>();
@@ -169,13 +169,13 @@ public class MaquinaDeRegras : MonoBehaviour
         }
     }
 
-    private bool[] checkFor(List<List<int>> posicoes, int[,] tabuleiro, int i, int j, int pecaInimiga, int damaInimiga, bool comer){
+    private bool[] checkFor(List<List<int>> posicoes, int[][] tabuleiro, int i, int j, int pecaInimiga, int damaInimiga, bool comer){
         bool[] retorno = {comer, true};
-        if (!comer && tabuleiro[i, j] == 0){
+        if (!comer && tabuleiro[i][j] == 0){
             posicoes.Add(new List<int> { i, j });
             return retorno;
         }
-        else if(tabuleiro[i, j] == damaInimiga || tabuleiro[i, j] == pecaInimiga){
+        else if(tabuleiro[i][j] == damaInimiga || tabuleiro[i][j] == pecaInimiga){
             retorno[0] = true; // comer = true
             posicoes.Add(new List<int> { i, j });
             List<List<int>> maioria = LeiDaMaioria(tabuleiro, i, j, pecaInimiga, damaInimiga);
@@ -190,13 +190,13 @@ public class MaquinaDeRegras : MonoBehaviour
         }
     }
 
-    private List<List<int>> LeiDaMaioria(int [,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga) {
+    private List<List<int>> LeiDaMaioria(int[][] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga) {
         List<List<int>> pos1 = new List<List<int>>();
         List<List<int>> pos2 = new List<List<int>>();
         List<List<int>> pos3 = new List<List<int>>();
         List<List<int>> pos4 = new List<List<int>>();
         List<List<int>> posAux = new List<List<int>>();
-        if (x + 2 < 8 && y + 2 < 8 && (tabuleiro[x + 1, y + 1] == pecaInimiga || tabuleiro[x + 1, y + 1] == damaInimiga))
+        if (x + 2 < 8 && y + 2 < 8 && (tabuleiro[x + 1][y + 1] == pecaInimiga || tabuleiro[x + 1][y + 1] == damaInimiga))
         {
             pos1.Add(new List<int> { x + 2, y + 2 });
             posAux = LeiDaMaioria(tabuleiro, x+2, y+2, pecaInimiga, damaInimiga);
@@ -207,7 +207,7 @@ public class MaquinaDeRegras : MonoBehaviour
                 }
             }
         }
-        if (x - 2 >= 0 && y + 2 < 8 && (tabuleiro[x - 1, y + 1] == pecaInimiga || tabuleiro[x + 1, y + 1] == damaInimiga))
+        if (x - 2 >= 0 && y + 2 < 8 && (tabuleiro[x - 1][y + 1] == pecaInimiga || tabuleiro[x + 1][y + 1] == damaInimiga))
         {
             pos2.Add(new List<int> { x - 2, y + 2 });
             posAux = LeiDaMaioria(tabuleiro, x-2, y+2, pecaInimiga, damaInimiga);
@@ -218,7 +218,7 @@ public class MaquinaDeRegras : MonoBehaviour
                 }
             }
         }
-        if (x + 2 < 8 && y - 2 >= 0 && (tabuleiro[x + 1, y - 1] == pecaInimiga || tabuleiro[x + 1, y - 1] == damaInimiga)){
+        if (x + 2 < 8 && y - 2 >= 0 && (tabuleiro[x + 1][y - 1] == pecaInimiga || tabuleiro[x + 1][y - 1] == damaInimiga)){
             pos3.Add(new List<int> { x + 2, y - 2 });
             posAux = LeiDaMaioria(tabuleiro, x+2, y-2, pecaInimiga, damaInimiga);
             if(posAux.Count != 0){
@@ -228,7 +228,7 @@ public class MaquinaDeRegras : MonoBehaviour
                 }
             }
         }
-        if (x - 2 < 8 && y - 2 >= 0 && (tabuleiro[x - 1, y - 1] == pecaInimiga || tabuleiro[x - 1, y - 1] == damaInimiga))
+        if (x - 2 < 8 && y - 2 >= 0 && (tabuleiro[x - 1][y - 1] == pecaInimiga || tabuleiro[x - 1][y - 1] == damaInimiga))
         {
             pos4.Add(new List<int> { x - 2, y - 2 });
             posAux = LeiDaMaioria(tabuleiro, x-2, y-2, pecaInimiga, damaInimiga);
