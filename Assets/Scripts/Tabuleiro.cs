@@ -58,6 +58,8 @@ public class Tabuleiro : MonoBehaviour {
 		int lin, col, atual;
 		int pecasPretas = 0;
 		int pecasVermelhas = 0;
+		//TODO verificar se é dama ou não
+		//se essa função for ser utilizada para outro propósito sem ser a inicialização isso será necessário
 		for(lin=0;lin<matrizTabuleiroInt.GetLength(0);lin++){
 			for(col=0;col<matrizTabuleiroInt.GetLength(0);col++){
 				atual = matrizTabuleiroInt[lin, col];
