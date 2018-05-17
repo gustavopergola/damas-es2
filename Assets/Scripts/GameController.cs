@@ -14,7 +14,6 @@ public class GameController : MonoBehaviour {
     public LayerMask layerJogador1;
     public LayerMask layerJogador2;
 
-
 	private Text textIndicator;
     private Button passarTurnoBtn;
 
@@ -112,6 +111,4 @@ public class GameController : MonoBehaviour {
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
     }
 
-
 }
-
