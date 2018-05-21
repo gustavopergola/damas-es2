@@ -7,8 +7,13 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour {
 
 	public Jogador jogadorAtual;
+
     private static Jogador jogador1;
     private static Jogador jogador2;
+
+    public LayerMask layerJogador1;
+    public LayerMask layerJogador2;
+
 	private Text textIndicator;
     private Button passarTurnoBtn;
 
@@ -91,16 +96,19 @@ public class GameController : MonoBehaviour {
     private void defineJogadores(Jogador player1, Jogador player2){        
         jogador1 = player1;
         jogador2 = player2;
+
+        jogador1.layerMaskValue = layerJogador1.value;
+
+        jogador2.layerMaskValue = layerJogador2.value;
+
         this.jogadorAtual = jogador1;
     }
 
     private void loadGameMode(){
         int gameMode = PlayerPrefs.GetInt("GameMode");
-        Debug.Log("GameMode loaded = " + gameMode);
         if (gameMode == GAME_MODE_PLAYER_VS_IA) loadPlayervsIAGame();
         else if (gameMode == GAME_MODE_IA_VS_IA) loadIAvsIAGame();
-        else loadPlayervsPlayerGame();
-        Debug.Log("Turno: " + jogadorAtual.getNomeJogador());
+        else loadPlayervsPlayerGame();        
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
     }
 
@@ -110,6 +118,5 @@ public class GameController : MonoBehaviour {
     public static Jogador getJogador2(){
         return jogador2;
     }
-
 
 }
