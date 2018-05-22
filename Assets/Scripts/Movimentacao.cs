@@ -42,7 +42,8 @@ public class Movimentacao : MonoBehaviour {
 			if (objeto_resposta != null) {
 				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
-				} else if (isPosicao(objeto_resposta)) {
+
+				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
 					movimenta (this.pedraSelecionada, objeto_resposta);
 					gameController.passarTurno();
 					descelecionar_pedra_atual();
