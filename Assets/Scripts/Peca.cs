@@ -7,4 +7,6 @@ public class Peca : MonoBehaviour {
 	public Jogador jogador;
 
 	public int tipo;
+
+	public Posicao posicao;
 }

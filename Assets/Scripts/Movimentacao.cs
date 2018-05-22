@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TabuleiroNS;
+using TiposNS;
 
 public class Movimentacao : MonoBehaviour {
 
@@ -105,11 +107,19 @@ public class Movimentacao : MonoBehaviour {
 	private void movimenta(GameObject go_pedra_selecionada, GameObject go_posicao_alvo){
 		if (go_pedra_selecionada == null)
 			return;
-		
 		this.startPosition = go_pedra_selecionada.transform.position;
 		this.finalPosition = go_posicao_alvo.transform.position;
 		this.transformPedraEmMovimento = go_pedra_selecionada.transform;
 		this.timeSpent = 0f;
+		//realiza mudanças no tabuleiro
+		int linInicio = go_pedra_selecionada.GetComponent<Peca>().posicao.lin;
+		int colInicio = go_pedra_selecionada.GetComponent<Peca>().posicao.col;
+		int linFim = go_posicao_alvo.GetComponent<Posicao>().lin;
+		int colFim = go_posicao_alvo.GetComponent<Posicao>().col;
+		Tabuleiro.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
+		Tabuleiro.matrizTabuleiroInt[linFim, colFim] = go_pedra_selecionada.GetComponent<Peca>().tipo; //TODO verificar se virou dama
+		//TODO verificar se capturou alguma peça no meio do caminho
+		//TODO verificar se virou dama
 	}
 
 	private void controlaMovimento(){
@@ -118,7 +128,5 @@ public class Movimentacao : MonoBehaviour {
 			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * this.speed);
 			this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
 		}
-
-
 	}
 }
