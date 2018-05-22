@@ -112,12 +112,16 @@ public class Movimentacao : MonoBehaviour {
 		this.transformPedraEmMovimento = go_pedra_selecionada.transform;
 		this.timeSpent = 0f;
 		//realiza mudanças no tabuleiro
-		int linInicio = go_pedra_selecionada.GetComponent<Peca>().posicao.lin;
-		int colInicio = go_pedra_selecionada.GetComponent<Peca>().posicao.col;
-		int linFim = go_posicao_alvo.GetComponent<Posicao>().lin;
-		int colFim = go_posicao_alvo.GetComponent<Posicao>().col;
+		alteraMatriz(go_pedra_selecionada, go_posicao_alvo);
+	}
+
+	private void alteraMatriz(GameObject pedra_selecionada, GameObject posicao_alvo){
+		int linInicio = pedra_selecionada.GetComponent<Peca>().posicao.lin;
+		int colInicio = pedra_selecionada.GetComponent<Peca>().posicao.col;
+		int linFim = posicao_alvo.GetComponent<Posicao>().lin;
+		int colFim = posicao_alvo.GetComponent<Posicao>().col;
 		Tabuleiro.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
-		Tabuleiro.matrizTabuleiroInt[linFim, colFim] = go_pedra_selecionada.GetComponent<Peca>().tipo; //TODO verificar se virou dama
+		Tabuleiro.matrizTabuleiroInt[linFim, colFim] = posicao_alvo.GetComponent<Peca>().tipo; //TODO verificar se virou dama
 		//TODO verificar se capturou alguma peça no meio do caminho
 		//TODO verificar se virou dama
 	}
