@@ -6,7 +6,9 @@ public class Posicao : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if(peca){
-			peca.transform.position = gameObject.transform.position;
+			Vector3 aux = gameObject.transform.position;
+			aux.z -= 2;
+			peca.transform.position = aux;
 		}
 	}
 }

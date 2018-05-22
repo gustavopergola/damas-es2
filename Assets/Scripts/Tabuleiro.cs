@@ -68,9 +68,6 @@ public class Tabuleiro : MonoBehaviour {
 					pecasPretas++;
 				}else if(Tipos.isJogador2(atual)){
 					matrizTabuleiroPosicoes[lin, col].gameObject.GetComponent<Posicao>().peca = pedrasVermelhas.transform.GetChild(pecasVermelhas).gameObject;
-					Debug.Log("A"+pedrasVermelhas.transform.GetChild(pecasPretas).gameObject);
-					Debug.Log("B"+matrizTabuleiroPosicoes[lin, col].gameObject.GetComponent<Posicao>().peca);
-					Debug.Log(matrizTabuleiroPosicoes[lin, col].gameObject);
 					pecasVermelhas++;
 				}
 			}
@@ -135,7 +132,6 @@ public class Tabuleiro : MonoBehaviour {
 			for(int col=0; col<size; col++){
 				resp = resp + " " + matrizTabuleiroInt[lin,col];
 			}
-			Debug.Log(resp);
 			resp = "";
 		}
 	}
