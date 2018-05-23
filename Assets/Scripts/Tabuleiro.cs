@@ -14,7 +14,7 @@ namespace TabuleiroNS
         public GameObject pedrasVermelhas;
         public GameObject posicoesAgrupamento;
 
-        private GameObject[,] matrizTabuleiroPosicoes = new GameObject[8, 8];
+        public static GameObject[,] matrizTabuleiroPosicoes = new GameObject[8, 8];
         public static int[,] matrizTabuleiroInt = new int[8, 8];
         private List<GameObject> posicoes;
 

@@ -120,10 +120,26 @@ public class Movimentacao : MonoBehaviour {
 		int colInicio = pedra_selecionada.GetComponent<Peca>().posicao.col;
 		int linFim = posicao_alvo.GetComponent<Posicao>().lin;
 		int colFim = posicao_alvo.GetComponent<Posicao>().col;
-		Tabuleiro.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
-		Tabuleiro.matrizTabuleiroInt[linFim, colFim] = posicao_alvo.GetComponent<Peca>().tipo; //TODO verificar se virou dama
-		//TODO verificar se capturou alguma peça no meio do caminho
-		//TODO verificar se virou dama
+		bool ataque = false;//TODO receber resultado da máquina de regras para determinar se movimento é ataque ou não
+		//TODO RECEBER POSICAO DA PECA QUE FOI CAPTURADA
+		if(!ataque){
+			//MOVIMENTACAO SIMPLES
+			//Atualiza matriz de inteiros
+			Tabuleiro.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
+			Tabuleiro.matrizTabuleiroInt[linFim, colFim] = pedra_selecionada.GetComponent<Peca>().tipo; //TODO verificar se virou dama
+			//atualiza objetos
+			Tabuleiro.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca = null;
+			Tabuleiro.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>().peca = pedra_selecionada;
+			pedra_selecionada.GetComponent<Peca>().posicao = posicao_alvo.GetComponent<Posicao>();
+		}else{
+			//MOVIMENTO DE ATAQUE
+			//TODO alterar matriz em caso de movimento de ataque
+		}
+		bool dama = false; //TODO receber resultado da máquina de regras para determinar se virou dama ou não
+		if(dama){
+			//TODO verificar se virou dama
+		}
+		
 	}
 
 	private void controlaMovimento(){
