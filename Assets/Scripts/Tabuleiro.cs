@@ -7,20 +7,21 @@ using UnityEngine;
 
 public class Tabuleiro : MonoBehaviour {
 
-	public List<GameObject> pedrasBlue;
-	public List<GameObject> pedrasRed;
+	public GameObject pedrasPretas;
+	public GameObject pedrasVermelhas;
 	public GameObject posicoesAgrupamento;
 
-	private GameObject[,] matrizTabuleiroObj = new GameObject[8,8];
+	private GameObject[,] matrizTabuleiroPosicoes = new GameObject[8,8];
 	private int[,] matrizTabuleiroInt = new int[8,8];
 	private List<GameObject> posicoes;
 
 	// Use this for initialization
-	void Start () {
-		initialize_matriz_tabuleiro();
-		inicializaMatrizPecas();
-		Debug.Log(matrizTabuleiroInt[0,0]);
+	void Awake () {
+		inicalizaPecas();
+		inicializaMatrizPosicoes();
+		inicializaMatrizInt();
 		mostraTabuleiro();
+		MatrizPecasParaMatrizPosicoes();
 	}
 
 	bool makeMove(){
@@ -35,23 +36,56 @@ public class Tabuleiro : MonoBehaviour {
 		return true;
 	}
 
-	private void initialize_matriz_tabuleiro(){//matriz das posições
+	private void inicializaMatrizPosicoes(){//matriz das posições
         int col, lin, contador = 0;
-        for (col = matrizTabuleiroObj.GetLength(0)-1; col >= 0; col--)
+        for (lin = matrizTabuleiroPosicoes.GetLength(0)-1; lin >= 0; lin--)
         { 
-            for(lin = matrizTabuleiroObj.GetLength(1)-1; lin >= 0; lin--)
+            for(col = matrizTabuleiroPosicoes.GetLength(1)-1; col >= 0; col--)
             {
-                matrizTabuleiroObj[col, lin] = posicoesAgrupamento.transform.GetChild(contador).gameObject;
+                matrizTabuleiroPosicoes[lin, col] = posicoesAgrupamento.transform.GetChild(contador).gameObject;
                 contador++;
             }
         }
     }
 
-	private void inicializaMatrizPecas(){
+	private void inicializaMatrizInt(){
 		preencheVazio();
 		preenchePecasJogador1();
 		preenchePecasJogador2();
 	}
+	
+	private void MatrizPecasParaMatrizPosicoes(){
+		int lin, col, atual;
+		int pecasPretas = 0;
+		int pecasVermelhas = 0;
+		//TODO verificar se é dama ou não
+		//se essa função for ser utilizada para outro propósito sem ser a inicialização isso será necessário
+		for(lin=0;lin<matrizTabuleiroInt.GetLength(0);lin++){
+			for(col=0;col<matrizTabuleiroInt.GetLength(0);col++){
+				atual = matrizTabuleiroInt[lin, col];
+				if(Tipos.isJogador1(atual)){
+					matrizTabuleiroPosicoes[lin, col].gameObject.GetComponent<Posicao>().peca = pedrasPretas.transform.GetChild(pecasPretas).gameObject;
+					pecasPretas++;
+				}else if(Tipos.isJogador2(atual)){
+					matrizTabuleiroPosicoes[lin, col].gameObject.GetComponent<Posicao>().peca = pedrasVermelhas.transform.GetChild(pecasVermelhas).gameObject;
+					pecasVermelhas++;
+				}
+			}
+		}
+	}
+	
+
+	public void inicalizaPecas(){
+		foreach(Transform peca in pedrasPretas.transform){
+			peca.gameObject.GetComponent<Peca>().jogador = GameController.getJogador1();
+			peca.gameObject.GetComponent<Peca>().tipo = Tipos.getPecaJogador1();
+		}
+		foreach(Transform peca in pedrasVermelhas.transform){
+			peca.gameObject.GetComponent<Peca>().jogador = GameController.getJogador2();
+			peca.gameObject.GetComponent<Peca>().tipo = Tipos.getPecaJogador2();
+		}
+	}
+
 	private void preencheVazio(){
 		int lin, col;
 		for(lin=0;lin<matrizTabuleiroInt.GetLength(0);lin++){
@@ -60,6 +94,7 @@ public class Tabuleiro : MonoBehaviour {
 			}
 		}
 	}
+
 	private void preenchePecasJogador1(){
 		matrizTabuleiroInt[7,1] = Tipos.getPecaJogador1();
 		matrizTabuleiroInt[7,3] = Tipos.getPecaJogador1();
@@ -97,7 +132,6 @@ public class Tabuleiro : MonoBehaviour {
 			for(int col=0; col<size; col++){
 				resp = resp + " " + matrizTabuleiroInt[lin,col];
 			}
-			Debug.Log(resp);
 			resp = "";
 		}
 	}

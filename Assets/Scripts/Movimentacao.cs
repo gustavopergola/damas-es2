@@ -5,10 +5,11 @@ using UnityEngine;
 public class Movimentacao : MonoBehaviour {
 
 	public GameObject pedraSelecionada;
+	public GameObject selectorParticleSystem;
+	private GameObject selectorParticleSystemAtual;
 	public Transform transformInicialPedra;
 
 	public LayerMask layerPosicao;
-	public LayerMask layerPedras;
 
 	public float timeToMove = 1f;
 	public float speed = 1f;
@@ -37,49 +38,62 @@ public class Movimentacao : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
 			if (!gameController.getTurnoJogador()) return; //turno IA
 		
-			GameObject objeto_resposta = checaClique ();
+			GameObject objeto_resposta = checaClique();
 			if (objeto_resposta != null) {
-				if (comparaLayerMaskValue (objeto_resposta.layer, this.layerPedras.value)) {
+				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
-				} else if (comparaLayerMaskValue (objeto_resposta.layer, this.layerPosicao.value)) {
+				} else if (isPosicao(objeto_resposta)) {
 					movimenta (this.pedraSelecionada, objeto_resposta);
 					gameController.passarTurno();
+					descelecionar_pedra_atual();
 				}
 			} else {
-				descelecionar_pedra_atual ();
+				descelecionar_pedra_atual();
 			}
 
 		}
 	}
 
+	private bool isPeca(GameObject objeto){
+		return (
+			comparaLayerMaskValue (objeto.layer, this.gameController.layerJogador1.value) ||
+			comparaLayerMaskValue (objeto.layer, this.gameController.layerJogador2.value)
+		);
+	}
+
+	private bool isPecaJogadorAtual(GameObject objeto){
+		return comparaLayerMaskValue(objeto.layer, this.gameController.jogadorAtual.layerMaskValue);
+	}
+
+	private bool isPosicao(GameObject objeto){
+		return comparaLayerMaskValue (objeto.layer, this.layerPosicao.value);
+	}
+
 	private GameObject checaClique(){
 		RaycastHit hit;
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
 		if (Physics.Raycast (ray, out hit)) {
-			Transform objectHit = hit.transform;
-			//if (comparaLayerMaskValue(objectHit.gameObject.layer, layerPedras.value)){
-				//TODO adicionar condição se for a peça do jogador do turno correto
-			//}
-
-			return objectHit.gameObject;
+			GameObject objHit = hit.transform.gameObject;
+			if (isPosicao(objHit) || isPecaJogadorAtual(objHit)) return objHit; else return null;
 		}
-
+		
 		return null;
 	}
 
 	private void seleciona_pedra(GameObject pedraSelecionada){
+		if (this.pedraSelecionada != null) descelecionar_pedra_atual();
+
 		this.pedraSelecionada = pedraSelecionada;
-		//TODO melhorar highlight de seleção da peça
-		Vector3 aux = this.transformInicialPedra.transform.localScale;
-		aux.x += 0.3f;
-		aux.y += 0.3f;
-		this.pedraSelecionada.transform.localScale = aux;
+		this.selectorParticleSystemAtual = Instantiate(this.selectorParticleSystem, this.pedraSelecionada.transform) as GameObject;
+		this.selectorParticleSystemAtual.transform.parent = this.pedraSelecionada.transform;
 	}
 
 	private void descelecionar_pedra_atual(){
 		if (this.pedraSelecionada != null) {
 			this.pedraSelecionada.transform.localScale = this.transformInicialPedra.localScale;
-			this.pedraSelecionada = null;		
+			this.pedraSelecionada = null;
+			if (this.selectorParticleSystemAtual != null) Destroy(this.selectorParticleSystemAtual);
 		}
 	}
 
