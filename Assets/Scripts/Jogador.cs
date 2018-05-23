@@ -3,12 +3,14 @@ using System.Collections.Generic;
 
 public class Jogador {
 
+    public int layerMaskValue;
     private string nome;
     private IA ia;
     
-    public Jogador(string nome, IA ia = null){
+    public Jogador(string nome, IA ia = null, int layerMaskValue = 999){
         this.nome = nome;
         this.ia = ia;
+        this.layerMaskValue = layerMaskValue;
     }
 
     public bool isPlayer(){

@@ -5,15 +5,15 @@ using TiposNS;
 
 public class Estado : MonoBehaviour {
 
-	public char[,] board;
+	public int[,] board;
 	public int currentPlayer;
 	public int[] lastMove;
 	public int playsCount;
 	public int playsWithoutCapture;
 	public bool gameOver = false;
 
-	public State(char[,] board, int currentPlayer, int[] lastMove, int playsCount, int playsWithoutCapture = 0){
-		this.board = (char[,])board.Clone();
+	public State(int[,] board, int currentPlayer, int[] lastMove, int playsCount, int playsWithoutCapture = 0){
+		this.board = (int[,])board.Clone();
 		this.currentPlayer = currentPlayer;
 		this.lastMove = lastMove;
 		this.playsCount = playsCount;
@@ -76,7 +76,7 @@ public class Estado : MonoBehaviour {
 			newState.playsWithoutCapture++;
 		}
 
-		char piece = newState.board[action[0], action[1]];
+		int piece = newState.board[action[0], action[1]];
 		newState.board[action[0], action[1]] = Types.EMPTY;
 		newState.board[action[2], action[3]] = piece;
 		newState.currentPlayer = newState.currentPlayer == 1 ? 2 : 1;
