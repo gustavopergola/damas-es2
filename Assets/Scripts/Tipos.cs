@@ -33,8 +33,8 @@ namespace TiposNS
 			return peca == Tipos.getPecaJogador2() || peca == Tipos.getDamaJogador2();
 		}
 
-		public static bool isJogadorX(int peca, int jogador){
-			return jogador == 1 ? isJogador1(peca) : isJogador2(peca);
+		public static bool isJogadorX(int peca, Jogador jogador){
+			return jogador.getNumeroJogador() == 1 ? isJogador1(peca) : isJogador2(peca);
 		}
 
 		public static bool isPecaComum(int peca){
@@ -45,11 +45,11 @@ namespace TiposNS
 			return peca == Tipos.getDamaJogador1() || peca == Tipos.getDamaJogador2();
 		}
 
-		public static int getPecaJogadorX(int peca, int jogador){
+		public static int getPecaJogadorX(int peca, Jogador jogador){
 			if(peca == dama){
-				return jogador == 1 ? getDamaJogador1() : getDamaJogador2();
+				return jogador.getNumeroJogador() == 1 ? getDamaJogador1() : getDamaJogador2();
 			}
-			return jogador == 1 ? getPecaJogador1() : getPecaJogador2();
+			return jogador.getNumeroJogador() == 1 ? getPecaJogador1() : getPecaJogador2();
 		}
 
 		public static bool isVazio(int peca){
