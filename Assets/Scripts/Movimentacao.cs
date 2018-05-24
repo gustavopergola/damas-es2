@@ -125,11 +125,11 @@ public class Movimentacao : MonoBehaviour {
 		if(!ataque){
 			//MOVIMENTACAO SIMPLES
 			//Atualiza matriz de inteiros
-			Tabuleiro.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
-			Tabuleiro.matrizTabuleiroInt[linFim, colFim] = pedra_selecionada.GetComponent<Peca>().tipo; //TODO verificar se virou dama
+			Tabuleiro.instance.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
+			Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = pedra_selecionada.GetComponent<Peca>().tipo; //TODO verificar se virou dama
 			//atualiza objetos
-			Tabuleiro.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca = null;
-			Tabuleiro.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>().peca = pedra_selecionada;
+			Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca = null;
+			Tabuleiro.instance.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>().peca = pedra_selecionada;
 			pedra_selecionada.GetComponent<Peca>().posicao = posicao_alvo.GetComponent<Posicao>();
 		}else{
 			//MOVIMENTO DE ATAQUE

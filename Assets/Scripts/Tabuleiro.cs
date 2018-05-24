@@ -9,22 +9,22 @@ namespace TabuleiroNS
 {
     public class Tabuleiro : MonoBehaviour
     {
-
+        public static Tabuleiro instance { get; private set; }
         public GameObject pedrasPretas;
         public GameObject pedrasVermelhas;
         public GameObject posicoesAgrupamento;
 
-        public static GameObject[,] matrizTabuleiroPosicoes = new GameObject[8, 8];
-        public static int[,] matrizTabuleiroInt = new int[8, 8];
+        public GameObject[,] matrizTabuleiroPosicoes = new GameObject[8, 8];
+        public int[,] matrizTabuleiroInt = new int[8, 8];
         private List<GameObject> posicoes;
 
         // Use this for initialization
         void Awake()
         {
+            instance = this;
             inicalizaPecas();
             inicializaMatrizPosicoes();
             inicializaMatrizInt();
-            mostraTabuleiro();
             MatrizPecasParaMatrizPosicoes();
         }
 
@@ -45,9 +45,9 @@ namespace TabuleiroNS
         private void inicializaMatrizPosicoes()
         {//matriz das posições
             int col, lin, contador = 0;
-            for (lin = matrizTabuleiroPosicoes.GetLength(0) - 1; lin >= 0; lin--)
+            for (lin = getTamanhoTabuleiro() - 1; lin >= 0; lin--)
             {
-                for (col = matrizTabuleiroPosicoes.GetLength(1) - 1; col >= 0; col--)
+                for (col = getTamanhoTabuleiro() - 1; col >= 0; col--)
                 {
                     matrizTabuleiroPosicoes[lin, col] = posicoesAgrupamento.transform.GetChild(contador).gameObject;
                     contador++;
@@ -70,9 +70,9 @@ namespace TabuleiroNS
             Posicao posicaoAtual;
             //TODO verificar se é dama ou não
             //se essa função for ser utilizada para outro propósito sem ser a inicialização isso será necessário
-            for (lin = 0; lin < matrizTabuleiroInt.GetLength(0); lin++)
+            for (lin = 0; lin < getTamanhoTabuleiro(); lin++)
             {
-                for (col = 0; col < matrizTabuleiroInt.GetLength(0); col++)
+                for (col = 0; col < getTamanhoTabuleiro(); col++)
                 {
                     atual = matrizTabuleiroInt[lin, col];
                     posicaoAtual = matrizTabuleiroPosicoes[lin, col].gameObject.GetComponent<Posicao>();
@@ -85,11 +85,25 @@ namespace TabuleiroNS
                     }
                     else if (Tipos.isJogador2(atual))
                     {
-                        matrizTabuleiroPosicoes[lin, col].gameObject.GetComponent<Posicao>().peca = pedrasVermelhas.transform.GetChild(pecasVermelhas).gameObject;
+                        posicaoAtual.peca = pedrasVermelhas.transform.GetChild(pecasVermelhas).gameObject;
                         pecasVermelhas++;
                     }
                 }
             }
+        }
+
+        public List<int[]> posicoesJogadorX(int jogador){
+            List<int[]> posicoes = new List<int[]>();
+            int[] posicao = new int[2];
+            Posicao posicaoAtual;
+            Transform pecas = jogador == 1 ? pedrasPretas.transform : pedrasVermelhas.transform;
+            for(int i=0; i<pecas.childCount; i++){
+                posicaoAtual = pecas.GetChild(i).gameObject.GetComponent<Peca>().posicao.GetComponent<Posicao>();
+                posicao[0] = posicaoAtual.lin;
+                posicao[1] = posicaoAtual.col;
+                posicoes.Add((int[])posicao.Clone());
+            }
+            return posicoes;
         }
 
 
@@ -110,9 +124,9 @@ namespace TabuleiroNS
         private void preencheVazio()
         {
             int lin, col;
-            for (lin = 0; lin < matrizTabuleiroInt.GetLength(0); lin++)
+            for (lin = 0; lin < getTamanhoTabuleiro(); lin++)
             {
-                for (col = 0; col < matrizTabuleiroInt.GetLength(0); col++)
+                for (col = 0; col < getTamanhoTabuleiro(); col++)
                 {
                     matrizTabuleiroInt[lin, col] = Tipos.vazio;
                 }
@@ -151,9 +165,9 @@ namespace TabuleiroNS
             matrizTabuleiroInt[2, 6] = Tipos.getPecaJogador2();
         }
 
-        public static void mostraTabuleiro()
+        public void mostraTabuleiro()
         {
-            int size = matrizTabuleiroInt.GetLength(0);
+            int size = getTamanhoTabuleiro();
             string resp = "";
 			Debug.Log("=====================");
             for (int lin = 0; lin < size; lin++)
@@ -166,6 +180,10 @@ namespace TabuleiroNS
                 resp = "";
             }
 			Debug.Log("=====================");
+        }
+
+        public int getTamanhoTabuleiro(){
+            return matrizTabuleiroInt.GetLength(0);
         }
 
         /*private List<GameObject> preenche_lista_posicoes(){
