@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TabuleiroNS;
+using TiposNS;
 
 public class Movimentacao : MonoBehaviour {
 
@@ -42,7 +44,8 @@ public class Movimentacao : MonoBehaviour {
 			if (objeto_resposta != null) {
 				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
-				} else if (isPosicao(objeto_resposta)) {
+
+				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
 					movimenta (this.pedraSelecionada, objeto_resposta);
 					gameController.passarTurno();
 					descelecionar_pedra_atual();
@@ -104,11 +107,39 @@ public class Movimentacao : MonoBehaviour {
 	private void movimenta(GameObject go_pedra_selecionada, GameObject go_posicao_alvo){
 		if (go_pedra_selecionada == null)
 			return;
-		
 		this.startPosition = go_pedra_selecionada.transform.position;
 		this.finalPosition = go_posicao_alvo.transform.position;
 		this.transformPedraEmMovimento = go_pedra_selecionada.transform;
 		this.timeSpent = 0f;
+		//realiza mudanças no tabuleiro
+		alteraMatriz(go_pedra_selecionada, go_posicao_alvo);
+	}
+
+	private void alteraMatriz(GameObject pedra_selecionada, GameObject posicao_alvo){
+		int linInicio = pedra_selecionada.GetComponent<Peca>().posicao.lin;
+		int colInicio = pedra_selecionada.GetComponent<Peca>().posicao.col;
+		int linFim = posicao_alvo.GetComponent<Posicao>().lin;
+		int colFim = posicao_alvo.GetComponent<Posicao>().col;
+		bool ataque = false;//TODO receber resultado da máquina de regras para determinar se movimento é ataque ou não
+		//TODO RECEBER POSICAO DA PECA QUE FOI CAPTURADA
+		if(!ataque){
+			//MOVIMENTACAO SIMPLES
+			//Atualiza matriz de inteiros
+			Tabuleiro.instance.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
+			Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = pedra_selecionada.GetComponent<Peca>().tipo; //TODO verificar se virou dama
+			//atualiza objetos
+			Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca = null;
+			Tabuleiro.instance.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>().peca = pedra_selecionada;
+			pedra_selecionada.GetComponent<Peca>().posicao = posicao_alvo.GetComponent<Posicao>();
+		}else{
+			//MOVIMENTO DE ATAQUE
+			//TODO alterar matriz em caso de movimento de ataque
+		}
+		bool dama = false; //TODO receber resultado da máquina de regras para determinar se virou dama ou não
+		if(dama){
+			//TODO verificar se virou dama
+		}
+		
 	}
 
 	private void controlaMovimento(){
@@ -117,7 +148,5 @@ public class Movimentacao : MonoBehaviour {
 			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * this.speed);
 			this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
 		}
-
-
 	}
 }
