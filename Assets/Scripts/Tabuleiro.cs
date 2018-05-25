@@ -45,9 +45,10 @@ namespace TabuleiroNS
         private void inicializaMatrizPosicoes()
         {//matriz das posições
             int col, lin, contador = 0;
-            for (lin = getTamanhoTabuleiro() - 1; lin >= 0; lin--)
+            int tamanho = getTamanhoTabuleiro();
+            for (lin = tamanho - 1; lin >= 0; lin--)
             {
-                for (col = getTamanhoTabuleiro() - 1; col >= 0; col--)
+                for (col = tamanho - 1; col >= 0; col--)
                 {
                     matrizTabuleiroPosicoes[lin, col] = posicoesAgrupamento.transform.GetChild(contador).gameObject;
                     contador++;
@@ -68,11 +69,12 @@ namespace TabuleiroNS
             int pecasPretas = 0;
             int pecasVermelhas = 0;
             Posicao posicaoAtual;
+            int tamanho = getTamanhoTabuleiro();
             //TODO verificar se é dama ou não
             //se essa função for ser utilizada para outro propósito sem ser a inicialização isso será necessário
-            for (lin = 0; lin < getTamanhoTabuleiro(); lin++)
+            for (lin = 0; lin < tamanho; lin++)
             {
-                for (col = 0; col < getTamanhoTabuleiro(); col++)
+                for (col = 0; col < tamanho; col++)
                 {
                     atual = matrizTabuleiroInt[lin, col];
                     posicaoAtual = matrizTabuleiroPosicoes[lin, col].gameObject.GetComponent<Posicao>();
@@ -124,9 +126,10 @@ namespace TabuleiroNS
         private void preencheVazio()
         {
             int lin, col;
-            for (lin = 0; lin < getTamanhoTabuleiro(); lin++)
+            int tamanho = getTamanhoTabuleiro();
+            for (lin = 0; lin < tamanho; lin++)
             {
-                for (col = 0; col < getTamanhoTabuleiro(); col++)
+                for (col = 0; col < tamanho; col++)
                 {
                     matrizTabuleiroInt[lin, col] = Tipos.vazio;
                 }
