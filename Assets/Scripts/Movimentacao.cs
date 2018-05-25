@@ -39,12 +39,10 @@ public class Movimentacao : MonoBehaviour {
 	private void processaClique(){
         if (Input.GetMouseButtonDown(0)) {
 			if (!gameController.getTurnoJogador()) return; //turno IA
-		
 			GameObject objeto_resposta = checaClique();
 			if (objeto_resposta != null) {
 				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
-
 				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
 					movimenta (this.pedraSelecionada, objeto_resposta);
 					gameController.passarTurno();
@@ -116,21 +114,25 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	private void alteraMatriz(GameObject pedra_selecionada, GameObject posicao_alvo){
-		int linInicio = pedra_selecionada.GetComponent<Peca>().posicao.lin;
-		int colInicio = pedra_selecionada.GetComponent<Peca>().posicao.col;
-		int linFim = posicao_alvo.GetComponent<Posicao>().lin;
-		int colFim = posicao_alvo.GetComponent<Posicao>().col;
+		Peca pecaSelecionada = pedra_selecionada.GetComponent<Peca>();
+		Posicao posicaoAlvo = posicao_alvo.GetComponent<Posicao>();
+		int linInicio = pecaSelecionada.posicao.lin;
+		int colInicio = pecaSelecionada.posicao.col;
+		int linFim = posicaoAlvo.lin;
+		int colFim = posicaoAlvo.col;
 		bool ataque = false;//TODO receber resultado da máquina de regras para determinar se movimento é ataque ou não
 		//TODO RECEBER POSICAO DA PECA QUE FOI CAPTURADA
+		Posicao posInicio = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>();
+		Posicao posFim = Tabuleiro.instance.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>();
 		if(!ataque){
 			//MOVIMENTACAO SIMPLES
 			//Atualiza matriz de inteiros
 			Tabuleiro.instance.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
-			Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = pedra_selecionada.GetComponent<Peca>().tipo; //TODO verificar se virou dama
+			Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = pecaSelecionada.tipo;
 			//atualiza objetos
-			Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca = null;
-			Tabuleiro.instance.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>().peca = pedra_selecionada;
-			pedra_selecionada.GetComponent<Peca>().posicao = posicao_alvo.GetComponent<Posicao>();
+			posInicio.peca = null;
+			posFim.peca = pedra_selecionada;
+			pecaSelecionada.posicao = posicaoAlvo;
 		}else{
 			//MOVIMENTO DE ATAQUE
 			//TODO alterar matriz em caso de movimento de ataque
