@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TiposNS;
+using TabuleiroNS;
 
 public class MaquinaDeRegras : MonoBehaviour
 {
@@ -119,7 +120,7 @@ public class MaquinaDeRegras : MonoBehaviour
     }
     
     // retorna os possíveis movimentos de apenas uma peça
-    public List<List<int>> PossiveisMovimentos(int[,] tabuleiro, int x, int y)
+    public List<Jogada> PossiveisMovimentos(int[,] tabuleiro, int x, int y)
     {
         int jogador;
         if(Tipos.isJogador1(tabuleiro[x,y]))
@@ -130,137 +131,108 @@ public class MaquinaDeRegras : MonoBehaviour
         int dama = valoresPecas[0], pecaInimiga = valoresPecas[1], damaInimiga = valoresPecas[2];
         if (tabuleiro[x,y] == dama)
             return MovimentosDama(tabuleiro, x, y, pecaInimiga, damaInimiga);
-        List<List<int>> posicoes = new List<List<int>>();
+        List<Jogada> jogadas = new List<Jogada>();
         // TODO chamar lei da maioria pra verificar qual movimento que mais come peça e...
-        if (posicoes.Count > 0)
-            return posicoes;
+        if (jogadas.Count > 0)
+            return jogadas;
         // ...retornar ele
         if(jogador == 1)
         {
             if (x + 1 < 8 && y + 1 < 8 && Tipos.isVazio(tabuleiro[x + 1, y + 1]))
-                posicoes.Add(new List<int> { x + 1, y + 1 });
+            {
+                Jogada novaJogada = new Jogada();
+                novaJogada.movimentos.Add(new int[2] { x + 1, y + 1 });
+                jogadas.Add(novaJogada);
+            }
             if (x - 1 >= 0 && y + 1 < 8 && tabuleiro[x - 1, y + 1] == 0)
-                posicoes.Add(new List<int> { x - 1, y + 1 });
+            {
+                Jogada novaJogada = new Jogada();
+                novaJogada.movimentos.Add(new int[2] { x - 1, y + 1 });
+                jogadas.Add(novaJogada);
+            }
         }
         else {
             if (x + 1 < 8 && y - 1 >= 0 && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
-                posicoes.Add(new List<int> { x + 1, y - 1 });
+            {
+                Jogada novaJogada = new Jogada();
+                novaJogada.movimentos.Add(new int[2] { x + 1, y - 1 });
+                jogadas.Add(novaJogada);
+            }
             if (x - 1 >= 0 && y - 1 >= 0 && tabuleiro[x - 1, y - 1] == 0)
-                posicoes.Add(new List<int> { x - 1, y - 1 });
+            {
+                Jogada novaJogada = new Jogada();
+                novaJogada.movimentos.Add(new int[2] { x - 1, y - 1 });
+                jogadas.Add(novaJogada);
+            }
         }
-        return posicoes;
+        return jogadas;
     }
 
     // retorna os possíveis movimentos para dama
-    private List<List<int>> MovimentosDama(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
+    private List<Jogada> MovimentosDama(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
     {
-        List<List<int>> posicoesCimaDireita = new List<List<int>>();
-        List<List<int>> posicoesCimaEsquerda = new List<List<int>>();
-        List<List<int>> posicoesBaixoDireita = new List<List<int>>();
-        List<List<int>> posicoesBaixoEsquerda = new List<List<int>>();
+        Jogada jogadaCimaDireita = new Jogada();
+        Jogada jogadaCimaEsquerda = new Jogada();
+        Jogada jogadaBaixoDireita = new Jogada();
+        Jogada jogadaBaixoEsquerda = new Jogada();
         int i, j;
-        bool[] comeu = {false, false, false, false};
-        for(i = x+1, j = y+1; i < 8 && j < 8; i++, j++)
+        // TODO chamar LeiDaMaioria aqui
+        for(i = x+1, j = y+1; i < Tabuleiro.getTamanhoTabuleiro() && j < Tabuleiro.getTamanhoTabuleiro(); i++, j++)
         {
             if(Tipos.isVazio(tabuleiro[i,j]))
-                posicoesCimaDireita.Add(new List<int> { i, j });
-            // verifica se deve comer
-            else if(tabuleiro[i,j] == damaInimiga || tabuleiro[i,j] == pecaInimiga)
             {
-                // verifica se a próxima casa está vazia para poder ser ocupada
-                if((i+1 < 8 && j+1 < 8) && Tipos.isVazio(tabuleiro[i+1,j+1]))
-                {
-                    comeu[0] = true;
-                    posicoesCimaDireita.Add(new List<int> {i+1,j+1});
-                    // corrige valores de i e j para a nova casa vazia
-                    i++;
-                    j++;
-                }
+                jogadaCimaDireita.movimentos.Add(new int[2] {i,j});
+                // chamar LeiDaMaioria aqui
             }
-            // último caso simboliza que tem uma peça aliada na diagonal
-            // logo não pode mais realizar nenhum movimento nessa diagonal
-            else break;
-        }
-        for(i = x+1, j = y-1; i < 8 && j >= 0; i++, j--)
-        {   
-            if(Tipos.isVazio(tabuleiro[i,j]))
-                posicoesCimaDireita.Add(new List<int> { i, j });
-            else if(tabuleiro[i,j] == damaInimiga || tabuleiro[i,j] == pecaInimiga)
+            else if(tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
             {
-                if((i+1 < 8 && j-1 >= 0) && Tipos.isVazio(tabuleiro[i+1,j-1]))
-                {
-                    comeu[0] = true;
-                    posicoesCimaDireita.Add(new List<int> {i+1,j-1});
-                    i++;
-                    j--;
-                }
+                // chamar LeiDaMaioria aqui
             }
+            // caso onde achou uma peça aliada
             else break;
+
         }
-        for(i = x-1, j = y+1; i >= 0 && j < 8; i--, j++)
+        for(i = x+1, j = y-1; i < Tabuleiro.getTamanhoTabuleiro() && j >= 0; i++, j--)
         {
             if(Tipos.isVazio(tabuleiro[i,j]))
-                posicoesCimaDireita.Add(new List<int> { i, j });
-            else if(tabuleiro[i,j] == damaInimiga || tabuleiro[i,j] == pecaInimiga)
             {
-                if((i-1 >= 0 && j+1 < 8) && Tipos.isVazio(tabuleiro[i-1,j+1]))
-                {
-                    comeu[0] = true;
-                    posicoesCimaDireita.Add(new List<int> {i-1,j+1});
-                    i--;
-                    j++;
-                }
+                jogadaCimaDireita.movimentos.Add(new int[2] {i,j});
+                // chamar LeiDaMaioria aqui
             }
+            else if(tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
+            {
+                // chamar LeiDaMaioria aqui
+            }
+            // caso onde achou uma peça aliada
+            else break;
+        }
+        for(i = x-1, j = y+1; i >= 0 && j < Tabuleiro.getTamanhoTabuleiro(); i--, j++)
+        {
+            if(Tipos.isVazio(tabuleiro[i,j]))
+            {
+                jogadaCimaDireita.movimentos.Add(new int[2] {i,j});
+                // chamar LeiDaMaioria aqui
+            }
+            else if(tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
+            {
+                // chamar LeiDaMaioria aqui
+            }
+            // caso onde achou uma peça aliada
             else break;
         }
         for(i = x-1, j = y-1; i >= 0 && j >= 0; i--, j--)
         {
             if(Tipos.isVazio(tabuleiro[i,j]))
-                posicoesCimaDireita.Add(new List<int> { i, j });
-            else if(tabuleiro[i,j] == damaInimiga || tabuleiro[i,j] == pecaInimiga)
             {
-                if((i-1 >= 0 && j-1 >= 0) && Tipos.isVazio(tabuleiro[i-1,j-1]))
-                {
-                    comeu[0] = true;
-                    posicoesCimaDireita.Add(new List<int> {i-1,j-1});
-                    i--;
-                    j--;
-                }
+                jogadaCimaDireita.movimentos.Add(new int[2] {i,j});
+                // chamar LeiDaMaioria aqui
             }
+            else if(tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
+            {
+                // chamar LeiDaMaioria aqui
+            }
+            // caso onde achou uma peça aliada
             else break;
-        }
-        // inicializa a lista de retorno
-        List<List<int>> posicoesTotais = new List<List<int>>();
-
-        // caso alguma diagonal resulte em captura
-        if(comeu.Contains(true))
-        {
-            // TODO fazer todas receberem lei da maioria
-            int qtdComidasCimaDireita = 0, qtdComidasCimaEsquerda = 0, qtdComidasBaixoDireita = 0, qtdComidasBaixoEsquerda = 0;
-            int max = Mathf.Max(qtdComidasBaixoDireita, qtdComidasBaixoEsquerda);
-            max = Mathf.Max(max, qtdComidasCimaDireita);
-            max = Mathf.Max(max, qtdComidasCimaEsquerda);
-            if(max == qtdComidasBaixoDireita)
-                posicoesTotais.Add(new List<int> {x+1, y-1});
-            if(max == qtdComidasBaixoEsquerda)
-                posicoesTotais.Add(new List<int> {x-1, y-1});
-            if(max == qtdComidasCimaDireita)
-                posicoesTotais.Add(new List<int> {x+1, y+1});
-            if(max == qtdComidasCimaEsquerda)
-                posicoesTotais.Add(new List<int> {x-1, y+1});
-            return posicoesTotais;
-        }
-        else
-        {
-            foreach (List<int> posicao in posicoesBaixoDireita)
-                posicoesTotais.Add(posicao);
-            foreach (List<int> posicao in posicoesBaixoEsquerda)
-                posicoesTotais.Add(posicao);
-            foreach (List<int> posicao in posicoesCimaDireita)
-                posicoesTotais.Add(posicao);
-            foreach (List<int> posicao in posicoesCimaEsquerda)
-                posicoesTotais.Add(posicao);
-            return posicoesTotais;
         }
     }
 
