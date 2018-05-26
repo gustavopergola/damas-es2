@@ -13,6 +13,7 @@ namespace TabuleiroNS
         public GameObject pedrasPretas;
         public GameObject pedrasVermelhas;
         public GameObject posicoesAgrupamento;
+        public GameObject bolaHighlightPreFab;
 
         public GameObject[,] matrizTabuleiroPosicoes = new GameObject[8, 8];
         public int[,] matrizTabuleiroInt = new int[8, 8];
@@ -35,7 +36,6 @@ namespace TabuleiroNS
             //TODO callMakeValidMove()
             return true;
         }
-
 
         private bool makeValidMove(GameObject dama, int posx, int posy)
         {
@@ -189,14 +189,18 @@ namespace TabuleiroNS
             return matrizTabuleiroInt.GetLength(0);
         }
 
-        /*private List<GameObject> preenche_lista_posicoes(){
-            int qtd_posicoes = posicoesAgrupamento.transform.childCount, i = 0;
-            List<GameObject> posicoes_new = new List<GameObject> ();
-            for (i = 0; i < qtd_posicoes; i++)
-                posicoes_new.Add(posicoesAgrupamento.transform.GetChild(i).gameObject);
+        public void escondeHighlight(){
+            GameObject[] listaHighlightsInstanciados = GameObject.FindGameObjectsWithTag(this.bolaHighlightPreFab.tag);
+            foreach(GameObject highlight in listaHighlightsInstanciados)
+                Destroy(highlight);
+            
+        }
 
-            return posicoes_new;
-        }*/
-
+        public void mostraHighlight(List<int[]> listaJogadas){
+            foreach(int[] jogada in listaJogadas){
+                Transform posicaoTransform = this.matrizTabuleiroPosicoes[jogada[0], jogada[1]].transform;
+                Instantiate(this.bolaHighlightPreFab, posicaoTransform);
+            }
+        }
     }
 }
