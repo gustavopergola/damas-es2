@@ -25,53 +25,6 @@ public class MaquinaDeRegras : MonoBehaviour
         return valoresPecas;
     }
 
-    // verifica dentro de todas as peças do jogador se existe alguma que deve comer
-    // public List<List<int>> HasToComer(int[,] tabuleiro, List<List<int>> pecasJogador, int jogador)
-    // {
-    //     List<List<int>> pecasQueComem = new List<List<int>>();
-    //     int[] valoresPecas = GetValoresPecas(jogador);
-    //     int pecaInimiga = valoresPecas[1], damaInimiga = valoresPecas[2];
-    //     int x, y;
-    //     foreach (List<int> peca in pecasJogador)
-    //     {
-    //         x = peca[0];
-    //         y = peca[1];
-    //         if(Tipos.isDama(tabuleiro[x,y])) {
-    //             // TODO verificar comer como dama
-    //         }
-    //         // TODO verificar lei da maioria
-    //         else {
-    //             if(x + 2 < 8 && y + 2 < 8) // verifica se posição final da peça após comer está nos limites do tabuleiro
-    //                 // verifica se na diagonal existe uma peça inimiga para ser comida e ser é possível mover para a próxima casa
-    //                 if((tabuleiro[x+1, y+1] == pecaInimiga || tabuleiro[x+1, y+1] == damaInimiga) && (Tipos.isVazio(tabuleiro[x+2, y+2])))
-    //                 {
-    //                     pecasQueComem.Add(new List<int>{x,y});
-    //                     continue;
-    //                 }
-    //             if(x + 2 < 8 && y - 2 >= 0)
-    //                 if((tabuleiro[x+1, y-1] == pecaInimiga || tabuleiro[x+1, y-1] == damaInimiga) && (Tipos.isVazio(tabuleiro[x+2, y-2])))
-    //                 {
-    //                     pecasQueComem.Add(new List<int>{x,y});
-    //                     continue;
-    //                 }
-    //             if(x - 2 >= 0 && y + 2 < 8)
-    //                 if((tabuleiro[x-1, y+1] == pecaInimiga || tabuleiro[x-1, y+1] == damaInimiga) && (Tipos.isVazio(tabuleiro[x-2, y+2])))
-    //                 {
-    //                     pecasQueComem.Add(new List<int>{x,y});
-    //                     continue;
-    //                 }
-    //             if(x - 2 >= 0 && y - 2 >= 0)
-    //                 if((tabuleiro[x-1, y-1] == pecaInimiga || tabuleiro[x-1, y-1] == damaInimiga) && (Tipos.isVazio(tabuleiro[x-2, y-2])))
-    //                 {
-    //                     pecasQueComem.Add(new List<int>{x,y});
-    //                     continue;
-    //                 }
-    //         }
-    //     }
-    //     return pecasQueComem;
-    // }
-
-
     public List<List<Jogada>>[] TodosPossiveisMovimentos(int[,] tabuleiro, List<int[]> pecasJogador1, List<int[]> pecasJogador2)
     {
         List<List<Jogada>>[] possiveisJogadas = new List<List<Jogada>>[2];
@@ -80,6 +33,8 @@ public class MaquinaDeRegras : MonoBehaviour
         return possiveisJogadas;
     }
 
+    // cada item da lista está relacionado com uma peça
+    // cada peça possui a própria lista de jogadas válidas
     public List<List<Jogada>> PossiveisMovimentosUmJogador(int[,] tabuleiro, List<int[]> pecasJogador)
     {
         bool comeu = false;
@@ -87,15 +42,20 @@ public class MaquinaDeRegras : MonoBehaviour
         foreach (int[] peca in pecasJogador)
         {
             List<Jogada> jogada = PossiveisMovimentosUmaPeca(tabuleiro, peca[0], peca[1]);
+            // se teve alguma jogada que comeu peça
             if(jogada[0].pecasComidas.Count > 0)
             {
+                // e se foi a primeira jogada analisada que comeu peça
                 if(comeu == false)
                 {
-                    possiveisJogadas = new List<List<Jogada>>();
+                    // se tinham jogadas que não comiam peças antes, a lista é limpa
+                    if(possiveisJogadas.Count > 0)
+                        possiveisJogadas = new List<List<Jogada>>();
                     comeu = true;
                 }
                 possiveisJogadas.Add(jogada);
             }
+            // se não comeu peças e mais ninguém comeu
             else if(comeu == false)
                 possiveisJogadas.Add(jogada);
         }
@@ -116,6 +76,7 @@ public class MaquinaDeRegras : MonoBehaviour
             return MovimentosDama(tabuleiro, x, y, valoresPecas[1], valoresPecas[2]);
         List<Jogada> jogadas = new List<Jogada>();
         Jogada captura = LeiDaMaioria(tabuleiro, x, y, valoresPecas[1], valoresPecas[2], null);
+        // se teve alguma jogada com captura / peças comida
         if(captura != null)
         {
             jogadas.Add(captura);
@@ -123,31 +84,27 @@ public class MaquinaDeRegras : MonoBehaviour
         }
         if(jogador == 1)
         {
-            if (x + 1 < 8 && y + 1 < 8)
+            if ((x + 1 < 8 && y + 1 < 8) && Tipos.isVazio(tabuleiro[x + 1, y + 1]))
             {
-                if (Tipos.isVazio(tabuleiro[x + 1, y + 1])){
-                    Jogada novaJogada = new Jogada();
-                    novaJogada.movimentos.Add(new int[2] { x + 1, y + 1 });
-                    jogadas.Add(novaJogada);
-                }
+                Jogada novaJogada = new Jogada();
+                novaJogada.movimentos.Add(new int[2] { x + 1, y + 1 });
+                jogadas.Add(novaJogada);
             }
-            if (x - 1 >= 0 && y + 1 < 8)
-            {
-                if (Tipos.isVazio(tabuleiro[x - 1, y + 1])){
-                    Jogada novaJogada = new Jogada();
-                    novaJogada.movimentos.Add(new int[2] { x - 1, y + 1 });
-                    jogadas.Add(novaJogada);
-                }
-            }
-        }
-        else {
-            if (x + 1 < 8 && y - 1 >= 0 && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
+            if ((x + 1 < 8 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
             {
                 Jogada novaJogada = new Jogada();
                 novaJogada.movimentos.Add(new int[2] { x + 1, y - 1 });
                 jogadas.Add(novaJogada);
             }
-            if (x - 1 >= 0 && y - 1 >= 0 && tabuleiro[x - 1, y - 1] == 0)
+        }
+        else {
+            if ((x - 1 >= 0 && y + 1 < 8) && Tipos.isVazio(tabuleiro[x - 1, y + 1]))
+            {
+                Jogada novaJogada = new Jogada();
+                novaJogada.movimentos.Add(new int[2] { x - 1, y + 1 });
+                jogadas.Add(novaJogada);
+            }
+            if ((x - 1 >= 0 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x - 1, y - 1]))
             {
                 Jogada novaJogada = new Jogada();
                 novaJogada.movimentos.Add(new int[2] { x - 1, y - 1 });
@@ -163,7 +120,10 @@ public class MaquinaDeRegras : MonoBehaviour
         Jogada cimaEsquerda = null;
         Jogada baixoDireita = null;
         Jogada baixoEsquerda = null;
-        // se tem uma peça ou dama inimiga
+        // inicializa a lista de peças comidas, caso seja a primeira chamada ao método
+        if(pecasComidas == null)
+            pecasComidas = new List<int[]>();
+        // se tem uma peça ou dama inimiga na vizinhança
         if((x + 1 < 8 && y + 1 < 8) && (tabuleiro[x + 1, y + 1] == pecaInimiga || tabuleiro[x + 1, y + 1] == damaInimiga))
         {
             // e se ela ainda não foi comida numa jogada em cadeia
@@ -181,14 +141,16 @@ public class MaquinaDeRegras : MonoBehaviour
                     int pecaAtual = tabuleiro[x,y];
                     tabuleiro[x,y] = 0;
                     tabuleiro[x + 2, y + 2] = pecaAtual;
+                    pecasComidas.Add(new int[2] {x + 1, y + 1});
                     // chamada recursiva para olhar as próximas jogadas
-                    Jogada futura = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, cimaDireita.pecasComidas);
+                    Jogada futura = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                     // adiciona o resultado da jogada à jogada anterior
                     cimaDireita.movimentos.Concat(futura.movimentos);
                     cimaDireita.pecasComidas.Concat(futura.pecasComidas);
                     // retorna os valores originais do "estado" do tabuleiro
                     tabuleiro[x,y] = pecaAtual;
                     tabuleiro[x + 2, y + 2] = 0;
+                    pecasComidas.RemoveAt(pecasComidas.Count-1);
                 }
             }
         }
@@ -205,14 +167,13 @@ public class MaquinaDeRegras : MonoBehaviour
                     int pecaAtual = tabuleiro[x,y];
                     tabuleiro[x,y] = 0;
                     tabuleiro[x + 2, y - 2] = pecaAtual;
-                    int pecaComida = tabuleiro[x + 1, y - 1];
-                    tabuleiro[x + 1, y - 1] = 0;
-                    Jogada futura = LeiDaMaioria(tabuleiro, x + 2, y - 2, pecaInimiga, damaInimiga, cimaEsquerda.pecasComidas);
+                    pecasComidas.Add(new int[2] {x + 1, y - 1});
+                    Jogada futura = LeiDaMaioria(tabuleiro, x + 2, y - 2, pecaInimiga, damaInimiga, pecasComidas);
                     cimaEsquerda.movimentos.Concat(futura.movimentos);
                     cimaEsquerda.pecasComidas.Concat(futura.pecasComidas);
                     tabuleiro[x,y] = pecaAtual;
-                    tabuleiro[x + 1, y - 1] = pecaComida;
                     tabuleiro[x + 2, y - 2] = 0;
+                    pecasComidas.RemoveAt(pecasComidas.Count-1);
                 }
             }
         }
@@ -229,14 +190,13 @@ public class MaquinaDeRegras : MonoBehaviour
                     int pecaAtual = tabuleiro[x,y];
                     tabuleiro[x,y] = 0;
                     tabuleiro[x - 2, y + 2] = pecaAtual;
-                    int pecaComida = tabuleiro[x - 1, y + 1];
-                    tabuleiro[x - 1, y + 1] = 0;
-                    Jogada futura = LeiDaMaioria(tabuleiro, x - 2, y + 2, pecaInimiga, damaInimiga, baixoDireita.pecasComidas);
+                    pecasComidas.Add(new int[2] {x - 1, y + 1});
+                    Jogada futura = LeiDaMaioria(tabuleiro, x - 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                     baixoDireita.movimentos.Concat(futura.movimentos);
                     baixoDireita.pecasComidas.Concat(futura.pecasComidas);
                     tabuleiro[x,y] = pecaAtual;
-                    tabuleiro[x - 1, y + 1] = pecaComida;
                     tabuleiro[x - 2, y + 2] = 0;
+                    pecasComidas.RemoveAt(pecasComidas.Count-1);
                 }
             }
         }
@@ -253,14 +213,13 @@ public class MaquinaDeRegras : MonoBehaviour
                     int pecaAtual = tabuleiro[x,y];
                     tabuleiro[x,y] = 0;
                     tabuleiro[x - 2, y - 2] = pecaAtual;
-                    int pecaComida = tabuleiro[x - 1, y - 1];
-                    tabuleiro[x - 1, y - 1] = 0;
-                    Jogada futura = LeiDaMaioria(tabuleiro, x - 2, y - 2, pecaInimiga, damaInimiga, baixoEsquerda.pecasComidas);
+                    pecasComidas.Add(new int[2] {x - 1, y - 1});
+                    Jogada futura = LeiDaMaioria(tabuleiro, x - 2, y - 2, pecaInimiga, damaInimiga, pecasComidas);
                     baixoEsquerda.movimentos.Concat(futura.movimentos);
                     baixoEsquerda.pecasComidas.Concat(futura.pecasComidas);
                     tabuleiro[x,y] = pecaAtual;
-                    tabuleiro[x - 1, y - 1] = pecaComida;
                     tabuleiro[x - 2, y - 2] = 0;
+                    pecasComidas.RemoveAt(pecasComidas.Count-1);
                 }   
             }
         }
@@ -302,7 +261,7 @@ public class MaquinaDeRegras : MonoBehaviour
         {
             if(Tipos.isVazio(tabuleiro[i,j]))
             {
-                jogadaCimaDireita.movimentos.Add(new int[2] {i,j});
+                jogadaCimaEsquerda.movimentos.Add(new int[2] {i,j});
                 // chamar LeiDaMaioria aqui
             }
             else if(tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
@@ -316,7 +275,7 @@ public class MaquinaDeRegras : MonoBehaviour
         {
             if(Tipos.isVazio(tabuleiro[i,j]))
             {
-                jogadaCimaDireita.movimentos.Add(new int[2] {i,j});
+                jogadaBaixoDireita.movimentos.Add(new int[2] {i,j});
                 // chamar LeiDaMaioria aqui
             }
             else if(tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
@@ -330,7 +289,7 @@ public class MaquinaDeRegras : MonoBehaviour
         {
             if(Tipos.isVazio(tabuleiro[i,j]))
             {
-                jogadaCimaDireita.movimentos.Add(new int[2] {i,j});
+                jogadaBaixoEsquerda.movimentos.Add(new int[2] {i,j});
                 // chamar LeiDaMaioria aqui
             }
             else if(tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
@@ -341,6 +300,10 @@ public class MaquinaDeRegras : MonoBehaviour
             else break;
         }
         List<Jogada> jogadasPossiveis = new List<Jogada>();
+        jogadasPossiveis.Add(jogadaCimaDireita);
+        jogadasPossiveis.Add(jogadaCimaEsquerda);
+        jogadasPossiveis.Add(jogadaBaixoDireita);
+        jogadasPossiveis.Add(jogadaBaixoEsquerda);
         return jogadasPossiveis;
     }
 
