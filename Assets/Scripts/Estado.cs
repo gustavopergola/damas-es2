@@ -22,18 +22,18 @@ public class Estado : MonoBehaviour {
 		//Debug.Log("Current Player:"+currentPlayer);
 		//Debug.Log("Board:");
 		//string resp = "";
-		for(int i=0; i<6; i++){
-			for(int j=0; j<6; j++){
-				//resp += board[i,j]+" ";
-				//Console.Write($"{board[i,j]} "); ANTIGO
-			}
-			//Debug.Log(resp);
-			//resp = "";
-			//Console.Write("\n"); ANTIGO
-		}
-		if(lastMove != null){
-			//Debug.Log("LastMove: ["+lastMove[0]+"]["+lastMove[1]+"] to ["+lastMove[2]+"]["+lastMove[3]+"]");
-		}
+		//for(int i=0; i<6; i++){
+		//	for(int j=0; j<6; j++){
+		//		resp += board[i,j]+" ";
+		//		Console.Write($"{board[i,j]} "); ANTIGO
+		//	}
+		//	Debug.Log(resp);
+		//	resp = "";
+		//	Console.Write("\n"); ANTIGO
+		//}
+		//if(lastMove != null){
+	    //	Debug.Log("LastMove: ["+lastMove[0]+"]["+lastMove[1]+"] to ["+lastMove[2]+"]["+lastMove[3]+"]");
+		//}
 	}
 
 	//private void registerGameIsOver(){
@@ -82,20 +82,16 @@ public class Estado : MonoBehaviour {
         //novo.jogadasCount++;
         //novo.registerGameIsOver();
 
-        
-        tabuleiro[acao.movimentos[0], acao.movimentos[0]] = ;
+        int size = acao.movimentos.Count;
 
-        foreach(var peca in acao.pecasComidas){
+        novo.tabuleiro[acao.movimentos[size-1][0], acao.movimentos[size-1][1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
+        novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = 0;
+
+        foreach (var peca in acao.pecasComidas){
             novo.tabuleiro[peca[0], peca[1]] = 0;
         }
-        
-
-        int piece = newState.board[action[0], action[1]];
-		newState.board[action[0], action[1]] = Tipos.vazio;
-		newState.board[action[2], action[3]] = piece;
-		
-		
-		return newState;
+    	
+		return novo;
 	}
 
 }

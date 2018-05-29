@@ -4,6 +4,7 @@ public class Jogada
 {
     public List<int[]> movimentos;
     public List<int[]> pecasComidas;
+    public int[] posInicial;
     bool virouDama;
 
     public Jogada()
