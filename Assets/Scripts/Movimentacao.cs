@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TabuleiroNS;
 using TiposNS;
+using EstadoNS;
 
 public class Movimentacao : MonoBehaviour {
 
@@ -30,11 +31,39 @@ public class Movimentacao : MonoBehaviour {
 		
 	void Update () {
 		processaClique ();
+
+        test_result();
 	}
 
 	void FixedUpdate(){
 		controlaMovimento ();
 	}
+
+    public void test_result(){
+        int[,] tabuleiro = { {0,1,0,1,0,1,0,1},
+                             {1,0,1,0,1,0,1,0},
+                             {0,1,0,1,0,1,0,1},
+                             {0,0,0,0,0,0,0,0},
+                             {0,0,0,0,0,0,0,0},
+                             {3,0,3,0,3,0,3,0},
+                             {0,3,0,3,0,3,0,3},
+                             {3,0,3,0,3,0,3,0}
+                           };
+
+
+        Estado atual = new Estado(tabuleiro, 1, null);
+        atual.print();
+
+
+        Jogada acao = new Jogada();
+        acao.posInicial = new int[] { 2, 1 };
+        acao.movimentos.Add(new int[] { 3, 2 });
+        acao.movimentos.Add(new int[] { 4, 1 });
+
+
+        Estado novo = Estado.result(atual, acao);
+        novo.print();
+    }
 
 	private void processaClique(){
         if (Input.GetMouseButtonDown(0)) {

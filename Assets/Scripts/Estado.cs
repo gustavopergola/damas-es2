@@ -3,95 +3,99 @@ using System.Collections.Generic;
 using UnityEngine;
 using TiposNS;
 
-public class Estado : MonoBehaviour {
+namespace EstadoNS{
+    public class Estado{
 
-    public int[,] tabuleiro;
-    public int jogadorAtual;
-	public Jogada ultimaJogada;
-    //public int jogadasCount;
-    //public int movimentosSemCaptura;
-	public bool gameOver = false;
+        public int[,] tabuleiro;
+        public int jogadorAtual;
+	    public Jogada ultimaJogada;
+        //public int jogadasCount;
+        //public int movimentosSemCaptura;
+	    public bool gameOver = false;
 
-	public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
-        this.tabuleiro = (int[,])tabuleiro.Clone();
-        this.jogadorAtual = jogadorAtual;
-        this.ultimaJogada = ultimaJogada;
-	}
+	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
+            this.tabuleiro = (int[,])tabuleiro.Clone();
+            this.jogadorAtual = jogadorAtual;
+            this.ultimaJogada = ultimaJogada;
+	    }
 
-	public void print(){
-		//Debug.Log("Current Player:"+currentPlayer);
-		//Debug.Log("Board:");
-		//string resp = "";
-		//for(int i=0; i<6; i++){
-		//	for(int j=0; j<6; j++){
-		//		resp += board[i,j]+" ";
-		//		Console.Write($"{board[i,j]} "); ANTIGO
-		//	}
-		//	Debug.Log(resp);
-		//	resp = "";
-		//	Console.Write("\n"); ANTIGO
-		//}
-		//if(lastMove != null){
-	    //	Debug.Log("LastMove: ["+lastMove[0]+"]["+lastMove[1]+"] to ["+lastMove[2]+"]["+lastMove[3]+"]");
-		//}
-	}
+	    public void print(){
+            string resp = "";
 
-	//private void registerGameIsOver(){
-	//	int num_player1_pieces = 0;
-	//	int num_player2_pieces = 0;
-    //
-	//	foreach (int piece in this.board){
-	//		if (Tipos.isJogador1(piece)) num_player1_pieces++;
-	//		if (Tipos.isJogador2(piece)) num_player2_pieces++;
-	//		//if((num_player1_pieces!=0) && (num_player2_pieces!=0)) break;	
-	//	}
-	//	if((num_player1_pieces==0) || (num_player2_pieces==0)){
-	//		this.gameOver = true;
-	//	}
-	//	else{
-	//		this.gameOver = false || this.checkDraw();
-	//	}
-	//}
+            resp += ("Jogador Atual:"+jogadorAtual+"\n");
+		    resp += ("Tabuleiro:\n");
+		    for(int i=0; i<8; i++){
+		    	for(int j=0; j<8; j++){
+		    		resp += tabuleiro[i,j]+" ";
+		    		//Debug.Log(tabuleiro[i,j]+" ");
+		    	}
+		    	resp += "\n";
+		    }
 
-    //public bool checkDraw()
-    //{
-    //    return this. >= 20;
-    //}
+            Debug.Log(resp);
 
-    public bool gameIsOver(){
-		return this.gameOver;
-	}
+            //if (ultimaJogada != null){
+	        //	Debug.Log("Ultima jogada: ["+ultimaJogada[0]+"]["+ultimaJogada[1]+"] to ["+lastMove[2]+"]["+lastMove[3]+"]");
+		    //}
+	    }
 
-	public int getOpponent(){            
-		if (this.jogadorAtual== 1) return 2;
-		else return 1;
-	}
+	    //private void registerGameIsOver(){
+	    //	int num_player1_pieces = 0;
+	    //	int num_player2_pieces = 0;
+        //
+	    //	foreach (int piece in this.board){
+	    //		if (Tipos.isJogador1(piece)) num_player1_pieces++;
+	    //		if (Tipos.isJogador2(piece)) num_player2_pieces++;
+	    //		//if((num_player1_pieces!=0) && (num_player2_pieces!=0)) break;	
+	    //	}
+	    //	if((num_player1_pieces==0) || (num_player2_pieces==0)){
+	    //		this.gameOver = true;
+	    //	}
+	    //	else{
+	    //		this.gameOver = false || this.checkDraw();
+	    //	}
+	    //}
 
-	public static Estado result(Estado antigo, Jogada acao){
-		Estado novo = new Estado(antigo.tabuleiro, antigo.jogadorAtual, antigo.ultimaJogada);
+        //public bool checkDraw()
+        //{
+        //    return this. >= 20;
+        //}
 
-        //TODO Concertar quando tiver a função na máquina de regras
-        /*if(RuleMachine.isAttackMove(action, newState.board)){
-			newState.playsWithoutCapture = 0;
-		}else {
-			newState.playsWithoutCapture++;
-		}*/
+        public bool gameIsOver(){
+		    return this.gameOver;
+	    }
 
-        novo.jogadorAtual = novo.jogadorAtual == 1 ? 2 : 1;
-        novo.ultimaJogada = acao;
-        //novo.jogadasCount++;
-        //novo.registerGameIsOver();
+	    public int getOpponent(){            
+		    if (this.jogadorAtual== 1) return 2;
+		    else return 1;
+	    }
 
-        int size = acao.movimentos.Count;
+	    public static Estado result(Estado antigo, Jogada acao){
+		    Estado novo = new Estado(antigo.tabuleiro, antigo.jogadorAtual, antigo.ultimaJogada);
 
-        novo.tabuleiro[acao.movimentos[size-1][0], acao.movimentos[size-1][1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
-        novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = 0;
+            //TODO Concertar quando tiver a função na máquina de regras
+            /*if(RuleMachine.isAttackMove(action, newState.board)){
+			    newState.playsWithoutCapture = 0;
+		    }else {
+			    newState.playsWithoutCapture++;
+		    }*/
 
-        foreach (var peca in acao.pecasComidas){
-            novo.tabuleiro[peca[0], peca[1]] = 0;
-        }
+            novo.jogadorAtual = novo.jogadorAtual == 1 ? 2 : 1;
+            novo.ultimaJogada = acao;
+            //novo.jogadasCount++;
+            //novo.registerGameIsOver();
+
+            int size = acao.movimentos.Count;
+
+            novo.tabuleiro[acao.movimentos[size-1][0], acao.movimentos[size-1][1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
+            novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = 0;
+
+            foreach (var peca in acao.pecasComidas){
+                novo.tabuleiro[peca[0], peca[1]] = 0;
+            }
     	
-		return novo;
-	}
+		    return novo;
+	    }
 
+    }
 }
