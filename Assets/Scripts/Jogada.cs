@@ -7,10 +7,11 @@ public class Jogada
     public int[] posInicial;
     bool virouDama;
 
-    public Jogada()
+    public Jogada(int[] posInicial = null)
     {
         this.movimentos = new List<int[]>();
         this.pecasComidas = new List<int[]>();
+        this.posInicial = posInicial;
         this.virouDama = false;
     }
 }

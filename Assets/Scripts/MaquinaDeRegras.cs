@@ -82,18 +82,18 @@ public class MaquinaDeRegras : MonoBehaviour
         }
 
         Jogada novaJogada;
-
+        int[] posPeca = new int[2]{x, y};
         if(jogador == 1)
         {
             if ((x + 1 < 8 && y + 1 < 8) && Tipos.isVazio(tabuleiro[x + 1, y + 1]))
             {
-                novaJogada = new Jogada();
+                novaJogada = new Jogada(posPeca);
                 novaJogada.movimentos.Add(new int[2] { x + 1, y + 1 });
                 jogadas.Add(novaJogada);
             }
             if ((x + 1 < 8 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
             {
-                novaJogada = new Jogada();
+                novaJogada = new Jogada(posPeca);
                 novaJogada.movimentos.Add(new int[2] { x + 1, y - 1 });
                 jogadas.Add(novaJogada);
             }
@@ -101,13 +101,13 @@ public class MaquinaDeRegras : MonoBehaviour
         else {
             if ((x - 1 >= 0 && y + 1 < 8) && Tipos.isVazio(tabuleiro[x - 1, y + 1]))
             {
-                novaJogada = new Jogada();
+                novaJogada = new Jogada(posPeca);
                 novaJogada.movimentos.Add(new int[2] { x - 1, y + 1 });
                 jogadas.Add(novaJogada);
             }
             if ((x - 1 >= 0 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x - 1, y - 1]))
             {
-                novaJogada = new Jogada();
+                novaJogada = new Jogada(posPeca);
                 novaJogada.movimentos.Add(new int[2] { x - 1, y - 1 });
                 jogadas.Add(novaJogada);
             }
@@ -121,6 +121,7 @@ public class MaquinaDeRegras : MonoBehaviour
         Jogada cimaEsquerda = null;
         Jogada baixoDireita = null;
         Jogada baixoEsquerda = null;
+        int[] posPeca = new int[2]{x, y};
         // inicializa a lista de peças comidas, caso seja a primeira chamada ao método
         if(pecasComidas == null)
             pecasComidas = new List<int[]>();
@@ -135,7 +136,7 @@ public class MaquinaDeRegras : MonoBehaviour
                 {   
                     // então é uma jogada que come
                     if(cimaDireita == null)
-                        cimaDireita = new Jogada();
+                        cimaDireita = new Jogada(posPeca);
                     cimaDireita.movimentos.Add(new int[2] {x + 2, y + 2});
                     cimaDireita.pecasComidas.Add(new int[2] {x + 1, y + 1});
                     // atualiza o "estado" do tabuleiro
@@ -162,7 +163,7 @@ public class MaquinaDeRegras : MonoBehaviour
                 if((x + 2 < 8 && y - 2 >= 0) && Tipos.isVazio(tabuleiro[x + 2, y - 2]))
                 {
                     if(cimaEsquerda == null)
-                        cimaEsquerda = new Jogada();
+                        cimaEsquerda = new Jogada(posPeca);
                     cimaEsquerda.movimentos.Add(new int[2] {x + 2, y - 2});
                     cimaEsquerda.pecasComidas.Add(new int[2] {x + 1, y - 1});
                     int pecaAtual = tabuleiro[x,y];
@@ -185,7 +186,7 @@ public class MaquinaDeRegras : MonoBehaviour
                 if((x - 2 >= 0 && y + 2 > 8) && Tipos.isVazio(tabuleiro[x - 2, y + 2]))
                 {
                     if(baixoDireita == null)
-                        baixoDireita = new Jogada();
+                        baixoDireita = new Jogada(posPeca);
                     baixoDireita.movimentos.Add(new int[2] {x - 2, y + 2});
                     baixoDireita.pecasComidas.Add(new int[2] {x - 1, y + 1});
                     int pecaAtual = tabuleiro[x,y];
@@ -208,7 +209,7 @@ public class MaquinaDeRegras : MonoBehaviour
                 if((x - 2 >= 0 && y - 2 >= 0) && Tipos.isVazio(tabuleiro[x - 2, y - 2]))
                 {
                     if(baixoEsquerda == null)
-                        baixoEsquerda = new Jogada();
+                        baixoEsquerda = new Jogada(posPeca);
                     baixoEsquerda.movimentos.Add(new int[2] {x - 2, y - 2});
                     baixoEsquerda.pecasComidas.Add(new int[2] {x - 1, y - 1});
                     int pecaAtual = tabuleiro[x,y];
