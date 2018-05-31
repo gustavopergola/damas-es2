@@ -56,7 +56,7 @@ namespace TiposNS
 			return peca == Tipos.vazio;
 		}
 
-		public static bool pegaJogador(int peca){
+		public static int pegaJogador(int peca){
 			return isJogador1(peca) ? 1 : 2; 
 		}
 	}
