@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TabuleiroNS;
 using TiposNS;
+using EstadoNS;
 
 public class Movimentacao : MonoBehaviour {
 
@@ -36,7 +37,32 @@ public class Movimentacao : MonoBehaviour {
 		controlaMovimento ();
 	}
 
+    public void test_result(){
+        int[,] tabuleiro = { 
+			{0,1,0,1,0,1,0,1},
+            {1,0,1,0,1,0,1,0},
+            {0,1,0,1,0,1,0,1},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {3,0,3,0,3,0,3,0},
+            {0,3,0,3,0,3,0,3},
+            {3,0,3,0,3,0,3,0}
+        };
+
+        Estado atual = new Estado(tabuleiro, 1, null);
+        //atual.print();
+
+        Jogada mock_acao = new Jogada();
+        mock_acao.posInicial = new int[] { 2, 1 };
+        mock_acao.movimentos.Add(new int[] { 3, 2 });
+        mock_acao.movimentos.Add(new int[] { 4, 1 });
+
+        Estado novo = Estado.result(atual, mock_acao);
+		//novo.print();
+    }
+
 	private void processaClique(){
+		test_result();
         if (Input.GetMouseButtonDown(0)) {
 			if (!gameController.getTurnoJogador()) return; //turno IA
 			GameObject objeto_resposta = checaClique();
