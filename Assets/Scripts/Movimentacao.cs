@@ -50,13 +50,15 @@ public class Movimentacao : MonoBehaviour {
         };
 
         Estado atual = new Estado(tabuleiro, 1, null);
-        
+        //atual.print();
+
         Jogada mock_acao = new Jogada();
         mock_acao.posInicial = new int[] { 2, 1 };
         mock_acao.movimentos.Add(new int[] { 3, 2 });
         mock_acao.movimentos.Add(new int[] { 4, 1 });
 
         Estado novo = Estado.result(atual, mock_acao);
+		//novo.print();
     }
 
 	private void processaClique(){

@@ -66,14 +66,14 @@ public class MaquinaDeRegras : MonoBehaviour
     public List<Jogada> PossiveisMovimentosUmaPeca(int[,] tabuleiro, int x, int y)
     {
         int jogador;
-        if(Tipos.isJogador1(tabuleiro[x,y]))
-            jogador = 1;
-        else
-            jogador = 2;
+        
+        jogador = Tipos.pegaJogador(tabuleiro[x,y]);
+
         int[] valoresPecas = GetValoresPecas(jogador);
         // se for dama
         if (tabuleiro[x,y] == valoresPecas[0])
             return MovimentosDama(tabuleiro, x, y, valoresPecas[1], valoresPecas[2]);
+            
         List<Jogada> jogadas = new List<Jogada>();
         Jogada captura = LeiDaMaioria(tabuleiro, x, y, valoresPecas[1], valoresPecas[2], null);
         // se teve alguma jogada com captura / peças comida
@@ -82,17 +82,20 @@ public class MaquinaDeRegras : MonoBehaviour
             jogadas.Add(captura);
             return jogadas;
         }
+
+        Jogada novaJogada;
+
         if(jogador == 1)
         {
             if ((x + 1 < 8 && y + 1 < 8) && Tipos.isVazio(tabuleiro[x + 1, y + 1]))
             {
-                Jogada novaJogada = new Jogada();
+                novaJogada = new Jogada();
                 novaJogada.movimentos.Add(new int[2] { x + 1, y + 1 });
                 jogadas.Add(novaJogada);
             }
             if ((x + 1 < 8 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
             {
-                Jogada novaJogada = new Jogada();
+                novaJogada = new Jogada();
                 novaJogada.movimentos.Add(new int[2] { x + 1, y - 1 });
                 jogadas.Add(novaJogada);
             }
@@ -100,13 +103,13 @@ public class MaquinaDeRegras : MonoBehaviour
         else {
             if ((x - 1 >= 0 && y + 1 < 8) && Tipos.isVazio(tabuleiro[x - 1, y + 1]))
             {
-                Jogada novaJogada = new Jogada();
+                novaJogada = new Jogada();
                 novaJogada.movimentos.Add(new int[2] { x - 1, y + 1 });
                 jogadas.Add(novaJogada);
             }
             if ((x - 1 >= 0 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x - 1, y - 1]))
             {
-                Jogada novaJogada = new Jogada();
+                novaJogada = new Jogada();
                 novaJogada.movimentos.Add(new int[2] { x - 1, y - 1 });
                 jogadas.Add(novaJogada);
             }

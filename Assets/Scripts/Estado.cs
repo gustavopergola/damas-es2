@@ -9,8 +9,6 @@ namespace EstadoNS{
         public int[,] tabuleiro;
         public int jogadorAtual;
 	    public Jogada ultimaJogada;
-        //public int jogadasCount;
-        //public int movimentosSemCaptura;
 	    public bool gameOver = false;
 
 	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
@@ -39,28 +37,6 @@ namespace EstadoNS{
 		    //}
 	    }
 
-	    //private void registerGameIsOver(){
-	    //	int num_player1_pieces = 0;
-	    //	int num_player2_pieces = 0;
-        //
-	    //	foreach (int piece in this.board){
-	    //		if (Tipos.isJogador1(piece)) num_player1_pieces++;
-	    //		if (Tipos.isJogador2(piece)) num_player2_pieces++;
-	    //		//if((num_player1_pieces!=0) && (num_player2_pieces!=0)) break;	
-	    //	}
-	    //	if((num_player1_pieces==0) || (num_player2_pieces==0)){
-	    //		this.gameOver = true;
-	    //	}
-	    //	else{
-	    //		this.gameOver = false || this.checkDraw();
-	    //	}
-	    //}
-
-        //public bool checkDraw()
-        //{
-        //    return this. >= 20;
-        //}
-
         public bool gameIsOver(){
 		    return this.gameOver;
 	    }
@@ -73,17 +49,8 @@ namespace EstadoNS{
 	    public static Estado result(Estado antigo, Jogada acao){
 		    Estado novo = new Estado(antigo.tabuleiro, antigo.jogadorAtual, antigo.ultimaJogada);
 
-            //TODO Concertar quando tiver a função na máquina de regras
-            /*if(RuleMachine.isAttackMove(action, newState.board)){
-			    newState.playsWithoutCapture = 0;
-		    }else {
-			    newState.playsWithoutCapture++;
-		    }*/
-
             novo.jogadorAtual = novo.jogadorAtual == 1 ? 2 : 1;
             novo.ultimaJogada = acao;
-            //novo.jogadasCount++;
-            //novo.registerGameIsOver();
 
             int size = acao.movimentos.Count;
 
