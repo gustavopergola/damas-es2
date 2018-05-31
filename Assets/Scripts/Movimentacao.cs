@@ -49,7 +49,7 @@ public class Movimentacao : MonoBehaviour {
             {3,0,3,0,3,0,3,0}
         };
 
-        Estado atual = new Estado(tabuleiro, 1, null);
+        Estado atual = new Estado(tabuleiro, 1, null,0);
         //atual.print();
 
         Jogada mock_acao = new Jogada();

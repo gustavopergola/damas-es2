@@ -3,9 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TiposNS;
+using EstadoNS;
+using TabuleiroNS;
 
 public class MaquinaDeRegras : MonoBehaviour
 {
+    public static MaquinaDeRegras instance { get; private set; }
+
+    void Awake()
+    {
+        instance = this;
+    }
+
     // inicializa valores para verificação de movimentos de acordo com o jogador atual
     private int[] GetValoresPecas(int jogador)
     {
@@ -25,9 +34,15 @@ public class MaquinaDeRegras : MonoBehaviour
         return valoresPecas;
     }
 
-    public List<List<Jogada>>[] TodosPossiveisMovimentos(int[,] tabuleiro, List<int[]> pecasJogador1, List<int[]> pecasJogador2)
+    public List<Jogada> PossiveisMovimentos(Estado estado){
+        return PossiveisMovimentosUmJogador(estado.tabuleiro, Tabuleiro.instance.posicoesJogadorX(estado.jogadorAtual));
+    }
+
+    //public List<List<Jogada>>[] TodosPossiveisMovimentos(int[,] tabuleiro, List<int[]> pecasJogador1, List<int[]> pecasJogador2)
+    public List<Jogada>[] TodosPossiveisMovimentos(int[,] tabuleiro, List<int[]> pecasJogador1, List<int[]> pecasJogador2)
     {
-        List<List<Jogada>>[] possiveisJogadas = new List<List<Jogada>>[2];
+        //List<List<Jogada>>[] possiveisJogadas = new List<List<Jogada>>[2];
+        List<Jogada>[] possiveisJogadas = new List<Jogada>[2];
         possiveisJogadas[0] = PossiveisMovimentosUmJogador(tabuleiro, pecasJogador1);
         possiveisJogadas[1] = PossiveisMovimentosUmJogador(tabuleiro, pecasJogador2);
         return possiveisJogadas;
@@ -35,29 +50,37 @@ public class MaquinaDeRegras : MonoBehaviour
 
     // cada item da lista está relacionado com uma peça
     // cada peça possui a própria lista de jogadas válidas
-    public List<List<Jogada>> PossiveisMovimentosUmJogador(int[,] tabuleiro, List<int[]> pecasJogador)
+    //public List<List<Jogada>> PossiveisMovimentosUmJogador(int[,] tabuleiro, List<int[]> pecasJogador)
+    public List<Jogada> PossiveisMovimentosUmJogador(int[,] tabuleiro, List<int[]> pecasJogador)
     {
         bool comeu = false;
-        List<List<Jogada>> possiveisJogadas = new List<List<Jogada>>();
+        //List<List<Jogada>> possiveisJogadas = new List<List<Jogada>>();
+        List<Jogada> possiveisJogadas = new List<Jogada>();
         foreach (int[] peca in pecasJogador)
         {
             List<Jogada> jogada = PossiveisMovimentosUmaPeca(tabuleiro, peca[0], peca[1]);
             // se teve alguma jogada que comeu peça
-            if(jogada[0].pecasComidas.Count > 0)
+            if (jogada[0].pecasComidas.Count > 0)
             {
                 // e se foi a primeira jogada analisada que comeu peça
-                if(comeu == false)
+                if (comeu == false)
                 {
                     // se tinham jogadas que não comiam peças antes, a lista é limpa
-                    if(possiveisJogadas.Count > 0)
-                        possiveisJogadas = new List<List<Jogada>>();
+                    if (possiveisJogadas.Count > 0)
+                    {
+                        //possiveisJogadas = new List<List<Jogada>>();
+                        possiveisJogadas = new List<Jogada>();
+                    }
                     comeu = true;
                 }
-                possiveisJogadas.Add(jogada);
+                //possiveisJogadas.Add(jogada);
+                possiveisJogadas.AddRange(jogada);
             }
             // se não comeu peças e mais ninguém comeu
-            else if(comeu == false)
-                possiveisJogadas.Add(jogada);
+            else if (comeu == false){
+                //possiveisJogadas.Add(jogada);
+                possiveisJogadas.AddRange(jogada);
+            }
         }
         return possiveisJogadas;
     }
