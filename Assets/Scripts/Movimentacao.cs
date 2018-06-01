@@ -135,39 +135,48 @@ public class Movimentacao : MonoBehaviour {
 		this.finalPosition = go_posicao_alvo.transform.position;
 		this.transformPedraEmMovimento = go_pedra_selecionada.transform;
 		this.timeSpent = 0f;
-		//realiza mudanças no tabuleiro
-		alteraMatriz(go_pedra_selecionada, go_posicao_alvo);
 	}
 
-	private void alteraMatriz(GameObject pedra_selecionada, GameObject posicao_alvo){
-		Peca pecaSelecionada = pedra_selecionada.GetComponent<Peca>();
-		Posicao posicaoAlvo = posicao_alvo.GetComponent<Posicao>();
-		int linInicio = pecaSelecionada.posicao.lin;
-		int colInicio = pecaSelecionada.posicao.col;
-		int linFim = posicaoAlvo.lin;
-		int colFim = posicaoAlvo.col;
-		bool ataque = false;//TODO receber resultado da máquina de regras para determinar se movimento é ataque ou não
-		//TODO RECEBER POSICAO DA PECA QUE FOI CAPTURADA
-		Posicao posInicio = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>();
-		Posicao posFim = Tabuleiro.instance.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>();
-		if(!ataque){
-			//MOVIMENTACAO SIMPLES
-			//Atualiza matriz de inteiros
-			Tabuleiro.instance.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
-			Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = pecaSelecionada.tipo;
-			//atualiza objetos
-			posInicio.peca = null;
-			posFim.peca = pedra_selecionada;
-			pecaSelecionada.posicao = posicaoAlvo;
-		}else{
-			//MOVIMENTO DE ATAQUE
-			//TODO alterar matriz em caso de movimento de ataque
-		}
-		bool dama = false; //TODO receber resultado da máquina de regras para determinar se virou dama ou não
-		if(dama){
-			//TODO verificar se virou dama
-		}
-		
+	private void alteraMatriz(Jogada jogada){
+        int linInicio = jogada.posInicial[0];
+        int colInicio = jogada.posInicial[1];
+        int[] ultimoMovimento = jogada.ultimoMovimento();
+        int linFim = ultimoMovimento[0];
+        int colFim = ultimoMovimento[1];
+
+        GameObject pecaSelecionada = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca;
+        Peca _pecaSelecionada = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca.GetComponent<Peca>();
+
+        Posicao posInicio = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>();
+        Posicao posFim = Tabuleiro.instance.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>();
+
+		//Atualiza matriz de inteiros
+		Tabuleiro.instance.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
+		Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
+		//atualiza objetos
+		posInicio.peca = null;
+		posFim.peca = pecaSelecionada;
+        _pecaSelecionada.posicao = posFim;
+
+        bool ataque = jogada.pecasComidas.Count > 0 ? true : false;
+        if (ataque)
+        {
+            for(int i=0; i < jogada.pecasComidas.Count; i++)
+            {
+                int linComida = jogada.pecasComidas[i][0];
+                int colComida = jogada.pecasComidas[i][1];
+
+                Tabuleiro.instance.matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
+                Tabuleiro.instance.matrizTabuleiroPosicoes[linComida, colComida].GetComponent<Posicao>().peca = null;
+                //objeto da peça não é modificado pois ele será deletado
+            }
+        }
+
+		if(jogada.virouDama){
+            int jogador = Tipos.jogador(_pecaSelecionada.tipo);
+            _pecaSelecionada.tipo = Tipos.getPecaJogadorX(Tipos.dama, jogador);
+            Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
+        }
 	}
 
 	private void controlaMovimento(){
