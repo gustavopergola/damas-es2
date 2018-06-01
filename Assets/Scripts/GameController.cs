@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using IANS;
+using EstadoNS;
 
 public class GameController : MonoBehaviour {
 
@@ -21,6 +22,8 @@ public class GameController : MonoBehaviour {
     public const int GAME_MODE_PLAYER_VS_IA = 1;
     public const int GAME_MODE_IA_VS_IA = 2;
     public const int GAME_MODE_PLAYER_VS_PLAYER = 3;
+
+    public static Estado estadoAtual; 
 
     private static bool created = false;
 
@@ -85,8 +88,8 @@ public class GameController : MonoBehaviour {
     }
 
     private void loadIAvsIAGame(){
-        Jogador ia1 = new Jogador("IA 1", new IA());
-        Jogador ia2 = new Jogador("IA 2", new IA());
+        Jogador ia1 = new Jogador("IA 1", new IA(1));
+        Jogador ia2 = new Jogador("IA 2", new IA(2));
         defineJogadores(ia1, ia2);
     }
     

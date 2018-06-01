@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using EstadoNS;
+using TiposNS;
 
 namespace IANS
 {
@@ -9,6 +10,17 @@ namespace IANS
     {
         int jogadorId;
         int tipo;
+
+        static int[,] valoracao = { {0,4,0,4,0,4,0,4},
+                                    {4,0,3,0,3,0,3,0},
+                                    {0,3,0,2,0,2,0,4},
+                                    {4,0,2,0,1,0,3,0},
+                                    {0,3,0,1,0,2,0,4},
+                                    {4,0,2,0,2,0,3,0},
+                                    {0,3,0,3,0,3,0,4},
+                                    {4,0,4,0,4,0,4,0}
+        };
+
         public IA(int jogadorId, int tipo)
         {
             this.jogadorId = jogadorId;
@@ -165,137 +177,69 @@ namespace IANS
             }
         }
 
-        /*
-        //função de avaliação sobre a quantidade de movimentos possiveis
+        
+        //função de avaliacao sobre a quantidade de movimentos possiveis
         //retorna a qtd de movimentos possiveis
-        public static int evalMobility(State state)
+        public static int evalMobility(Estado estado)
         {
-            LinkedList<int[]> moves = RuleMachine.possible_moves(state);
-            return moves.Count;
+            List<Jogada> jogadas = MaquinaDeRegras.instance.PossiveisMovimentos(estado);
+            return jogadas.Count;
         }
-        //função de avaliação do controle do centro do tabuleiro
-        public static int evalCenterControl(State state)
+
+        //funcao de avaliacao que considera a quantidade de pecas e o lugar onde estao
+        //cada peca tem um valor associado peao, peao perto de virar dama e dama
+        //cada posicao do tabuleiro tem um valor associado
+        public static int evalMaterial(Estado estado)
         {
-            int count = 0;
-            char piece;
-            for (int i = 2; i <= 3; i++)
-            {
-                for (int j = 2; j <= 3; j++)
-                {
-                    if (Program.getCurrentPlayer() == 1)
-                    {
-                        piece = state.board[i, j];
-                        if (!(piece == '0'))
-                        {
-                            if (Char.IsUpper(piece))
-                            {
-                                count += 1;
-                            }
-                            else
-                            {
-                                count -= 1;
-                            }
-                        }
+            int i, j, peca, valorPeca, valorPos, sum1 = 0, sum2 = 0;
+            for(i=0; i<8; i++){
+                for(j=0; j<8; j++){
+                    peca = estado.tabuleiro[i, j];
+                    valorPos = valoracao[i, j];
+                    
+                    if(Tipos.isDama(peca)){
+                        valorPeca = 10;
                     }
-                    else
-                    {
-                        piece = state.board[i, j];
-                        if (!(piece == '0'))
-                        {
-                            if (Char.IsLower(piece))
-                            {
-                                count += 1;
-                            }
-                            else
-                            {
-                                count -= 1;
-                            }
-                        }
+                    else if(((i == 1) && Tipos.isJogador1(peca)) || ((i == 6) && Tipos.isJogador2(peca))){
+                        valorPeca = 7;
+                    }
+                    else{
+                        valorPeca = 5;
+                    }
+
+                    if (Tipos.isJogador1(peca)){ 
+                        sum1 += valorPeca * valorPos;
+                    }
+                    else if(Tipos.isJogador2(peca)){
+                        sum2 += valorPeca * valorPos;
                     }
                 }
             }
-            return count;
-        }
 
-        //função de avaliação simples
-        public static int evalMaterial(State state)
-        {
-            int p = 0, b = 0, t = 0, q = 0, eval = 0;
-
-            for (int i = 0; i < 6; i++)
-            {
-                for (int j = 0; j < 6; j++)
-                {
-                    switch (state.board[i, j])
-                    {
-                        case Types.PAWN2:
-                            p -= Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                        case Types.PAWN:
-                            p += Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                        case Types.BISHOP2:
-                            b -= Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                        case Types.BISHOP:
-                            b += Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                        case Types.ROOK2:
-                            t -= Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                        case Types.ROOK:
-                            t += Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                        case Types.QUEEN2:
-                            q -= Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                        case Types.QUEEN:
-                            q += Program.getCurrentPlayer() == 1 ? 1 : -1;
-                            break;
-                    }
-                }
+            if(estado.jogadorAtual == 1){
+                return sum1 - sum2;
             }
-            eval = p + 3 * b + 5 * t + 9 * q;
-            return eval;
+            else{
+                return sum2 - sum1;
+            }
         }
-        */
 
         public bool cutoff_test(Estado estado)
         {
-            //return estado.contaJogadas - Program.currentState.playsCount > 4;
-            return true;
+            return (estado.contaJogadas - GameController.estadoAtual.contaJogadas) > 4;
         }
+
         //funcao de avaliacao usando material e quantidade de jogadas
         public static int eval1(Estado estado)
         {
-            /*
-            if (state.checkDraw())
-            {
-                return 0;
-            }
-
-            int p = 0, b = 0, t = 0, q = 0, util = 0, winner = -1;
-
-            util = evalMaterial(state);
-            winner = Program.getWinner(state);
-
-            if ((Program.getCurrentPlayer()) == 1) util += winner < 2 ? -100 : 100;
-            else util += winner == 2 ? 100 : -100;
-
-            util += p + 3 * b + 5 * t + 9 * q;
-            util = (int)util / (state.playsCount);
-            return util;
-            */
-            return 1;
+            int c1 = 50, c2 = 50;
+            return (int)( (c1*evalMaterial(estado)) + (c2*evalMobility(estado)) );
         }
 
         public static int eval2(Estado estado)
         {
-            /*
-            int c1 = 25, c2 = 35, c3 = 40;
-            return (int)((c1 * evalCenterControl(state)) + (c2 * evalMaterial(state)) + (c3 * evalMobility(state))) / 100;
-            */
-            return 2;
+            int c1 = 70, c2 = 30;
+            return (int)( (c1 * evalMaterial(estado)) + (c2 * evalMobility(estado)) );
         }
     }
 }
