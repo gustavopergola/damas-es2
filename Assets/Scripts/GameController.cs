@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour {
     public const int GAME_MODE_PLAYER_VS_PLAYER = 3;
 
     private static bool created = false;
+    private bool emJogo = false;
 
 	void Awake (){
         instance = this;
@@ -38,13 +39,16 @@ public class GameController : MonoBehaviour {
             textIndicator = GameObject.Find("TurnoText").GetComponent<Text>();
             passarTurnoBtn = GameObject.Find("PassarTurno").GetComponent<Button>();
             loadGameMode();
+            emJogo = true;
         }
     }
 
     private void Start()
     {
-        // inicializando estado
-        estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, -1, null);
+        if (emJogo)
+        {
+            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null);
+        }
     }
 
     public void passarTurno(){
@@ -133,7 +137,11 @@ public class GameController : MonoBehaviour {
     public void setJogadorAtual(Jogador novoJogador)
     {
         this.jogadorAtual = novoJogador;
-        this.estadoAtual.setJogadorAtual(novoJogador.getNumeroJogador());
+        if (estadoAtual != null)
+        {
+            this.estadoAtual.setJogadorAtual(novoJogador.getNumeroJogador());
+        }
+
     }
 
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TabuleiroNS;
 using TiposNS;
-using EstadoNS;
+using MaquinaDeRegrasNS;
 
 public class Movimentacao : MonoBehaviour {
 
@@ -67,7 +67,31 @@ public class Movimentacao : MonoBehaviour {
 				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
 				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
-					movimenta (this.pedraSelecionada, objeto_resposta);
+                    if (this.pedraSelecionada) {
+                        Peca pecaSelecionada = pedraSelecionada.GetComponent<Peca>();
+                        List<int[]> posicoes = GameController.instance
+                                                             .estadoAtual
+                                                             .posicoesJogadorX(GameController.instance.jogadorAtual.getNumeroJogador());
+                        //otimizar para chamar a máquina de regras uma vez apenas quando mudar o turno, pegando todos os movimentos possiveis do jogador atual
+                        List<List<Jogada>> jogadas = MaquinaDeRegras.PossiveisMovimentosUmJogador(
+                            GameController.instance.estadoAtual.tabuleiro,
+                            posicoes);
+                        foreach(List<Jogada> lista in jogadas)
+                        {
+                            if(lista[0].posInicial[0] == pecaSelecionada.posicao.lin 
+                               && lista[0].posInicial[1] == pecaSelecionada.posicao.col)
+                            {
+                                Debug.Log("Peça que estou querendo tratar encontrada");
+                                // TODO 
+                                //1-verificar se movimento que estou querendo fazer se encontra nessa lista de jogadas
+                                //2-impedir movimentação caso não esteja nesta lista de jogadas
+                                //3-mostrar highlight no tabuleiro
+                                //4-executar movimento visual seguindo as ações da Jogada
+                            }
+                        }
+                    }
+                    //verificar se movimento é válido
+                    movimenta(this.pedraSelecionada, objeto_resposta);
                     GameController.instance.passarTurno();
 					descelecionar_pedra_atual();
 				}

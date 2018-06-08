@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TiposNS;
+using TabuleiroNS;
 
 namespace EstadoNS{
     public class Estado{
@@ -67,6 +68,35 @@ namespace EstadoNS{
         public void setJogadorAtual(int novoJogador)
         {
             this.jogadorAtual = novoJogador;
+        }
+
+        public int getJogadorAtual()
+        {
+            return this.jogadorAtual;
+        }
+
+        public List<int[]> posicoesJogadorX(int jogador)
+        {
+            //retorna todas as posicões (x, y) das peças de um jogador X
+
+            int lin, col, pecaAtual;
+            List<int[]> posicoes = new List<int[]>();
+            int[] posicao = new int[2];
+            int tamanho = Tabuleiro.instance.getTamanhoTabuleiro();
+            for (lin = 0; lin < tamanho; lin++)
+            {
+                for (col = 0; col < tamanho; col++)
+                {
+                    pecaAtual = tabuleiro[lin, col];
+                    if (Tipos.isJogadorX(pecaAtual, jogador))
+                    {
+                        posicao[0] = lin;
+                        posicao[1] = col;
+                        posicoes.Add((int[])posicao.Clone());
+                    }
+                }
+            }
+            return posicoes;
         }
 
     }
