@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour {
 
     public static GameController instance { get; private set; }
     public Estado estadoAtual;
+    public Jogador jogadorAtual; 
 
     private static Jogador jogador1;
     private static Jogador jogador2;
@@ -43,16 +44,16 @@ public class GameController : MonoBehaviour {
     private void Start()
     {
         // inicializando estado
-        estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, null, null);
+        estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, -1, null);
     }
 
     public void passarTurno(){
-        estadoAtual.jogadorAtual = isJogadorAtual(jogador1) ? jogador2 : jogador1;
+        setJogadorAtual(isJogadorAtual(jogador1) ? jogador2 : jogador1);
 
-        setTextoTurno("Turno: " + estadoAtual.jogadorAtual.getNomeJogador());
+        setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
 
-        if (this.estadoAtual.jogadorAtual.isIA()){
-            estadoAtual.jogadorAtual.callAIAction();
+        if (jogadorAtual.isIA()){
+            jogadorAtual.callAIAction();
             disablePassarTurnoBtn();
         }
     }
@@ -68,12 +69,12 @@ public class GameController : MonoBehaviour {
 
     public bool getTurnoJogador()
     {
-        if (this.estadoAtual.jogadorAtual == null) return false;
-        return this.estadoAtual.jogadorAtual.isPlayer();
+        if (jogadorAtual == null) return false;
+        return jogadorAtual.isPlayer();
     }
 
     public bool isJogadorAtual(Jogador jogador){
-        return jogador == this.estadoAtual.jogadorAtual;
+        return jogador == jogadorAtual;
     }
 
     public void switchScene(int gameMode){
@@ -111,7 +112,7 @@ public class GameController : MonoBehaviour {
 
         jogador2.layerMaskValue = layerJogador2.value;
 
-        this.estadoAtual.jogadorAtual = jogador1;
+        setJogadorAtual(jogador1);
     }
 
     private void loadGameMode(){
@@ -119,7 +120,7 @@ public class GameController : MonoBehaviour {
         if (gameMode == GAME_MODE_PLAYER_VS_IA) loadPlayervsIAGame();
         else if (gameMode == GAME_MODE_IA_VS_IA) loadIAvsIAGame();
         else loadPlayervsPlayerGame();        
-        setTextoTurno("Turno: " + estadoAtual.jogadorAtual.getNomeJogador());
+        setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
     }
 
     public Jogador getJogador1(){
@@ -129,9 +130,10 @@ public class GameController : MonoBehaviour {
         return jogador2;
     }
 
-    public Jogador getOponente(int jogador)
+    public void setJogadorAtual(Jogador novoJogador)
     {
-        return jogador == 1 ? getJogador1() : getJogador2();
+        this.jogadorAtual = novoJogador;
+        this.estadoAtual.setJogadorAtual(novoJogador.getNumeroJogador());
     }
 
 }

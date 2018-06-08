@@ -86,7 +86,7 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	private bool isPecaJogadorAtual(GameObject objeto){
-		return comparaLayerMaskValue(objeto.layer, GameController.instance.estadoAtual.jogadorAtual.layerMaskValue);
+		return comparaLayerMaskValue(objeto.layer, GameController.instance.jogadorAtual.layerMaskValue);
 	}
 
 	private bool isPosicao(GameObject objeto){
