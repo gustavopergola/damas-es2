@@ -113,12 +113,12 @@ namespace TabuleiroNS
         {
             foreach (Transform peca in pedrasPretas.transform)
             {
-                peca.gameObject.GetComponent<Peca>().jogador = GameController.getJogador1();
+                peca.gameObject.GetComponent<Peca>().jogador = GameController.instance.getJogador1();
                 peca.gameObject.GetComponent<Peca>().tipo = Tipos.getPecaJogador1();
             }
             foreach (Transform peca in pedrasVermelhas.transform)
             {
-                peca.gameObject.GetComponent<Peca>().jogador = GameController.getJogador2();
+                peca.gameObject.GetComponent<Peca>().jogador = GameController.instance.getJogador2();
                 peca.gameObject.GetComponent<Peca>().tipo = Tipos.getPecaJogador2();
             }
         }

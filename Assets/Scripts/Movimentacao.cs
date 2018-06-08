@@ -22,10 +22,7 @@ public class Movimentacao : MonoBehaviour {
 	private Vector3 finalPosition;
 	private float timeSpent = 9999f;
 
-    private GameController gameController;
-
     void Start () {
-        gameController = gameObject.GetComponent<GameController>();
         pedraSelecionada = null;
 	}
 		
@@ -49,7 +46,7 @@ public class Movimentacao : MonoBehaviour {
             {3,0,3,0,3,0,3,0}
         };
 
-        Estado atual = new Estado(tabuleiro, 1, null);
+        //Estado atual = new Estado(tabuleiro, 1, null);
         //atual.print();
 
         Jogada mock_acao = new Jogada();
@@ -57,21 +54,21 @@ public class Movimentacao : MonoBehaviour {
         mock_acao.movimentos.Add(new int[] { 3, 2 });
         mock_acao.movimentos.Add(new int[] { 4, 1 });
 
-        Estado novo = Estado.result(atual, mock_acao);
+        //Estado novo = Estado.result(atual, mock_acao);
 		//novo.print();
     }
 
 	private void processaClique(){
 		test_result();
         if (Input.GetMouseButtonDown(0)) {
-			if (!gameController.getTurnoJogador()) return; //turno IA
+			if (!GameController.instance.getTurnoJogador()) return; //turno IA
 			GameObject objeto_resposta = checaClique();
 			if (objeto_resposta != null) {
 				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
 				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
 					movimenta (this.pedraSelecionada, objeto_resposta);
-					gameController.passarTurno();
+                    GameController.instance.passarTurno();
 					descelecionar_pedra_atual();
 				}
 			} else {
@@ -83,13 +80,13 @@ public class Movimentacao : MonoBehaviour {
 
 	private bool isPeca(GameObject objeto){
 		return (
-			comparaLayerMaskValue (objeto.layer, this.gameController.layerJogador1.value) ||
-			comparaLayerMaskValue (objeto.layer, this.gameController.layerJogador2.value)
+			comparaLayerMaskValue (objeto.layer, GameController.instance.layerJogador1.value) ||
+			comparaLayerMaskValue (objeto.layer, GameController.instance.layerJogador2.value)
 		);
 	}
 
 	private bool isPecaJogadorAtual(GameObject objeto){
-		return comparaLayerMaskValue(objeto.layer, this.gameController.jogadorAtual.layerMaskValue);
+		return comparaLayerMaskValue(objeto.layer, GameController.instance.estadoAtual.jogadorAtual.layerMaskValue);
 	}
 
 	private bool isPosicao(GameObject objeto){
