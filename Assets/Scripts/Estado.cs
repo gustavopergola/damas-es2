@@ -7,11 +7,11 @@ namespace EstadoNS{
     public class Estado{
 
         public int[,] tabuleiro;
-        public int jogadorAtual;
+        public Jogador jogadorAtual;
 	    public Jogada ultimaJogada;
 	    public bool gameOver = false;
 
-	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
+	    public Estado(int[,] tabuleiro, Jogador jogadorAtual, Jogada ultimaJogada){
             this.tabuleiro = (int[,])tabuleiro.Clone();
             this.jogadorAtual = jogadorAtual;
             this.ultimaJogada = ultimaJogada;
@@ -42,14 +42,14 @@ namespace EstadoNS{
 	    }
 
 	    public int getOpponent(){            
-		    if (this.jogadorAtual== 1) return 2;
+		    if (this.jogadorAtual.getNumeroJogador() == 1) return 2;
 		    else return 1;
 	    }
 
 	    public static Estado result(Estado antigo, Jogada acao){
 		    Estado novo = new Estado(antigo.tabuleiro, antigo.jogadorAtual, antigo.ultimaJogada);
 
-            novo.jogadorAtual = novo.jogadorAtual == 1 ? 2 : 1;
+            novo.jogadorAtual = GameController.instance.getOponente(novo.jogadorAtual.getNumeroJogador());
             novo.ultimaJogada = acao;
 
             int size = acao.movimentos.Count;

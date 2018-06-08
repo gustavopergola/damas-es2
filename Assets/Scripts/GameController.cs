@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using EstadoNS;
+using TabuleiroNS;
 
 public class GameController : MonoBehaviour {
 
-	public Jogador jogadorAtual;
+
+    public static GameController instance { get; private set; }
+    public Estado estadoAtual;
 
     private static Jogador jogador1;
     private static Jogador jogador2;
@@ -24,7 +28,7 @@ public class GameController : MonoBehaviour {
     private static bool created = false;
 
 	void Awake (){
-        
+        instance = this;
         if (!created){
             DontDestroyOnLoad(this.gameObject);
             created = true;
@@ -36,13 +40,19 @@ public class GameController : MonoBehaviour {
         }
     }
 
-	public void passarTurno(){
-        jogadorAtual = isJogadorAtual(jogador1) ? jogador2 : jogador1;
+    private void Start()
+    {
+        // inicializando estado
+        estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, null, null);
+    }
 
-        setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
+    public void passarTurno(){
+        estadoAtual.jogadorAtual = isJogadorAtual(jogador1) ? jogador2 : jogador1;
 
-        if (this.jogadorAtual.isIA()){
-            jogadorAtual.callAIAction();
+        setTextoTurno("Turno: " + estadoAtual.jogadorAtual.getNomeJogador());
+
+        if (this.estadoAtual.jogadorAtual.isIA()){
+            estadoAtual.jogadorAtual.callAIAction();
             disablePassarTurnoBtn();
         }
     }
@@ -58,12 +68,12 @@ public class GameController : MonoBehaviour {
 
     public bool getTurnoJogador()
     {
-        if (this.jogadorAtual == null) return false;
-        return this.jogadorAtual.isPlayer();
+        if (this.estadoAtual.jogadorAtual == null) return false;
+        return this.estadoAtual.jogadorAtual.isPlayer();
     }
 
     public bool isJogadorAtual(Jogador jogador){
-        return jogador == this.jogadorAtual;
+        return jogador == this.estadoAtual.jogadorAtual;
     }
 
     public void switchScene(int gameMode){
@@ -101,7 +111,7 @@ public class GameController : MonoBehaviour {
 
         jogador2.layerMaskValue = layerJogador2.value;
 
-        this.jogadorAtual = jogador1;
+        this.estadoAtual.jogadorAtual = jogador1;
     }
 
     private void loadGameMode(){
@@ -109,14 +119,19 @@ public class GameController : MonoBehaviour {
         if (gameMode == GAME_MODE_PLAYER_VS_IA) loadPlayervsIAGame();
         else if (gameMode == GAME_MODE_IA_VS_IA) loadIAvsIAGame();
         else loadPlayervsPlayerGame();        
-        setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
+        setTextoTurno("Turno: " + estadoAtual.jogadorAtual.getNomeJogador());
     }
 
-    public static Jogador getJogador1(){
+    public Jogador getJogador1(){
         return jogador1;
     }
-    public static Jogador getJogador2(){
+    public Jogador getJogador2(){
         return jogador2;
+    }
+
+    public Jogador getOponente(int jogador)
+    {
+        return jogador == 1 ? getJogador1() : getJogador2();
     }
 
 }
