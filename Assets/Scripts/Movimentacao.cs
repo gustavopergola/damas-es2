@@ -67,33 +67,57 @@ public class Movimentacao : MonoBehaviour {
 				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
 				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
-                    if (this.pedraSelecionada) {
-                        Peca pecaSelecionada = pedraSelecionada.GetComponent<Peca>();
-                        List<int[]> posicoes = GameController.instance
-                                                             .estadoAtual
-                                                             .posicoesJogadorX(GameController.instance.jogadorAtual.getNumeroJogador());
-                        //otimizar para chamar a máquina de regras uma vez apenas quando mudar o turno, pegando todos os movimentos possiveis do jogador atual
-                        List<List<Jogada>> jogadas = MaquinaDeRegras.PossiveisMovimentosUmJogador(
-                            GameController.instance.estadoAtual.tabuleiro,
-                            posicoes);
-                        foreach(List<Jogada> lista in jogadas)
+                    Jogada jogadaASerExecutada = null;
+                    Peca pecaSelecionada = pedraSelecionada.GetComponent<Peca>();
+                    List<int[]> posicoes = GameController.instance
+                                                            .estadoAtual
+                                                            .posicoesJogadorX(GameController.instance.jogadorAtual.getNumeroJogador());
+                    // otimizar para chamar a máquina de regras uma vez apenas quando mudar o turno, pegando todos os movimentos possiveis do jogador atual
+                    List<List<Jogada>> jogadas = MaquinaDeRegras.PossiveisMovimentosUmJogador(
+                        GameController.instance.estadoAtual.tabuleiro,
+                        posicoes);
+                    foreach (List<Jogada> lista in jogadas)
+                    {
+                        // verifica se lista sendo avaliada neste momento é a lista de jogadas da peça que eu quero movimentar agora
+                        if(lista[0].posInicial[0] == pecaSelecionada.posicao.lin 
+                            && lista[0].posInicial[1] == pecaSelecionada.posicao.col)
                         {
-                            if(lista[0].posInicial[0] == pecaSelecionada.posicao.lin 
-                               && lista[0].posInicial[1] == pecaSelecionada.posicao.col)
+                            // se for a lista de jogadas da peça que eu quero mover tenho que achar a Jogada que tem como ultimo movimento
+                            // a posicao que quero mover a peca
+                            Debug.Log("Peça que estou querendo tratar encontrada");
+                            int linFinalAtual, colFinalAtual, linFinalDestino, colFinalDestino;
+                            foreach(Jogada jogada in lista) // as jogadas para encontrar qual é a jogada que quero fazer
                             {
-                                Debug.Log("Peça que estou querendo tratar encontrada");
-                                // TODO 
-                                //1-verificar se movimento que estou querendo fazer se encontra nessa lista de jogadas
-                                //2-impedir movimentação caso não esteja nesta lista de jogadas
-                                //3-mostrar highlight no tabuleiro
-                                //4-executar movimento visual seguindo as ações da Jogada
+                                linFinalAtual = jogada.ultimoMovimento()[0];
+                                colFinalAtual = jogada.ultimoMovimento()[1];
+                                Posicao posicaoDestino = objeto_resposta.GetComponent<Posicao>();
+                                linFinalDestino = posicaoDestino.lin;
+                                colFinalDestino = posicaoDestino.col;
+                                if (linFinalAtual == linFinalDestino && colFinalAtual == colFinalDestino) //TODO IMPLEMENTAR ESSA CONDICAO
+                                // Encontrando a jogada procurada temos que a jogada que queríamos fazer é válida, portando mudamos a variavel jogadaASerExecutada
+                                {
+                                    jogadaASerExecutada = jogada;
+                                }
                             }
+                            // TODO 
+                            //OK 1-verificar se movimento que estou querendo fazer se encontra nessa lista de jogadas
+                            //2-impedir movimentação caso não esteja nesta lista de jogadas ==> Mostrar indicação visual de movimento inválido
+                            //3-mostrar highlight no tabuleiro ==> Assim que selecionar uma peca mostrar o highlight
+                            //4-executar movimento visual seguindo as ações da Jogada
                         }
                     }
-                    //verificar se movimento é válido
-                    movimenta(this.pedraSelecionada, objeto_resposta);
-                    GameController.instance.passarTurno();
-					descelecionar_pedra_atual();
+                    if (jogadaASerExecutada != null)//se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar
+                        // E atualizar o estadoAtual
+                    {
+                        // executar movimento visual
+                        movimenta(this.pedraSelecionada, objeto_resposta);
+
+                        GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
+                        GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
+
+                        GameController.instance.passarTurno();
+                        descelecionar_pedra_atual();
+                    }
 				}
 			} else {
 				descelecionar_pedra_atual();
@@ -158,22 +182,23 @@ public class Movimentacao : MonoBehaviour {
 		this.timeSpent = 0f;
 	}
 
-	private void alteraMatriz(Jogada jogada){
+	private int[,] alteraMatriz(int[,] matrizTabuleiroInt, Jogada jogada){
         int linInicio = jogada.posInicial[0];
         int colInicio = jogada.posInicial[1];
         int[] ultimoMovimento = jogada.ultimoMovimento();
         int linFim = ultimoMovimento[0];
         int colFim = ultimoMovimento[1];
 
-        GameObject pecaSelecionada = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca;
-        Peca _pecaSelecionada = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>().peca.GetComponent<Peca>();
-
         Posicao posInicio = Tabuleiro.instance.matrizTabuleiroPosicoes[linInicio, colInicio].GetComponent<Posicao>();
+        GameObject pecaSelecionada = posInicio.peca;
+        Peca _pecaSelecionada = pecaSelecionada.GetComponent<Peca>();
+
+        
         Posicao posFim = Tabuleiro.instance.matrizTabuleiroPosicoes[linFim, colFim].GetComponent<Posicao>();
 
 		//Atualiza matriz de inteiros
-		Tabuleiro.instance.matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
-		Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
+		matrizTabuleiroInt[linInicio, colInicio] = Tipos.vazio;
+		matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
 		//atualiza objetos
 		posInicio.peca = null;
 		posFim.peca = pecaSelecionada;
@@ -196,8 +221,10 @@ public class Movimentacao : MonoBehaviour {
 		if(jogada.virouDama){
             int jogador = Tipos.jogador(_pecaSelecionada.tipo);
             _pecaSelecionada.tipo = Tipos.getPecaJogadorX(Tipos.dama, jogador);
-            Tabuleiro.instance.matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
+            matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
         }
+
+        return matrizTabuleiroInt;
 	}
 
 	private void controlaMovimento(){
