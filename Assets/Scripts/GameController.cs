@@ -20,7 +20,6 @@ public class GameController : MonoBehaviour {
     public LayerMask layerJogador2;
 
 	private Text textIndicator;
-    private Button passarTurnoBtn;
 
     public const int GAME_MODE_PLAYER_VS_IA = 1;
     public const int GAME_MODE_IA_VS_IA = 2;
@@ -37,7 +36,6 @@ public class GameController : MonoBehaviour {
         }else {
             // vai entrar aqui quando for uma scene diferente do menu inicial
             textIndicator = GameObject.Find("TurnoText").GetComponent<Text>();
-            passarTurnoBtn = GameObject.Find("PassarTurno").GetComponent<Button>();
             loadGameMode();
             emJogo = true;
         }
@@ -54,17 +52,11 @@ public class GameController : MonoBehaviour {
 
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
 
-        if (jogadorAtual.isIA()){
+        if (jogadorAtual.isIA())
             jogadorAtual.callAIAction();
-            disablePassarTurnoBtn();
-        }
-    }
+        
 
-    public void disablePassarTurnoBtn()
-    {
-        passarTurnoBtn.interactable = false;
     }
-
 	private void setTextoTurno(string new_texto){
 		textIndicator.text = new_texto;
 	}

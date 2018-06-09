@@ -21,6 +21,7 @@ public class Movimentacao : MonoBehaviour {
 	private Vector3 startPosition;
 	private Vector3 finalPosition;
 	private float timeSpent = 9999f;
+	private bool clickFlag = false;
 
     void Start () {
         pedraSelecionada = null;
@@ -60,7 +61,8 @@ public class Movimentacao : MonoBehaviour {
 
 	private void processaClique(){
 		//test_result();
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonUp(0) && !clickFlag) {
+			clickFlag = true;
 			if (!GameController.instance.getTurnoJogador()) return; //turno IA
 			GameObject objeto_resposta = checaClique();
 			if (objeto_resposta != null) {
@@ -83,7 +85,6 @@ public class Movimentacao : MonoBehaviour {
                         {
                             // se for a lista de jogadas da peça que eu quero mover tenho que achar a Jogada que tem como ultimo movimento
                             // a posicao que quero mover a peca
-                            Debug.Log("Peça que estou querendo tratar encontrada");
                             int linFinalAtual, colFinalAtual, linFinalDestino, colFinalDestino;
                             foreach(Jogada jogada in lista) // as jogadas para encontrar qual é a jogada que quero fazer
                             {
@@ -92,7 +93,7 @@ public class Movimentacao : MonoBehaviour {
                                 Posicao posicaoDestino = objeto_resposta.GetComponent<Posicao>();
                                 linFinalDestino = posicaoDestino.lin;
                                 colFinalDestino = posicaoDestino.col;
-                                if (linFinalAtual == linFinalDestino && colFinalAtual == colFinalDestino) //TODO IMPLEMENTAR ESSA CONDICAO
+                                if (linFinalAtual == linFinalDestino && colFinalAtual == colFinalDestino)
                                 // Encontrando a jogada procurada temos que a jogada que queríamos fazer é válida, portando mudamos a variavel jogadaASerExecutada
                                 {
                                     jogadaASerExecutada = jogada;
@@ -111,17 +112,17 @@ public class Movimentacao : MonoBehaviour {
                         // executar movimento visual
                         movimenta(this.pedraSelecionada, objeto_resposta);
 
+						descelecionar_pedra_atual();
                         GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
                         GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
 
                         GameController.instance.passarTurno();
-                        descelecionar_pedra_atual();
                     }
 				}
 			} else {
 				descelecionar_pedra_atual();
 			}
-
+			clickFlag = false;
 		}
 	}
 
@@ -162,9 +163,9 @@ public class Movimentacao : MonoBehaviour {
 
 	private void descelecionar_pedra_atual(){
 		if (this.pedraSelecionada != null) {
-			this.pedraSelecionada.transform.localScale = this.transformInicialPedra.localScale;
 			this.pedraSelecionada = null;
-			if (this.selectorParticleSystemAtual != null) Destroy(this.selectorParticleSystemAtual);
+			if (this.selectorParticleSystemAtual != null)
+				Destroy(this.selectorParticleSystemAtual);
 		}
 	}
 

@@ -72,6 +72,7 @@ namespace MaquinaDeRegrasNS
             int jogador = Tipos.pegaJogador(tabuleiro[x, y]);
 
             int[] valoresPecas = GetValoresPecas(jogador);
+
             // se for dama
             if (tabuleiro[x, y] == valoresPecas[0])
                 return MovimentosDama(tabuleiro, x, y, valoresPecas[1], valoresPecas[2]);
@@ -79,6 +80,7 @@ namespace MaquinaDeRegrasNS
             List<Jogada> jogadas = new List<Jogada>();
             Jogada captura = LeiDaMaioria(tabuleiro, x, y, valoresPecas[1], valoresPecas[2], null);
             // se teve alguma jogada com captura / peças comida
+            
             if (captura != null)
             {
                 jogadas.Add(captura);

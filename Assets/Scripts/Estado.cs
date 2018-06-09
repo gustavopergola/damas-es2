@@ -21,8 +21,8 @@ namespace EstadoNS{
 	    public void print(){
             string resp = "";
 
-            resp += ("Jogador Atual:"+jogadorAtual+"\n");
-		    resp += ("Tabuleiro:\n");
+            resp += "Jogador Atual:" + jogadorAtual + "\n";
+		    resp += "Tabuleiro: \n";
 		    for(int i=0; i<8; i++){
 		    	for(int j=0; j<8; j++){
 		    		resp += tabuleiro[i,j]+" ";

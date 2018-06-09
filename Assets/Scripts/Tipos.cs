@@ -62,7 +62,9 @@ namespace TiposNS
 		}
 
 		public static int pegaJogador(int peca){
-			return isJogador1(peca) ? 1 : 2; 
+			if (isJogador1(peca)) return 1;
+			if (isJogador2(peca)) return 2;
+			return 0;
 		}
 	}
 }
