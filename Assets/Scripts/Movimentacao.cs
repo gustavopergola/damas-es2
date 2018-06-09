@@ -59,7 +59,7 @@ public class Movimentacao : MonoBehaviour {
     }
 
 	private void processaClique(){
-		test_result();
+		//test_result();
         if (Input.GetMouseButtonDown(0)) {
 			if (!GameController.instance.getTurnoJogador()) return; //turno IA
 			GameObject objeto_resposta = checaClique();
@@ -69,13 +69,12 @@ public class Movimentacao : MonoBehaviour {
 				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
                     Jogada jogadaASerExecutada = null;
                     Peca pecaSelecionada = pedraSelecionada.GetComponent<Peca>();
-                    List<int[]> posicoes = GameController.instance
-                                                            .estadoAtual
-                                                            .posicoesJogadorX(GameController.instance.jogadorAtual.getNumeroJogador());
+                    List<int[]> posicoesPecasJogadorAtual = GameController.instance.posicoes_jogador_atual();
+
                     // otimizar para chamar a máquina de regras uma vez apenas quando mudar o turno, pegando todos os movimentos possiveis do jogador atual
                     List<List<Jogada>> jogadas = MaquinaDeRegras.PossiveisMovimentosUmJogador(
                         GameController.instance.estadoAtual.tabuleiro,
-                        posicoes);
+                        posicoesPecasJogadorAtual);
                     foreach (List<Jogada> lista in jogadas)
                     {
                         // verifica se lista sendo avaliada neste momento é a lista de jogadas da peça que eu quero movimentar agora

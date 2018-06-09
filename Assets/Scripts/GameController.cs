@@ -46,9 +46,7 @@ public class GameController : MonoBehaviour {
     private void Start()
     {
         if (emJogo)
-        {
-            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null);
-        }
+            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null);        
     }
 
     public void passarTurno(){
@@ -142,6 +140,10 @@ public class GameController : MonoBehaviour {
             this.estadoAtual.setJogadorAtual(novoJogador.getNumeroJogador());
         }
 
+    }
+
+    public List<int []> posicoes_jogador_atual(){
+        return this.estadoAtual.posicoesJogadorX(GameController.instance.jogadorAtual.getNumeroJogador());
     }
 
 }

@@ -229,11 +229,11 @@ namespace MaquinaDeRegrasNS
                 }
             }
             Jogada melhor = cimaDireita;
-            if (cimaEsquerda.pecasComidas.Count > melhor.pecasComidas.Count)
+            if (melhor != null || (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count > melhor.pecasComidas.Count))
                 melhor = cimaEsquerda;
-            if (baixoDireita.pecasComidas.Count > melhor.pecasComidas.Count)
+            if (melhor != null || (cimaDireita != null && baixoDireita.pecasComidas.Count > melhor.pecasComidas.Count))
                 melhor = baixoDireita;
-            if (baixoEsquerda.pecasComidas.Count > melhor.pecasComidas.Count)
+            if (melhor != null || (cimaDireita != null && baixoEsquerda.pecasComidas.Count > melhor.pecasComidas.Count))
                 melhor = baixoEsquerda;
             return melhor;
         }
