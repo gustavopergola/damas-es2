@@ -44,22 +44,24 @@ namespace MaquinaDeRegrasNS
             foreach (int[] peca in pecasJogador)
             {
                 List<Jogada> jogada = PossiveisMovimentosUmaPeca(tabuleiro, peca[0], peca[1]);
-                // se teve alguma jogada que comeu peça
-                if (jogada[0].pecasComidas.Count > 0)
-                {
-                    // e se foi a primeira jogada analisada que comeu peça
-                    if (comeu == false)
+                if (jogada.Count() > 0){
+                    // se teve alguma jogada que comeu peça
+                    if (jogada.First().pecasComidas.Count > 0)
                     {
-                        // se tinham jogadas que não comiam peças antes, a lista é limpa
-                        if (possiveisJogadas.Count > 0)
-                            possiveisJogadas = new List<List<Jogada>>();
-                        comeu = true;
+                        // e se foi a primeira jogada analisada que comeu peça
+                        if (comeu == false)
+                        {
+                            // se tinham jogadas que não comiam peças antes, a lista é limpa
+                            if (possiveisJogadas.Count > 0)
+                                possiveisJogadas = new List<List<Jogada>>();
+                            comeu = true;
+                        }
+                        possiveisJogadas.Add(jogada);
                     }
-                    possiveisJogadas.Add(jogada);
+                    // se não comeu peças e mais ninguém comeu
+                    else if (comeu == false)
+                        possiveisJogadas.Add(jogada);
                 }
-                // se não comeu peças e mais ninguém comeu
-                else if (comeu == false)
-                    possiveisJogadas.Add(jogada);
             }
             return possiveisJogadas;
         }
@@ -245,6 +247,7 @@ namespace MaquinaDeRegrasNS
             Jogada jogadaCimaEsquerda = new Jogada();
             Jogada jogadaBaixoDireita = new Jogada();
             Jogada jogadaBaixoEsquerda = new Jogada();
+
             int i, j;
             // TODO chamar LeiDaMaioria aqui
             for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
