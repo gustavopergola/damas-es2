@@ -132,9 +132,6 @@ namespace MaquinaDeRegrasNS
             if (pecasComidas == null)
                 pecasComidas = new List<int[]>();
             // se tem uma peça ou dama inimiga na vizinhança
-
-            
-
             if ((x + 1 < 8 && y + 1 < 8) && (tabuleiro[x + 1, y + 1] == pecaInimiga || tabuleiro[x + 1, y + 1] == damaInimiga))
             {
                 
@@ -195,7 +192,7 @@ namespace MaquinaDeRegrasNS
                     }
                 }
             }
-            if ((x - 1 >= 0 && y + 1 > 8) && (tabuleiro[x - 1, y + 1] == pecaInimiga || tabuleiro[x - 1, y + 1] == damaInimiga))
+            if ((x - 1 >= 0 && y + 1 < 8) && (tabuleiro[x - 1, y + 1] == pecaInimiga || tabuleiro[x - 1, y + 1] == damaInimiga))
             {
                 
                 if (!contemPeca(pecasComidas, new int[2] { x - 1, y + 1 }))
@@ -258,30 +255,92 @@ namespace MaquinaDeRegrasNS
             return melhor;
         }
 
+        private static Jogada LeiDaMaioriaDamas(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga, List<int[]> pecasComidas)
+        {
+            Jogada cimaDireita = null;
+            Jogada cimaEsquerda = null;
+            Jogada baixoDireita = null;
+            Jogada baixoEsquerda = null;
+            int[] posPeca = new int[2] { x, y };
+
+            // inicializa a lista de peças comidas, caso seja a primeira chamada ao método
+            if (pecasComidas == null)
+                pecasComidas = new List<int[]>();
+
+            int i = x, j = y;
+            // percorrer cada diagonal a procura da peças para comer
+            for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                    //jogadaCimaDireita.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
+
+            }
+            for (i = x + 1, j = y - 1; i < 8 && j >= 0; i++, j--)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                    //jogadaCimaEsquerda.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
+            }
+            for (i = x - 1, j = y + 1; i >= 0 && j < 8; i--, j++)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                    //jogadaBaixoDireita.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
+            }
+            for (i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                   // jogadaBaixoEsquerda.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
+            }
+            Jogada melhor = cimaDireita;
+            if (melhor == null || (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
+                melhor = cimaEsquerda;
+            if (melhor == null || (baixoDireita != null && baixoDireita.pecasComidas.Count() > melhor.pecasComidas.Count()))
+                melhor = baixoDireita;
+            if (melhor == null || (baixoEsquerda != null && baixoEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
+                melhor = baixoEsquerda;
+
+            return melhor;
+        }
+
         // retorna os possíveis movimentos para dama
         private static List<Jogada> MovimentosDama(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
         {
-            Jogada jogadaCimaDireita = new Jogada();
-            Jogada jogadaCimaEsquerda = new Jogada();
-            Jogada jogadaBaixoDireita = new Jogada();
-            Jogada jogadaBaixoEsquerda = new Jogada();
-
-            int i, j;
             // TODO chamar LeiDaMaioria aqui
-
             List<Jogada> jogadas = new List<Jogada>();
-            // Jogada captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
-            Jogada captura = new Jogada();
+            Jogada captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
             // se teve alguma jogada com captura / peças comida
             if (captura != null)
             {
                 jogadas.Add(captura);
                 return jogadas;
             }
+            int[] posPeca = new int[2] { x, y };
+            Jogada jogadaCimaDireita = null;
+            Jogada jogadaCimaEsquerda = null;
+            Jogada jogadaBaixoDireita = null;
+            Jogada jogadaBaixoEsquerda = null;
+            int i, j;
             for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
             {
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
+                    if (jogadaCimaDireita == null)
+                        jogadaCimaDireita = new Jogada(posPeca);
                     jogadaCimaDireita.movimentos.Add(new int[2] { i, j });
                 }
                 // caso onde achou uma peça aliada
@@ -292,6 +351,8 @@ namespace MaquinaDeRegrasNS
             {
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
+                    if (jogadaCimaEsquerda == null)
+                        jogadaCimaEsquerda = new Jogada(posPeca);
                     jogadaCimaEsquerda.movimentos.Add(new int[2] { i, j });
                 }
                 // caso onde achou uma peça aliada
@@ -301,6 +362,8 @@ namespace MaquinaDeRegrasNS
             {
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
+                    if (jogadaBaixoDireita == null)
+                        jogadaBaixoDireita = new Jogada(posPeca);
                     jogadaBaixoDireita.movimentos.Add(new int[2] { i, j });
                 }
                 // caso onde achou uma peça aliada
@@ -310,6 +373,8 @@ namespace MaquinaDeRegrasNS
             {
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
+                    if (jogadaBaixoEsquerda == null)
+                        jogadaBaixoEsquerda = new Jogada(posPeca);
                     jogadaBaixoEsquerda.movimentos.Add(new int[2] { i, j });
                 }
                 // caso onde achou uma peça aliada
