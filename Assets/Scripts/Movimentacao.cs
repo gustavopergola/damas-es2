@@ -9,6 +9,7 @@ public class Movimentacao : MonoBehaviour {
 
 	public GameObject pedraSelecionada;
 	public GameObject selectorParticleSystem;
+	public GameObject preFabXVermelho;
 	private GameObject selectorParticleSystemAtual;
 	public Transform transformInicialPedra;
 
@@ -101,23 +102,27 @@ public class Movimentacao : MonoBehaviour {
                             }
                             // TODO 
                             //OK 1-verificar se movimento que estou querendo fazer se encontra nessa lista de jogadas
-                            //2-impedir movimentação caso não esteja nesta lista de jogadas ==> Mostrar indicação visual de movimento inválido
+                            //OK 2.1-impedir movimentação caso não esteja nesta lista de jogadas
+							//2.2 - mostrar indicação visual de movimento inválido
                             //3-mostrar highlight no tabuleiro ==> Assim que selecionar uma peca mostrar o highlight
                             //4-executar movimento visual seguindo as ações da Jogada
+							//5-Acao usa result de Estado e não manipulsa estado atual manualmente
                         }
                     }
-                    if (jogadaASerExecutada != null)//se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar
-                        // E atualizar o estadoAtual
+                    if (jogadaASerExecutada != null)//se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar e atualizar o estadoAtual
                     {
                         // executar movimento visual
                         movimenta(this.pedraSelecionada, objeto_resposta);
-
 						descelecionar_pedra_atual();
+
                         GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
                         GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
-
                         GameController.instance.passarTurno();
-                    }
+                    }else {
+						// Mostra X de jogada inválida
+						Instantiate(this.preFabXVermelho, objeto_resposta.transform);
+						//this.selectorParticleSystemAtual.transform.parent = this.pedraSelecionada.transform;
+					}
 				}
 			} else {
 				descelecionar_pedra_atual();
