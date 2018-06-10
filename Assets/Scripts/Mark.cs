@@ -2,16 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Peca : MonoBehaviour {
+public class Mark : MonoBehaviour {
 
-	public Jogador jogador;
-	public int tipo;
-	public Posicao posicao;
 	private int timeToFadeOut = 50;
 	private SpriteRenderer spriteRenderer;
     private Color newColor;
-	private bool destruirFlag = false;
 
+	// Use this for initialization
 	void Start () {
 		spriteRenderer = GetComponent<SpriteRenderer>();		
 		// força sprite 100% opaco
@@ -20,20 +17,16 @@ public class Peca : MonoBehaviour {
 		spriteRenderer.color = newColor;
 	}
 	
+	// Update is called once per frame
 	void FixedUpdate () {
 		//fade out animation
-		if (destruirFlag){
-			timeToFadeOut--;
-			newColor = spriteRenderer.color;
-			newColor.a -= 0.02f;
-			spriteRenderer.color = newColor;
-			
-			if (timeToFadeOut <= 0)
-				Destroy(this.gameObject);
-		}
-	}
-
-	public void destruir(){
-		destruirFlag = true;
+		
+		timeToFadeOut--;
+		newColor = spriteRenderer.color;
+		newColor.a -= 0.02f;
+		spriteRenderer.color = newColor;
+		
+		if (timeToFadeOut <= 0)
+			Destroy(this.gameObject);
 	}
 }
