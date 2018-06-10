@@ -103,9 +103,9 @@ public class Movimentacao : MonoBehaviour {
                             // TODO 
                             //OK 1-verificar se movimento que estou querendo fazer se encontra nessa lista de jogadas
                             //OK 2.1-impedir movimentação caso não esteja nesta lista de jogadas
-							//2.2 - mostrar indicação visual de movimento inválido
+							//OK 2.2 - mostrar indicação visual de movimento inválido
                             //3-mostrar highlight no tabuleiro ==> Assim que selecionar uma peca mostrar o highlight
-                            //4-executar movimento visual seguindo as ações da Jogada
+                            //4-executar movimento visual seguindo as multiplas ações da Jogada
 							//5-Acao usa result de Estado e não manipulsa estado atual manualmente
                         }
                     }
@@ -113,22 +113,35 @@ public class Movimentacao : MonoBehaviour {
                     {
                         // executar movimento visual
                         movimenta(this.pedraSelecionada, objeto_resposta);
-						descelecionar_pedra_atual();
-
+						comePecasGraphical(jogadaASerExecutada.pecasComidas);
+						descelecionarPedraAtual();
                         GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
                         GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
                         GameController.instance.passarTurno();
                     }else {
-						// Mostra X de jogada inválida
-						Instantiate(this.preFabXVermelho, objeto_resposta.transform);
-						//this.selectorParticleSystemAtual.transform.parent = this.pedraSelecionada.transform;
+						marcaXVermelhoNoTransform(objeto_resposta.transform);
 					}
 				}
 			} else {
-				descelecionar_pedra_atual();
+				descelecionarPedraAtual();
 			}
 			clickFlag = false;
 		}
+	}
+
+	private void comePecasGraphical(List<int []> pecasComidas){
+		foreach (int[] peca in pecasComidas){
+			GameObject posicao_go = Tabuleiro.instance.matrizTabuleiroPosicoes[peca[0], peca[1]];
+			Posicao posicao_script = posicao_go.GetComponent<Posicao>();
+			GameObject peca_go = posicao_script.peca;
+			Peca peca_script = peca_go.GetComponent<Peca>();
+			posicao_script.peca = null; // apaga referencia
+			peca_script.destruir(); // apaga game object com fade out
+		}
+	}
+
+	private void marcaXVermelhoNoTransform(Transform transformTarget){
+		Instantiate(this.preFabXVermelho, transformTarget); // Mostra X de jogada inválida
 	}
 
 	private bool isPeca(GameObject objeto){
@@ -159,14 +172,14 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	private void seleciona_pedra(GameObject pedraSelecionada){
-		if (this.pedraSelecionada != null) descelecionar_pedra_atual();
+		if (this.pedraSelecionada != null) descelecionarPedraAtual();
 
 		this.pedraSelecionada = pedraSelecionada;
 		this.selectorParticleSystemAtual = Instantiate(this.selectorParticleSystem, this.pedraSelecionada.transform) as GameObject;
 		this.selectorParticleSystemAtual.transform.parent = this.pedraSelecionada.transform;
 	}
 
-	private void descelecionar_pedra_atual(){
+	private void descelecionarPedraAtual(){
 		if (this.pedraSelecionada != null) {
 			this.pedraSelecionada = null;
 			if (this.selectorParticleSystemAtual != null)
@@ -209,7 +222,7 @@ public class Movimentacao : MonoBehaviour {
 		posFim.peca = pecaSelecionada;
         _pecaSelecionada.posicao = posFim;
 
-        bool ataque = jogada.pecasComidas.Count > 0 ? true : false;
+        bool ataque = jogada.pecasComidas.Count > 0;
         if (ataque)
         {
             for(int i=0; i < jogada.pecasComidas.Count; i++)
@@ -218,7 +231,6 @@ public class Movimentacao : MonoBehaviour {
                 int colComida = jogada.pecasComidas[i][1];
 
                 Tabuleiro.instance.matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
-                Tabuleiro.instance.matrizTabuleiroPosicoes[linComida, colComida].GetComponent<Posicao>().peca = null;
                 //objeto da peça não é modificado pois ele será deletado
             }
         }

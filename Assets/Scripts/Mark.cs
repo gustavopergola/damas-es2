@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Mark : MonoBehaviour {
 
-	private int timeToFadeOff = 50;
+	private int timeToFadeOut = 50;
 	private SpriteRenderer spriteRenderer;
-    //The Color to be assigned to the Renderer’s Material
     private Color newColor;
 
 	// Use this for initialization
@@ -20,14 +19,14 @@ public class Mark : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		//fade off animation
+		//fade out animation
 		
-		timeToFadeOff--;
+		timeToFadeOut--;
 		newColor = spriteRenderer.color;
 		newColor.a -= 0.02f;
 		spriteRenderer.color = newColor;
 		
-		if (timeToFadeOff <= 0)
+		if (timeToFadeOut <= 0)
 			Destroy(this.gameObject);
 	}
 }
