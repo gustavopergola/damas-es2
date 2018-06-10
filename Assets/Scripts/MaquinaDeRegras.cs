@@ -195,7 +195,7 @@ namespace MaquinaDeRegrasNS
                     }
                 }
             }
-            if ((x - 1 >= 0 && y + 1 > 8) && (tabuleiro[x - 1, y + 1] == pecaInimiga || tabuleiro[x - 1, y + 1] == damaInimiga))
+            if ((x - 1 >= 0 && y + 1 < 8) && (tabuleiro[x - 1, y + 1] == pecaInimiga || tabuleiro[x - 1, y + 1] == damaInimiga))
             {
                 
                 if (!contemPeca(pecasComidas, new int[2] { x - 1, y + 1 }))
@@ -339,8 +339,5 @@ namespace MaquinaDeRegrasNS
                     return true;
             return false;
         }   
-
     }
-
-    
 }
