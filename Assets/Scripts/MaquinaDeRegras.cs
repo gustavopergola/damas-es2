@@ -257,16 +257,21 @@ namespace MaquinaDeRegrasNS
 
             int i, j;
             // TODO chamar LeiDaMaioria aqui
+
+            List<Jogada> jogadas = new List<Jogada>();
+            // Jogada captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
+            Jogada captura = new Jogada();
+            // se teve alguma jogada com captura / peças comida
+            if (captura != null)
+            {
+                jogadas.Add(captura);
+                return jogadas;
+            }
             for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
             {
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
                     jogadaCimaDireita.movimentos.Add(new int[2] { i, j });
-                    // chamar LeiDaMaioria aqui
-                }
-                else if (tabuleiro[i, j] == pecaInimiga || tabuleiro[i, j] == damaInimiga)
-                {
-                    // chamar LeiDaMaioria aqui
                 }
                 // caso onde achou uma peça aliada
                 else break;
@@ -277,11 +282,6 @@ namespace MaquinaDeRegrasNS
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
                     jogadaCimaEsquerda.movimentos.Add(new int[2] { i, j });
-                    // chamar LeiDaMaioria aqui
-                }
-                else if (tabuleiro[i, j] == pecaInimiga || tabuleiro[i, j] == damaInimiga)
-                {
-                    // chamar LeiDaMaioria aqui
                 }
                 // caso onde achou uma peça aliada
                 else break;
@@ -291,11 +291,6 @@ namespace MaquinaDeRegrasNS
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
                     jogadaBaixoDireita.movimentos.Add(new int[2] { i, j });
-                    // chamar LeiDaMaioria aqui
-                }
-                else if (tabuleiro[i, j] == pecaInimiga || tabuleiro[i, j] == damaInimiga)
-                {
-                    // chamar LeiDaMaioria aqui
                 }
                 // caso onde achou uma peça aliada
                 else break;
@@ -305,11 +300,6 @@ namespace MaquinaDeRegrasNS
                 if (Tipos.isVazio(tabuleiro[i, j]))
                 {
                     jogadaBaixoEsquerda.movimentos.Add(new int[2] { i, j });
-                    // chamar LeiDaMaioria aqui
-                }
-                else if (tabuleiro[i, j] == pecaInimiga || tabuleiro[i, j] == damaInimiga)
-                {
-                    // chamar LeiDaMaioria aqui
                 }
                 // caso onde achou uma peça aliada
                 else break;
