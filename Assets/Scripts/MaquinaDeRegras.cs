@@ -274,75 +274,142 @@ namespace MaquinaDeRegrasNS
             }
 
             // percorrer cada diagonal a procura da peças para comer
-            int i = x, j = y;
+            int i , j;
             for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
             {
                 // se encontrou uma peça pra comer
                 if (tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
                 {
                     // e se ela ainda não foi comida numa jogada em cadeia
-                    // if (!contemPeca(pecasComidas,new int[2] { x + 1, y + 1 }))
-                    // {
-                    //     // e se tem uma casa vazia logo em seguida
-                    //     if ((x + 2 < 8 && y + 2 < 8) && Tipos.isVazio(tabuleiro[x + 2, y + 2]))
-                    //     {
-                    //         // então é uma jogada que come
-                    //         if (cimaDireita == null)
-                    //             cimaDireita = new Jogada(posPeca);
-                    //         cimaDireita.movimentos.Add(new int[2] { x + 2, y + 2 });
-                    //         cimaDireita.pecasComidas.Add(new int[2] { x + 1, y + 1 });
-                    //         // atualiza o "estado" do tabuleiro
-                    //         int pecaAtual = tabuleiro[x, y];
-                    //         tabuleiro[x, y] = 0;
-                    //         tabuleiro[x + 2, y + 2] = pecaAtual;
-                    //         int indicePecasComidas = pecasComidas.Count();
-                    //         pecasComidas.Add(new int[2] { x + 1, y + 1 });
-                    //         // chamada recursiva para olhar as próximas jogadas
-                    //         Jogada futura = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
-                    //         // adiciona o resultado da jogada à jogada anterior
-                    //         if (futura != null){
-                    //             cimaDireita.movimentos.Concat(futura.movimentos);
-                    //             cimaDireita.pecasComidas.Concat(futura.pecasComidas);
-                    //         }
-                    //         // retorna os valores originais do "estado" do tabuleiro
-                    //         tabuleiro[x, y] = pecaAtual;
-                    //         tabuleiro[x + 2, y + 2] = 0;
-                    //         pecasComidas.RemoveAt(indicePecasComidas);
-                    //     }
-                    // }
+                    if (!contemPeca(pecasComidas,new int[2] { i, j }))
+                    {
+                        // e se tem uma casa vazia logo em seguida
+                        if ((i + 2 < 8 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i + 2, j + 2]))
+                        {
+                            // então é uma jogada que come
+                            if (cimaDireita == null)
+                                cimaDireita = new Jogada(posPeca);
+                            cimaDireita.movimentos.Add(new int[2] { i + 2, j + 2 });
+                            cimaDireita.pecasComidas.Add(new int[2] { i + 1, j + 1 });
+                            // atualiza o "estado" do tabuleiro
+                            int pecaAtual = tabuleiro[i, j];
+                            tabuleiro[i, j] = 0;
+                            tabuleiro[i + 2, j + 2] = pecaAtual;
+                            int indicePecasComidas = pecasComidas.Count();
+                            pecasComidas.Add(new int[2] { i + 1, j + 1 });
+                            // chamada recursiva para olhar as próximas jogadas
+                            Jogada futura = LeiDaMaioria(tabuleiro, i + 2, j + 2, pecaInimiga, damaInimiga, pecasComidas);
+                            // adiciona o resultado da jogada à jogada anterior
+                            if (futura != null){
+                                cimaDireita.movimentos.Concat(futura.movimentos);
+                                cimaDireita.pecasComidas.Concat(futura.pecasComidas);
+                            }
+                            // retorna os valores originais do "estado" do tabuleiro
+                            tabuleiro[i, j] = pecaAtual;
+                            tabuleiro[i + 2, j + 2] = 0;
+                            pecasComidas.RemoveAt(indicePecasComidas);
+                        }
+                    }
                 }
-
                 // caso onde achou uma peça aliada
                 else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
                     break;
-
             }
             for (i = x + 1, j = y - 1; i < 8 && j >= 0; i++, j--)
             {
-                if (Tipos.isVazio(tabuleiro[i, j]))
+                if (tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
                 {
-                    cimaEsquerda.movimentos.Add(new int[2] { i, j });
+                    if (!contemPeca(pecasComidas,new int[2] { i, j }))
+                    {
+                        if ((i + 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i + 2, j - 2]))
+                        {
+                            if (cimaEsquerda == null)
+                                cimaEsquerda = new Jogada(posPeca);
+                            cimaEsquerda.movimentos.Add(new int[2] { i + 2, j - 2 });
+                            cimaEsquerda.pecasComidas.Add(new int[2] { i + 1, j - 1 });
+                            int pecaAtual = tabuleiro[i, j];
+                            tabuleiro[i, j] = 0;
+                            tabuleiro[i + 2, j - 2] = pecaAtual;
+                            int indicePecasComidas = pecasComidas.Count();
+                            pecasComidas.Add(new int[2] { i + 1, j - 1 });
+                            Jogada futura = LeiDaMaioria(tabuleiro, i + 2, j - 2, pecaInimiga, damaInimiga, pecasComidas);
+                            if (futura != null){
+                                cimaEsquerda.movimentos.Concat(futura.movimentos);
+                                cimaEsquerda.pecasComidas.Concat(futura.pecasComidas);
+                            }
+                            tabuleiro[i, j] = pecaAtual;
+                            tabuleiro[i + 2, j - 2] = 0;
+                            pecasComidas.RemoveAt(indicePecasComidas);
+                        }
+                    }
                 }
                 // caso onde achou uma peça aliada
-                else break;
+                else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
+                    break;
             }
             for (i = x - 1, j = y + 1; i >= 0 && j < 8; i--, j++)
             {
-                if (Tipos.isVazio(tabuleiro[i, j]))
+                if (tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
                 {
-                    baixoDireita.movimentos.Add(new int[2] { i, j });
+                    if (!contemPeca(pecasComidas,new int[2] { i, j }))
+                    {
+                        if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                        {
+                            if (baixoDireita == null)
+                                baixoDireita = new Jogada(posPeca);
+                            baixoDireita.movimentos.Add(new int[2] { i - 2, j + 2 });
+                            baixoDireita.pecasComidas.Add(new int[2] { i - 1, j + 1 });
+                            int pecaAtual = tabuleiro[i, j];
+                            tabuleiro[i, j] = 0;
+                            tabuleiro[i - 2, j + 2] = pecaAtual;
+                            int indicePecasComidas = pecasComidas.Count();
+                            pecasComidas.Add(new int[2] { i - 1, j + 1 });
+                            Jogada futura = LeiDaMaioria(tabuleiro, i - 2, j + 2, pecaInimiga, damaInimiga, pecasComidas);
+                            if (futura != null){
+                                baixoDireita.movimentos.Concat(futura.movimentos);
+                                baixoDireita.pecasComidas.Concat(futura.pecasComidas);
+                            }
+                            tabuleiro[i, j] = pecaAtual;
+                            tabuleiro[i - 2, j + 2] = 0;
+                            pecasComidas.RemoveAt(indicePecasComidas);
+                        }
+                    }
                 }
                 // caso onde achou uma peça aliada
-                else break;
+                else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
+                    break;
             }
             for (i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
             {
-                if (Tipos.isVazio(tabuleiro[i, j]))
+                if (tabuleiro[i,j] == pecaInimiga || tabuleiro[i,j] == damaInimiga)
                 {
-                   baixoEsquerda.movimentos.Add(new int[2] { i, j });
+                    if (!contemPeca(pecasComidas,new int[2] { i, j }))
+                    {
+                        if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                        {
+                            if (baixoEsquerda == null)
+                                baixoEsquerda = new Jogada(posPeca);
+                            baixoEsquerda.movimentos.Add(new int[2] { i - 2, j - 2 });
+                            baixoEsquerda.pecasComidas.Add(new int[2] { i - 1, j - 1 });
+                            int pecaAtual = tabuleiro[i, j];
+                            tabuleiro[i, j] = 0;
+                            tabuleiro[i - 2, j - 2] = pecaAtual;
+                            int indicePecasComidas = pecasComidas.Count();
+                            pecasComidas.Add(new int[2] { i - 1, j - 1 });
+                            Jogada futura = LeiDaMaioria(tabuleiro, i - 2, j - 2, pecaInimiga, damaInimiga, pecasComidas);
+                            if (futura != null){
+                                baixoEsquerda.movimentos.Concat(futura.movimentos);
+                                baixoEsquerda.pecasComidas.Concat(futura.pecasComidas);
+                            }
+                            tabuleiro[i, j] = pecaAtual;
+                            tabuleiro[i - 2, j - 2] = 0;
+                            pecasComidas.RemoveAt(indicePecasComidas);
+                        }
+                    }
                 }
                 // caso onde achou uma peça aliada
-                else break;
+                else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
+                    break;
             }
             Jogada melhor = cimaDireita;
             if (melhor == null || (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
