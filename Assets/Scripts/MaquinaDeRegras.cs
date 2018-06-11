@@ -266,7 +266,9 @@ namespace MaquinaDeRegrasNS
             Jogada baixoDireita = null;
             Jogada baixoEsquerda = null;
             int[] posPeca = new int[2] { x, y };
-
+            // lista de jogadas que podem surgir de uma casa vazia
+            // olhar if (Tipos.isVazio(tabuleiro[i,j]))
+            List<Jogada> jogadasEmCasasVazias = new List<Jogada>();
             // inicializa a lista de peças comidas, caso seja a primeira chamada ao método
             if (pecasComidas == null)
             {
@@ -311,9 +313,72 @@ namespace MaquinaDeRegrasNS
                         }
                     }
                 }
+                // em um espaço vazio verifica a melhor jogada a ser fazer a partir dai
+                // pode acarretar em um nova jogada comendo peças * jogadasCasasVazias *
+                else if (Tipos.isVazio(tabuleiro[i,j]))
+                {
+                    // a ideia aqui é simular como seria seguir a jogada a partir desse caminho
+                    // com o intuito de analisar qual o melhor caminho
+                    int[] novaPos = new int[2] { i + 1, j + 1 };
+
+                    // variavel para controlar se pode haver captura numa vizinhança a esta casa vazia
+                    bool capturaVizinhanca = false;
+
+                    // se encontrou uma peça pra comer
+                    if (i + 1 < 8 && j + 1 < 8 && (tabuleiro[i+1,j+1] == pecaInimiga || tabuleiro[i+1,j+1] == damaInimiga))
+                    {
+                        // e se ela ainda não foi comida numa jogada em cadeia
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            // e se tem uma casa vazia logo em seguida
+                            if ((i + 2 < 8 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i + 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i + 1 < 8 && j - 1 >= 0 && (tabuleiro[i+1,j-1] == pecaInimiga || tabuleiro[i+1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i + 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i + 2, j - 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j + 1 < 8 && (tabuleiro[i-1,j+1] == pecaInimiga || tabuleiro[i-1,j+1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j - 1 >= 0 && (tabuleiro[i-1,j-1] == pecaInimiga || tabuleiro[i-1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                            capturaVizinhanca = true;
+                        }
+                    }
+                    // caso possa haver a captura
+                    if (capturaVizinhanca){
+                        // faz uma chamada recursiva aqui para analisar o possivel caminho
+                        tabuleiro[i,j] = tabuleiro[x,y];
+                        tabuleiro[x,y] = 0;
+                        Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
+                        if (possivel != null){                                    
+                            Jogada casaVazia = new Jogada(posPeca);
+                            copiaJogada(cimaDireita, casaVazia);
+                            casaVazia.movimentos.Add(new int[2] {i, j});
+                            casaVazia.movimentos.Concat(possivel.movimentos);
+                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            jogadasEmCasasVazias.Add(casaVazia);
+                        }
+                        tabuleiro[x,y] = tabuleiro[i,j];
+                        tabuleiro[i,j] = 0;
+                    }
+                }
                 // caso onde achou uma peça aliada
-                else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
-                    break;
+                else break;
             }
             for (i = x + 1, j = y - 1; i < 8 && j >= 0; i++, j--)
             {
@@ -343,9 +408,60 @@ namespace MaquinaDeRegrasNS
                         }
                     }
                 }
+                else if (Tipos.isVazio(tabuleiro[i,j]))
+                {
+                    int[] novaPos = new int[2] { i + 1, j + 1 };
+                    bool capturaVizinhanca = false;
+                    if (i + 1 < 8 && j + 1 < 8 && (tabuleiro[i+1,j+1] == pecaInimiga || tabuleiro[i+1,j+1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i + 2 < 8 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i + 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i + 1 < 8 && j - 1 >= 0 && (tabuleiro[i+1,j-1] == pecaInimiga || tabuleiro[i+1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i + 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i + 2, j - 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j + 1 < 8 && (tabuleiro[i-1,j+1] == pecaInimiga || tabuleiro[i-1,j+1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j - 1 >= 0 && (tabuleiro[i-1,j-1] == pecaInimiga || tabuleiro[i-1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                            capturaVizinhanca = true;
+                        }
+                    }
+                    if (capturaVizinhanca){
+                        tabuleiro[i,j] = tabuleiro[x,y];
+                        tabuleiro[x,y] = 0;
+                        Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
+                        if (possivel != null){                                    
+                            Jogada casaVazia = new Jogada(posPeca);
+                            copiaJogada(cimaEsquerda, casaVazia);
+                            casaVazia.movimentos.Add(new int[2] {i, j});
+                            casaVazia.movimentos.Concat(possivel.movimentos);
+                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            jogadasEmCasasVazias.Add(casaVazia);
+                        }
+                        tabuleiro[x,y] = tabuleiro[i,j];
+                        tabuleiro[i,j] = 0;
+                    }
+                }
                 // caso onde achou uma peça aliada
-                else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
-                    break;
+                else break;
             }
             for (i = x - 1, j = y + 1; i >= 0 && j < 8; i--, j++)
             {
@@ -375,9 +491,60 @@ namespace MaquinaDeRegrasNS
                         }
                     }
                 }
+                else if (Tipos.isVazio(tabuleiro[i,j]))
+                {
+                    int[] novaPos = new int[2] { i + 1, j + 1 };
+                    bool capturaVizinhanca = false;
+                    if (i + 1 < 8 && j + 1 < 8 && (tabuleiro[i+1,j+1] == pecaInimiga || tabuleiro[i+1,j+1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i + 2 < 8 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i + 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i + 1 < 8 && j - 1 >= 0 && (tabuleiro[i+1,j-1] == pecaInimiga || tabuleiro[i+1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i + 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i + 2, j - 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j + 1 < 8 && (tabuleiro[i-1,j+1] == pecaInimiga || tabuleiro[i-1,j+1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j - 1 >= 0 && (tabuleiro[i-1,j-1] == pecaInimiga || tabuleiro[i-1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                            capturaVizinhanca = true;
+                        }
+                    }
+                    if (capturaVizinhanca){
+                        tabuleiro[i,j] = tabuleiro[x,y];
+                        tabuleiro[x,y] = 0;
+                        Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
+                        if (possivel != null){                                    
+                            Jogada casaVazia = new Jogada(posPeca);
+                            copiaJogada(baixoDireita, casaVazia);
+                            casaVazia.movimentos.Add(new int[2] {i, j});
+                            casaVazia.movimentos.Concat(possivel.movimentos);
+                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            jogadasEmCasasVazias.Add(casaVazia);
+                        }
+                        tabuleiro[x,y] = tabuleiro[i,j];
+                        tabuleiro[i,j] = 0;
+                    }
+                }
                 // caso onde achou uma peça aliada
-                else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
-                    break;
+                else break;
             }
             for (i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
             {
@@ -407,9 +574,60 @@ namespace MaquinaDeRegrasNS
                         }
                     }
                 }
+                else if (Tipos.isVazio(tabuleiro[i,j]))
+                {
+                    int[] novaPos = new int[2] { i + 1, j + 1 };
+                    bool capturaVizinhanca = false;
+                    if (i + 1 < 8 && j + 1 < 8 && (tabuleiro[i+1,j+1] == pecaInimiga || tabuleiro[i+1,j+1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i + 2 < 8 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i + 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i + 1 < 8 && j - 1 >= 0 && (tabuleiro[i+1,j-1] == pecaInimiga || tabuleiro[i+1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i + 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i + 2, j - 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j + 1 < 8 && (tabuleiro[i-1,j+1] == pecaInimiga || tabuleiro[i-1,j+1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                                capturaVizinhanca = true;
+                        }
+                    }
+                    if (i - 1 >= 0 && j - 1 >= 0 && (tabuleiro[i-1,j-1] == pecaInimiga || tabuleiro[i-1,j-1] == damaInimiga))
+                    {
+                        if (!contemPeca(pecasComidas,novaPos))
+                        {
+                            if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                            capturaVizinhanca = true;
+                        }
+                    }
+                    if (capturaVizinhanca){
+                        tabuleiro[i,j] = tabuleiro[x,y];
+                        tabuleiro[x,y] = 0;
+                        Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
+                        if (possivel != null){                                    
+                            Jogada casaVazia = new Jogada(posPeca);
+                            copiaJogada(baixoEsquerda, casaVazia);
+                            casaVazia.movimentos.Add(new int[2] {i, j});
+                            casaVazia.movimentos.Concat(possivel.movimentos);
+                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            jogadasEmCasasVazias.Add(casaVazia);
+                        }
+                        tabuleiro[x,y] = tabuleiro[i,j];
+                        tabuleiro[i,j] = 0;
+                    }
+                }
                 // caso onde achou uma peça aliada
-                else if (Tipos.isPecaComum(tabuleiro[i,j]) || Tipos.isDama(tabuleiro[i,j]))
-                    break;
+                else break;
             }
             Jogada melhor = cimaDireita;
             if (melhor == null || (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
@@ -418,6 +636,12 @@ namespace MaquinaDeRegrasNS
                 melhor = baixoDireita;
             if (melhor == null || (baixoEsquerda != null && baixoEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
                 melhor = baixoEsquerda;
+            if (jogadasEmCasasVazias != null){
+                foreach (Jogada casaVazia in jogadasEmCasasVazias){
+                    if (melhor == null || (casaVazia.pecasComidas.Count() > melhor.pecasComidas.Count()))
+                        melhor = casaVazia;
+                }
+            }
             return melhor;
         }
 
@@ -497,7 +721,15 @@ namespace MaquinaDeRegrasNS
                 if(peca_lista[0] == peca[0] && peca_lista[1] == peca[1])
                     return true;
             return false;
-        }   
+        }
+
+        private static void copiaJogada(Jogada origem, Jogada destino){
+            origem.posInicial = destino.posInicial;
+            foreach(int[] movimento in origem.movimentos)
+                destino.movimentos.Add(new int[2] {movimento[0], movimento[1]});
+            foreach(int[] pecaComida in destino.pecasComidas)
+                destino.pecasComidas.Add(new int[2] {pecaComida[0], pecaComida[1]});
+        }
 
     }
 
