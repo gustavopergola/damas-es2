@@ -9,11 +9,11 @@ public class Movimentacao : MonoBehaviour {
 
 	public GameObject pedraSelecionada;
 	public GameObject selectorParticleSystem;
+	public GameObject highlightParticleSystem;
 	public GameObject preFabXVermelho;
 	private GameObject selectorParticleSystemAtual;
 	public Transform transformInicialPedra;
-
-
+	
 	public LayerMask layerPosicao;
 
 	public float timeToMove = 1f;
@@ -24,9 +24,11 @@ public class Movimentacao : MonoBehaviour {
 	private Vector3 finalPosition;
 	private float timeSpent = 9999f;
 	private bool clickFlag = false;
+	private List<GameObject> listaHighlight;
 
     void Start () {
         pedraSelecionada = null;
+		listaHighlight = new List<GameObject>();
 	}
 		
 	void Update () {
@@ -37,30 +39,6 @@ public class Movimentacao : MonoBehaviour {
 		controlaMovimento ();
 	}
 
-    public void test_result(){
-        int[,] tabuleiro = { 
-			{0,1,0,1,0,1,0,1},
-            {1,0,1,0,1,0,1,0},
-            {0,1,0,1,0,1,0,1},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {3,0,3,0,3,0,3,0},
-            {0,3,0,3,0,3,0,3},
-            {3,0,3,0,3,0,3,0}
-        };
-
-        Estado atual = new Estado(tabuleiro, 1, null,0);
-        //atual.print();
-
-        Jogada mock_acao = new Jogada();
-        mock_acao.posInicial = new int[] { 2, 1 };
-        mock_acao.movimentos.Add(new int[] { 3, 2 });
-        mock_acao.movimentos.Add(new int[] { 4, 1 });
-
-        Estado novo = Estado.result(atual, mock_acao);
-		//novo.print();
-    }
-
 	private void processaClique(){
         if (Input.GetMouseButtonUp(0) && !clickFlag) {
 			clickFlag = true;
@@ -69,6 +47,7 @@ public class Movimentacao : MonoBehaviour {
 			if (objeto_resposta != null) {
 				if (isPeca(objeto_resposta)) {
 					seleciona_pedra (objeto_resposta);
+					mostraHighlight (objeto_resposta);
 				} else if (isPosicao(objeto_resposta) && this.pedraSelecionada) {
                     Jogada jogadaASerExecutada = null;
                     Peca pecaSelecionada = pedraSelecionada.GetComponent<Peca>();
@@ -101,10 +80,10 @@ public class Movimentacao : MonoBehaviour {
 								}
 							}
 							// TODO 
-							//OK 1-verificar se movimento que estou querendo fazer se encontra nessa lista de jogadas
+							//OK 1-verificar se movimentod que estou querendo fazer se encontra nessa lista de jogadas
 							//OK 2.1-impedir movimentação caso não esteja nesta lista de jogadas
 							//OK 2.2 - mostrar indicação visual de movimento inválido
-							//3-mostrar highlight no tabuleiro ==> Assim que selecionar uma peca mostrar o highlight
+							//OK 3-mostrar highlight no tabuleiro ==> Assim que selecionar uma peca mostrar o highlight
 							//4-executar movimento visual seguindo as multiplas ações da Jogada
 							//5-Acao usa result de Estado e não manipulsa estado atual manualmente
 						}
@@ -182,6 +161,7 @@ public class Movimentacao : MonoBehaviour {
 
 	private void descelecionarPedraAtual(){
 		if (this.pedraSelecionada != null) {
+			apagaHighlight();
 			this.pedraSelecionada = null;
 			if (this.selectorParticleSystemAtual != null)
 				Destroy(this.selectorParticleSystemAtual);
@@ -241,12 +221,43 @@ public class Movimentacao : MonoBehaviour {
 
         return matrizTabuleiroInt;
 	}
-
 	private void controlaMovimento(){
 		if (this.timeSpent <= this.timeToMove) {
 			this.timeSpent += Time.deltaTime / this.timeToMove;	
 			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * this.speed);
 			this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
 		}
+	}
+
+	private void mostraHighlight(GameObject peca_go){
+		List<int[]> posicoesPecasJogadorAtual = GameController.instance.posicoes_jogador_atual();
+		List<List<Jogada>> jogadas = MaquinaDeRegras.PossiveisMovimentosUmJogador(
+						GameController.instance.estadoAtual.tabuleiro,
+						posicoesPecasJogadorAtual);
+		Peca pecaSelecionada = peca_go.GetComponent<Peca>();
+
+		foreach(List<Jogada> jogadas_peca in jogadas){
+			// verifica se lista sendo avaliada neste momento é a lista de jogadas da peça que eu quero movimentar agora
+			if(jogadas_peca[0].posInicial[0] == pecaSelecionada.posicao.lin 
+				&& jogadas_peca[0].posInicial[1] == pecaSelecionada.posicao.col)
+			{
+				int linFinalAtual, colFinalAtual, linFinalDestino, colFinalDestino;
+				foreach(Jogada jogada in jogadas_peca)
+				{
+					linFinalAtual = jogada.ultimoMovimento()[0];
+					colFinalAtual = jogada.ultimoMovimento()[1];
+					GameObject posicao = Tabuleiro.instance.matrizTabuleiroPosicoes[linFinalAtual, colFinalAtual];
+					GameObject new_highlight = Instantiate(highlightParticleSystem, posicao.transform) as GameObject;
+					this.listaHighlight.Add(new_highlight);
+				}
+			}
+		}
+	}
+
+	private void apagaHighlight(){
+		foreach(GameObject highlight in listaHighlight)
+			Destroy(highlight);
+		
+		this.listaHighlight = new List<GameObject>();
 	}
 }
