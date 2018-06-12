@@ -158,8 +158,8 @@ namespace MaquinaDeRegrasNS
                         Jogada futura = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da jogada à jogada anterior
                         if (futura != null){
-                            cimaDireita.movimentos.Concat(futura.movimentos);
-                            cimaDireita.pecasComidas.Concat(futura.pecasComidas);
+                            concatenaListas(futura.movimentos, cimaDireita.movimentos);
+                            concatenaListas(futura.pecasComidas, cimaDireita.pecasComidas);
                         }
                         // retorna os valores originais do "estado" do tabuleiro
                         tabuleiro[x, y] = pecaAtual;
@@ -186,8 +186,8 @@ namespace MaquinaDeRegrasNS
                         pecasComidas.Add(new int[2] { x + 1, y - 1 });
                         Jogada futura = LeiDaMaioria(tabuleiro, x + 2, y - 2, pecaInimiga, damaInimiga, pecasComidas);
                         if (futura != null){
-                            cimaEsquerda.movimentos.Concat(futura.movimentos);
-                            cimaEsquerda.pecasComidas.Concat(futura.pecasComidas);
+                            concatenaListas(futura.movimentos, cimaEsquerda.movimentos);
+                            concatenaListas(futura.pecasComidas, cimaEsquerda.pecasComidas);
                         }
                         tabuleiro[x, y] = pecaAtual;
                         tabuleiro[x + 2, y - 2] = 0;
@@ -212,8 +212,8 @@ namespace MaquinaDeRegrasNS
                         pecasComidas.Add(new int[2] { x - 1, y + 1 });
                         Jogada futura = LeiDaMaioria(tabuleiro, x - 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                         if (futura != null){
-                            baixoDireita.movimentos.Concat(futura.movimentos);
-                            baixoDireita.pecasComidas.Concat(futura.pecasComidas);
+                            concatenaListas(futura.movimentos, baixoDireita.movimentos);
+                            concatenaListas(futura.pecasComidas, baixoDireita.pecasComidas);
                         }
                         tabuleiro[x, y] = pecaAtual;
                         tabuleiro[x - 2, y + 2] = 0;
@@ -238,8 +238,8 @@ namespace MaquinaDeRegrasNS
                         pecasComidas.Add(new int[2] { x - 1, y - 1 });
                         Jogada futura = LeiDaMaioria(tabuleiro, x - 2, y - 2, pecaInimiga, damaInimiga, pecasComidas);
                         if (futura != null){
-                            baixoEsquerda.movimentos.Concat(futura.movimentos);
-                            baixoEsquerda.pecasComidas.Concat(futura.pecasComidas);
+                            concatenaListas(futura.movimentos, baixoEsquerda.movimentos);
+                            concatenaListas(futura.pecasComidas, baixoEsquerda.pecasComidas);
                         }
                         tabuleiro[x, y] = pecaAtual;
                         tabuleiro[x - 2, y - 2] = 0;
@@ -338,6 +338,12 @@ namespace MaquinaDeRegrasNS
                 if(peca_lista[0] == peca[0] && peca_lista[1] == peca[1])
                     return true;
             return false;
-        }   
+        }
+
+        private static void concatenaListas(List<int[]> origem, List<int[]> destino)
+        {
+            foreach(int[] peca in origem)
+                destino.Add(peca);
+        }
     }
 }
