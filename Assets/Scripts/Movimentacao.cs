@@ -38,27 +38,27 @@ public class Movimentacao : MonoBehaviour {
 	}
 
     public void test_result(){
-        // int[,] tabuleiro = { 
-		// 	{0,1,0,1,0,1,0,1},
-        //     {1,0,1,0,1,0,1,0},
-        //     {0,1,0,1,0,1,0,1},
-        //     {0,0,0,0,0,0,0,0},
-        //     {0,0,0,0,0,0,0,0},
-        //     {3,0,3,0,3,0,3,0},
-        //     {0,3,0,3,0,3,0,3},
-        //     {3,0,3,0,3,0,3,0}
-        // };
+        int[,] tabuleiro = { 
+			{0,1,0,1,0,1,0,1},
+            {1,0,1,0,1,0,1,0},
+            {0,1,0,1,0,1,0,1},
+            {0,0,0,0,0,0,0,0},
+            {0,0,0,0,0,0,0,0},
+            {3,0,3,0,3,0,3,0},
+            {0,3,0,3,0,3,0,3},
+            {3,0,3,0,3,0,3,0}
+        };
 
-        // //Estado atual = new Estado(tabuleiro, 1, null);
-        // //atual.print();
+        Estado atual = new Estado(tabuleiro, 1, null,0);
+        //atual.print();
 
-        // Jogada mock_acao = new Jogada();
-        // mock_acao.posInicial = new int[] { 2, 1 };
-        // mock_acao.movimentos.Add(new int[] { 3, 2 });
-        // mock_acao.movimentos.Add(new int[] { 4, 1 });
+        Jogada mock_acao = new Jogada();
+        mock_acao.posInicial = new int[] { 2, 1 };
+        mock_acao.movimentos.Add(new int[] { 3, 2 });
+        mock_acao.movimentos.Add(new int[] { 4, 1 });
 
-        // //Estado novo = Estado.result(atual, mock_acao);
-		// //novo.print();
+        Estado novo = Estado.result(atual, mock_acao);
+		//novo.print();
     }
 
 	private void processaClique(){
