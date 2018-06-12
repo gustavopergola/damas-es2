@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using EstadoNS;
 using TabuleiroNS;
+using TiposNS;
 
 public class GameController : MonoBehaviour {
 
@@ -136,6 +137,51 @@ public class GameController : MonoBehaviour {
 
     public List<int []> posicoes_jogador_atual(){
         return this.estadoAtual.posicoesJogadorX(GameController.instance.jogadorAtual.getNumeroJogador());
+    }
+
+    public int verificaVitoriaEmpate(Estado estado)
+    {
+        // 0: não está em vitória nem em empate
+        // 1: vitória do jogador 1
+        // 2: vitória do jogador 2
+        // 3: empate
+        int resultado = 0;
+
+        int qtdPecasJogador1, qtdPecasjogador2;
+        qtdPecasJogador1 = qtdPecasjogador2 = 0;
+        foreach(int peca in estado.tabuleiro)
+        {
+            if (Tipos.isJogador1(peca))
+            {
+                qtdPecasJogador1++;
+            }
+            else if(Tipos.isJogador2(peca))
+            {
+                qtdPecasjogador2++;
+            }
+        }
+
+        if(qtdPecasJogador1 == 0)
+        {
+            mudaTexto("JOGADOR 2 GANHOU!!!!!");
+            return 2; //jogador 1 sem peças, vitoria do jogador 2
+        }else if(qtdPecasjogador2 == 0)
+        {
+            mudaTexto("JOGADOR 1 GANHOU!!!!!");
+            return 1;//jogador 2 sem peças, vitoria do jogador 1
+        }
+        Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
+        return resultado; 
+    }
+
+    public void mudaTexto(string mensagem)
+    {
+        textIndicator.text = mensagem;
+    }
+
+    public void reiniciaJogo()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
 }

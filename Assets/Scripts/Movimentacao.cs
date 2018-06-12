@@ -101,6 +101,10 @@ public class Movimentacao : MonoBehaviour {
 								// Encontrando a jogada procurada temos que a jogada que queríamos fazer é válida, portando mudamos a variavel jogadaASerExecutada
 								{
 									jogadaASerExecutada = jogada;
+                                    if (jogadaASerExecutada.pecasComidas.Count == 0)
+                                    {
+                                        GameController.instance.estadoAtual.jogadasSemComer++;
+                                    }
 								}
 							}
 							// TODO 
@@ -125,6 +129,8 @@ public class Movimentacao : MonoBehaviour {
                     }else {
 						marcaXVermelhoNoTransform(objeto_resposta.transform);
 					}
+                    int jogo = GameController.instance.verificaVitoriaEmpate(GameController.instance.estadoAtual);
+                    Debug.Log("Estado atual do jogo: " + jogo);
 				}
 			} else {
 				descelecionarPedraAtual();
