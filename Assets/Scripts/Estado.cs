@@ -58,7 +58,7 @@ namespace EstadoNS{
             novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
             novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = Tipos.vazio;
 
-            foreach (var peca in acao.pecasComidas){
+            foreach (int[] peca in acao.pecasComidas){
                 novo.tabuleiro[peca[0], peca[1]] = Tipos.vazio;
             }
 
