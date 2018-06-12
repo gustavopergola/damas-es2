@@ -200,7 +200,7 @@ namespace MaquinaDeRegrasNS
                 
                 if (!contemPeca(pecasComidas, new int[2] { x - 1, y + 1 }))
                 {
-                    if ((x - 2 >= 0 && y + 2 > 8) && Tipos.isVazio(tabuleiro[x - 2, y + 2]))
+                    if ((x - 2 >= 0 && y + 2 < 8) && Tipos.isVazio(tabuleiro[x - 2, y + 2]))
                     {
                         if (baixoDireita == null)
                             baixoDireita = new Jogada(posPeca);
