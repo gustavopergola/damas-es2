@@ -219,7 +219,7 @@ namespace MaquinaDeRegrasNS
                         tabuleiro[x + 2, y - 2] = pecaAtual;
                         int indicePecasComidas = pecasComidas.Count();
                         pecasComidas.Add(new int[2] { x + 1, y - 1 });
-                        List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
+                        List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y - 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
                         if (futuras != null){
                             concatenaListas(futuras[0].movimentos, cimaEsquerda.movimentos);
@@ -254,7 +254,7 @@ namespace MaquinaDeRegrasNS
                         tabuleiro[x - 2, y + 2] = pecaAtual;
                         int indicePecasComidas = pecasComidas.Count();
                         pecasComidas.Add(new int[2] { x - 1, y + 1 });
-                        List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
+                        List<Jogada> futuras = LeiDaMaioria(tabuleiro, x - 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
                         if (futuras != null){
                             concatenaListas(futuras[0].movimentos, baixoDireita.movimentos);
@@ -289,7 +289,7 @@ namespace MaquinaDeRegrasNS
                         tabuleiro[x - 2, y - 2] = pecaAtual;
                         int indicePecasComidas = pecasComidas.Count();
                         pecasComidas.Add(new int[2] { x - 1, y - 1 });
-                        List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
+                        List<Jogada> futuras = LeiDaMaioria(tabuleiro, x - 2, y - 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
                         if (futuras != null){
                             concatenaListas(futuras[0].movimentos, baixoEsquerda.movimentos);
