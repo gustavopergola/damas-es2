@@ -55,11 +55,17 @@ namespace EstadoNS{
 
             int size = acao.movimentos.Count;
 
-            novo.tabuleiro[acao.movimentos[size-1][0], acao.movimentos[size-1][1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
-            novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = 0;
+            novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
+            novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = Tipos.vazio;
 
             foreach (var peca in acao.pecasComidas){
-                novo.tabuleiro[peca[0], peca[1]] = 0;
+                novo.tabuleiro[peca[0], peca[1]] = Tipos.vazio;
+            }
+
+            if (acao.virouDama)
+            {
+                int jogadorAtual = Tipos.pegaJogador(novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]]);
+                novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = Tipos.getPecaJogadorX(Tipos.dama, jogadorAtual);
             }
     	
 		    return novo;

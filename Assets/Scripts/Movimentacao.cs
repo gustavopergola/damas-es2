@@ -226,15 +226,12 @@ public class Movimentacao : MonoBehaviour {
 		posFim.peca = pecaSelecionada;
         _pecaSelecionada.posicao = posFim;
 
-        if (jogada.pecasComidas.Count > 0)
+        for(int i=0; i < jogada.pecasComidas.Count; i++)
         {
-            for(int i=0; i < jogada.pecasComidas.Count; i++)
-            {
-                int linComida = jogada.pecasComidas[i][0];
-                int colComida = jogada.pecasComidas[i][1];
+            int linComida = jogada.pecasComidas[i][0];
+            int colComida = jogada.pecasComidas[i][1];
 
-                matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
-            }
+            matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
         }
 
 		if(jogada.virouDama){
