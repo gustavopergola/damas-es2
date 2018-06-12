@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using EstadoNS;
+using MaquinaDeRegrasNS;
 using TiposNS;
 
 namespace IANS
@@ -51,7 +52,7 @@ namespace IANS
             int alfa = Int32.MinValue;
             int beta = Int32.MaxValue;
 
-            List<Jogada> jogadas = MaquinaDeRegras.instance.PossiveisMovimentos(estado);
+            List<Jogada> jogadas = MaquinaDeRegras.PossiveisMovimentos(estado);
             int i = 0, temp, jogadaIndex = 0;
             foreach (var jogada in jogadas)
             {
@@ -94,7 +95,7 @@ namespace IANS
 
             int v = Int32.MinValue;
             int temp;
-            List<Jogada> jogadas = MaquinaDeRegras.instance.PossiveisMovimentos(estado);
+            List<Jogada> jogadas = MaquinaDeRegras.PossiveisMovimentos(estado);
             foreach (var jogada in jogadas)
             {
                 //MAX(v,min_value(result(s,a),alfa,beta))
@@ -127,7 +128,7 @@ namespace IANS
 
             int v = Int32.MaxValue;
             int temp;
-            List<Jogada> jogadas = MaquinaDeRegras.instance.PossiveisMovimentos(estado);
+            List<Jogada> jogadas = MaquinaDeRegras.PossiveisMovimentos(estado);
             foreach (var jogada in jogadas)
             {
                 //MIN(v,max_value(result(s,a),alfa,beta))
@@ -178,11 +179,11 @@ namespace IANS
         }
 
         
-        //função de avaliacao sobre a quantidade de movimentos possiveis
+        //funï¿½ï¿½o de avaliacao sobre a quantidade de movimentos possiveis
         //retorna a qtd de movimentos possiveis
         public static int evalMobility(Estado estado)
         {
-            List<Jogada> jogadas = MaquinaDeRegras.instance.PossiveisMovimentos(estado);
+            List<Jogada> jogadas = MaquinaDeRegras.PossiveisMovimentos(estado);
             return jogadas.Count;
         }
 
@@ -226,7 +227,7 @@ namespace IANS
 
         public bool cutoff_test(Estado estado)
         {
-            return (estado.contaJogadas - GameController.estadoAtual.contaJogadas) > 4;
+            return (estado.contaJogadas - GameController.instance.estadoAtual.contaJogadas) > 4;
         }
 
         //funcao de avaliacao usando material e quantidade de jogadas

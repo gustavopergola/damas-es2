@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using IANS;
 using EstadoNS;
+using TabuleiroNS;
 
 public class GameController : MonoBehaviour {
 
@@ -25,8 +26,6 @@ public class GameController : MonoBehaviour {
     public const int GAME_MODE_IA_VS_IA = 2;
     public const int GAME_MODE_PLAYER_VS_PLAYER = 3;
 
-    public static Estado estadoAtual; 
-
     private static bool created = false;
     private bool emJogo = false;
 
@@ -46,7 +45,7 @@ public class GameController : MonoBehaviour {
     private void Start()
     {
         if (emJogo)
-            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null);        
+            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null,0);        
     }
 
     public void passarTurno(){

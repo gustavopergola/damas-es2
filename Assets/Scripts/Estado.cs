@@ -8,7 +8,7 @@ namespace EstadoNS{
     public class Estado{
 
         public int[,] tabuleiro;
-        private int jogadorAtual;
+        public int jogadorAtual;
 	    public Jogada ultimaJogada;
         public int contaJogadas;
 	    public bool gameOver = false;
