@@ -5,7 +5,7 @@ public class Jogada
     public List<int[]> movimentos;
     public List<int[]> pecasComidas;
     public int[] posInicial;
-    bool virouDama;
+    public bool virouDama;
 
     public Jogada(int[] posInicial = null)
     {
@@ -13,5 +13,10 @@ public class Jogada
         this.pecasComidas = new List<int[]>();
         this.posInicial = posInicial;
         this.virouDama = false;
+    }
+
+    public int[] ultimoMovimento()
+    {
+        return movimentos[movimentos.Count - 1];
     }
 }

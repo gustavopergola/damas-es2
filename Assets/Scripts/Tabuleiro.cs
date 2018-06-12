@@ -113,12 +113,12 @@ namespace TabuleiroNS
         {
             foreach (Transform peca in pedrasPretas.transform)
             {
-                peca.gameObject.GetComponent<Peca>().jogador = GameController.getJogador1();
+                peca.gameObject.GetComponent<Peca>().jogador = GameController.instance.getJogador1();
                 peca.gameObject.GetComponent<Peca>().tipo = Tipos.getPecaJogador1();
             }
             foreach (Transform peca in pedrasVermelhas.transform)
             {
-                peca.gameObject.GetComponent<Peca>().jogador = GameController.getJogador2();
+                peca.gameObject.GetComponent<Peca>().jogador = GameController.instance.getJogador2();
                 peca.gameObject.GetComponent<Peca>().tipo = Tipos.getPecaJogador2();
             }
         }
@@ -136,36 +136,36 @@ namespace TabuleiroNS
             }
         }
 
-        private void preenchePecasJogador1()
-        {
-            matrizTabuleiroInt[7, 1] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[7, 3] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[7, 5] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[7, 7] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[6, 0] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[6, 2] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[6, 4] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[6, 6] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[5, 1] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[5, 3] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[5, 5] = Tipos.getPecaJogador1();
-            matrizTabuleiroInt[5, 7] = Tipos.getPecaJogador1();
-        }
-
         private void preenchePecasJogador2()
         {
-            matrizTabuleiroInt[0, 0] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[0, 2] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[0, 4] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[0, 6] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[1, 1] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[1, 3] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[1, 5] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[1, 7] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[2, 0] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[2, 2] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[2, 4] = Tipos.getPecaJogador2();
-            matrizTabuleiroInt[2, 6] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[7, 1] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[7, 3] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[7, 5] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[6, 0] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[7, 7] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[6, 2] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[6, 4] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[6, 6] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[5, 1] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[5, 3] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[5, 5] = Tipos.getPecaJogador2();
+            matrizTabuleiroInt[5, 7] = Tipos.getPecaJogador2();
+        }
+
+        private void preenchePecasJogador1()
+        {
+            matrizTabuleiroInt[0, 0] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[0, 2] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[0, 4] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[0, 6] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[1, 1] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[1, 3] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[1, 5] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[1, 7] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[2, 0] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[2, 2] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[2, 4] = Tipos.getPecaJogador1();
+            matrizTabuleiroInt[2, 6] = Tipos.getPecaJogador1();
         }
 
         public void mostraTabuleiro()

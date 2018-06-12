@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TiposNS;
+using TabuleiroNS;
 
 namespace EstadoNS{
     public class Estado{
 
         public int[,] tabuleiro;
-        public int jogadorAtual;
+        private int jogadorAtual;
 	    public Jogada ultimaJogada;
 	    public bool gameOver = false;
 
@@ -20,8 +21,8 @@ namespace EstadoNS{
 	    public void print(){
             string resp = "";
 
-            resp += ("Jogador Atual:"+jogadorAtual+"\n");
-		    resp += ("Tabuleiro:\n");
+            resp += "Jogador Atual:" + jogadorAtual + "\n";
+		    resp += "Tabuleiro: \n";
 		    for(int i=0; i<8; i++){
 		    	for(int j=0; j<8; j++){
 		    		resp += tabuleiro[i,j]+" ";
@@ -42,7 +43,7 @@ namespace EstadoNS{
 	    }
 
 	    public int getOpponent(){            
-		    if (this.jogadorAtual== 1) return 2;
+		    if (this.jogadorAtual == 1) return 2;
 		    else return 1;
 	    }
 
@@ -63,6 +64,40 @@ namespace EstadoNS{
     	
 		    return novo;
 	    }
+
+        public void setJogadorAtual(int novoJogador)
+        {
+            this.jogadorAtual = novoJogador;
+        }
+
+        public int getJogadorAtual()
+        {
+            return this.jogadorAtual;
+        }
+
+        public List<int[]> posicoesJogadorX(int jogador)
+        {
+            //retorna todas as posicões (x, y) das peças de um jogador X
+
+            int lin, col, pecaAtual;
+            List<int[]> posicoes = new List<int[]>();
+            int[] posicao = new int[2];
+            int tamanho = Tabuleiro.instance.getTamanhoTabuleiro();
+            for (lin = 0; lin < tamanho; lin++)
+            {
+                for (col = 0; col < tamanho; col++)
+                {
+                    pecaAtual = tabuleiro[lin, col];
+                    if (Tipos.isJogadorX(pecaAtual, jogador))
+                    {
+                        posicao[0] = lin;
+                        posicao[1] = col;
+                        posicoes.Add((int[])posicao.Clone());
+                    }
+                }
+            }
+            return posicoes;
+        }
 
     }
 }
