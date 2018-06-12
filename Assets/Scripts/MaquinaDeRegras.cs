@@ -80,6 +80,16 @@ namespace MaquinaDeRegrasNS
             // se teve alguma jogada com captura / peças comida
             if (captura != null)
             {
+                // verifica se a peça vira dama ao final do movimento
+                int [] ultimoMovimento = captura.movimentos[captura.movimentos.Count() -1];
+                if (jogador == 1){
+                    if (ultimoMovimento[0] == 7)
+                        captura.virouDama = true;
+                }
+                else
+                    if (ultimoMovimento[0] == 0)
+                        captura.virouDama = true;
+                // adiciona a jogada de captura como única jogada possível
                 jogadas.Add(captura);
                 return jogadas;
             }
@@ -93,12 +103,20 @@ namespace MaquinaDeRegrasNS
                     novaJogada = new Jogada(posPeca);
                     novaJogada.movimentos.Add(new int[2] { x + 1, y + 1 });
                     jogadas.Add(novaJogada);
+                    // verifica se virou dama
+                    if (jogador == 1)
+                        if (x + 1 == 7)
+                            novaJogada.virouDama = true;
+
                 }
                 if ((x + 1 < 8 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
                 {
                     novaJogada = new Jogada(posPeca);
                     novaJogada.movimentos.Add(new int[2] { x + 1, y - 1 });
                     jogadas.Add(novaJogada);
+                    if (jogador == 1)
+                        if (x + 1 == 7)
+                            novaJogada.virouDama = true;
                 }
             }
             else
@@ -108,12 +126,19 @@ namespace MaquinaDeRegrasNS
                     novaJogada = new Jogada(posPeca);
                     novaJogada.movimentos.Add(new int[2] { x - 1, y + 1 });
                     jogadas.Add(novaJogada);
+                    // verifica se virou dama
+                    if (jogador == 2)
+                        if (x - 1 == 0)
+                            novaJogada.virouDama = true;
                 }
                 if ((x - 1 >= 0 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x - 1, y - 1]))
                 {
                     novaJogada = new Jogada(posPeca);
                     novaJogada.movimentos.Add(new int[2] { x - 1, y - 1 });
                     jogadas.Add(novaJogada);
+                    if (jogador == 2)
+                        if (x - 1 == 0)
+                            novaJogada.virouDama = true;
                 }
             }
             
