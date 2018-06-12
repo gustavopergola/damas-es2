@@ -185,8 +185,8 @@ namespace MaquinaDeRegrasNS
                         List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
                         if (futuras != null){
-                            concatenaListas(futura[0].movimentos, cimaDireita.movimentos);
-                            concatenaListas(futura[0].pecasComidas, cimaDireita.pecasComidas);
+                            concatenaListas(futuras[0].movimentos, cimaDireita.movimentos);
+                            concatenaListas(futuras[0].pecasComidas, cimaDireita.pecasComidas);
                             int futurasLength = futuras.Count();
                             if (futurasLength > 1) {
                                 if (alternativas == null)
@@ -222,8 +222,8 @@ namespace MaquinaDeRegrasNS
                         List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
                         if (futuras != null){
-                            concatenaListas(futura[0].movimentos, cimaEsquerda.movimentos);
-                            concatenaListas(futura[0].pecasComidas, cimaEsquerda.pecasComidas);
+                            concatenaListas(futuras[0].movimentos, cimaEsquerda.movimentos);
+                            concatenaListas(futuras[0].pecasComidas, cimaEsquerda.pecasComidas);
                             int futurasLength = futuras.Count();
                             if (futurasLength > 1) {
                                 if (alternativas == null)
@@ -257,8 +257,8 @@ namespace MaquinaDeRegrasNS
                         List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
                         if (futuras != null){
-                            concatenaListas(futura.movimentos, baixoDireita.movimentos);
-                            concatenaListas(futura.pecasComidas, baixoDireita.pecasComidas);
+                            concatenaListas(futuras[0].movimentos, baixoDireita.movimentos);
+                            concatenaListas(futuras[0].pecasComidas, baixoDireita.pecasComidas);
                             int futurasLength = futuras.Count();
                             if (futurasLength > 1) {
                                 if (alternativas == null)
@@ -292,8 +292,8 @@ namespace MaquinaDeRegrasNS
                         List<Jogada> futuras = LeiDaMaioria(tabuleiro, x + 2, y + 2, pecaInimiga, damaInimiga, pecasComidas);
                         // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
                         if (futuras != null){
-                            concatenaListas(futura.movimentos, baixoEsquerda.movimentos);
-                            concatenaListas(futura.pecasComidas, baixoEsquerda.pecasComidas);
+                            concatenaListas(futuras[0].movimentos, baixoEsquerda.movimentos);
+                            concatenaListas(futuras[0].pecasComidas, baixoEsquerda.pecasComidas);
                             int futurasLength = futuras.Count();
                             if (futurasLength > 1) {
                                 if (alternativas == null)
@@ -327,7 +327,7 @@ namespace MaquinaDeRegrasNS
             if (cimaDireita != null && cimaDireita.pecasComidas.Count() > maiorQtdCapturas){
                 melhor = new List<Jogada>();
                 melhor.Add(cimaDireita);
-                maiorQtdCapturas = cimaDireita.pecasComidas.Count()
+                maiorQtdCapturas = cimaDireita.pecasComidas.Count();
             }
             else if (cimaDireita != null &&  cimaDireita.pecasComidas.Count() > 0 && cimaDireita.pecasComidas.Count() == maiorQtdCapturas){
                 if(melhor == null)
@@ -338,7 +338,7 @@ namespace MaquinaDeRegrasNS
             if (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > maiorQtdCapturas){
                 melhor = new List<Jogada>();
                 melhor.Add(cimaEsquerda);
-                maiorQtdCapturas = cimaEsquerda.pecasComidas.Count()
+                maiorQtdCapturas = cimaEsquerda.pecasComidas.Count();
             }
             else if (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > 0 && cimaEsquerda.pecasComidas.Count() == maiorQtdCapturas){
                 if(melhor == null)
@@ -349,7 +349,7 @@ namespace MaquinaDeRegrasNS
             if (baixoDireita != null && baixoDireita.pecasComidas.Count() > maiorQtdCapturas){
                 melhor = new List<Jogada>();
                 melhor.Add(baixoDireita);
-                maiorQtdCapturas = baixoDireita.pecasComidas.Count()
+                maiorQtdCapturas = baixoDireita.pecasComidas.Count();
             }
             else if (baixoDireita != null && baixoDireita.pecasComidas.Count() > 0 && baixoDireita.pecasComidas.Count() == maiorQtdCapturas){
                 if(melhor == null)
@@ -360,7 +360,7 @@ namespace MaquinaDeRegrasNS
             if (baixoEsquerda != null && baixoEsquerda.pecasComidas.Count() > maiorQtdCapturas){
                 melhor = new List<Jogada>();
                 melhor.Add(baixoEsquerda);
-                maiorQtdCapturas = baixoEsquerda.pecasComidas.Count()
+                maiorQtdCapturas = baixoEsquerda.pecasComidas.Count();
             }
             else if (baixoEsquerda != null && baixoEsquerda.pecasComidas.Count() > 0 && baixoEsquerda.pecasComidas.Count() == maiorQtdCapturas){
                 if(melhor == null)
@@ -414,8 +414,8 @@ namespace MaquinaDeRegrasNS
                             Jogada futura = LeiDaMaioriaDamas(tabuleiro, i + 2, j + 2, pecaInimiga, damaInimiga, pecasComidas);
                             // adiciona o resultado da jogada à jogada anterior
                             if (futura != null){
-                                cimaDireita.movimentos.Concat(futura.movimentos);
-                                cimaDireita.pecasComidas.Concat(futura.pecasComidas);
+                                concatenaListas(futura.movimentos, cimaDireita.movimentos);
+                                concatenaListas(futura.pecasComidas, cimaDireita.pecasComidas);
                             }
                             // retorna os valores originais do "estado" do tabuleiro
                             tabuleiro[i, j] = pecaAtual;
@@ -480,8 +480,8 @@ namespace MaquinaDeRegrasNS
                             Jogada casaVazia = new Jogada(posPeca);
                             copiaJogada(cimaDireita, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
-                            casaVazia.movimentos.Concat(possivel.movimentos);
-                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            concatenaListas(possivel.movimentos, casaVazia.movimentos);
+                            concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
                             jogadasEmCasasVazias.Add(casaVazia);
                         }
                         tabuleiro[x,y] = tabuleiro[i,j];
@@ -510,8 +510,8 @@ namespace MaquinaDeRegrasNS
                             pecasComidas.Add(new int[2] { i + 1, j - 1 });
                             Jogada futura = LeiDaMaioriaDamas(tabuleiro, i + 2, j - 2, pecaInimiga, damaInimiga, pecasComidas);
                             if (futura != null){
-                                cimaEsquerda.movimentos.Concat(futura.movimentos);
-                                cimaEsquerda.pecasComidas.Concat(futura.pecasComidas);
+                                concatenaListas(futura.movimentos, cimaEsquerda.movimentos);
+                                concatenaListas(futura.pecasComidas, cimaEsquerda.pecasComidas);
                             }
                             tabuleiro[i, j] = pecaAtual;
                             tabuleiro[i + 2, j - 2] = 0;
@@ -543,7 +543,7 @@ namespace MaquinaDeRegrasNS
                     {
                         if (!contemPeca(pecasComidas,novaPos))
                         {
-                            if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                            if ((i - 2 >= 0 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
                                 capturaVizinhanca = true;
                         }
                     }
@@ -551,7 +551,7 @@ namespace MaquinaDeRegrasNS
                     {
                         if (!contemPeca(pecasComidas,novaPos))
                         {
-                            if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                            if ((i - 2 >= 0 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
                             capturaVizinhanca = true;
                         }
                     }
@@ -563,8 +563,8 @@ namespace MaquinaDeRegrasNS
                             Jogada casaVazia = new Jogada(posPeca);
                             copiaJogada(cimaEsquerda, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
-                            casaVazia.movimentos.Concat(possivel.movimentos);
-                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            concatenaListas(possivel.movimentos, casaVazia.movimentos);
+                            concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
                             jogadasEmCasasVazias.Add(casaVazia);
                         }
                         tabuleiro[x,y] = tabuleiro[i,j];
@@ -580,7 +580,7 @@ namespace MaquinaDeRegrasNS
                 {
                     if (!contemPeca(pecasComidas,new int[2] { i, j }))
                     {
-                        if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                        if ((i - 2 >= 0 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
                         {
                             if (baixoDireita == null)
                                 baixoDireita = new Jogada(posPeca);
@@ -593,8 +593,8 @@ namespace MaquinaDeRegrasNS
                             pecasComidas.Add(new int[2] { i - 1, j + 1 });
                             Jogada futura = LeiDaMaioriaDamas(tabuleiro, i - 2, j + 2, pecaInimiga, damaInimiga, pecasComidas);
                             if (futura != null){
-                                baixoDireita.movimentos.Concat(futura.movimentos);
-                                baixoDireita.pecasComidas.Concat(futura.pecasComidas);
+                                concatenaListas(futura.movimentos, baixoDireita.movimentos);
+                                concatenaListas(futura.pecasComidas, baixoDireita.pecasComidas);
                             }
                             tabuleiro[i, j] = pecaAtual;
                             tabuleiro[i - 2, j + 2] = 0;
@@ -626,7 +626,7 @@ namespace MaquinaDeRegrasNS
                     {
                         if (!contemPeca(pecasComidas,novaPos))
                         {
-                            if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                            if ((i - 2 >= 0 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
                                 capturaVizinhanca = true;
                         }
                     }
@@ -634,7 +634,7 @@ namespace MaquinaDeRegrasNS
                     {
                         if (!contemPeca(pecasComidas,novaPos))
                         {
-                            if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                            if ((i - 2 >= 0 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
                             capturaVizinhanca = true;
                         }
                     }
@@ -646,8 +646,8 @@ namespace MaquinaDeRegrasNS
                             Jogada casaVazia = new Jogada(posPeca);
                             copiaJogada(baixoDireita, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
-                            casaVazia.movimentos.Concat(possivel.movimentos);
-                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            concatenaListas(possivel.movimentos, casaVazia.movimentos);
+                            concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
                             jogadasEmCasasVazias.Add(casaVazia);
                         }
                         tabuleiro[x,y] = tabuleiro[i,j];
@@ -663,7 +663,7 @@ namespace MaquinaDeRegrasNS
                 {
                     if (!contemPeca(pecasComidas,new int[2] { i, j }))
                     {
-                        if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                        if ((i - 2 >= 0 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
                         {
                             if (baixoEsquerda == null)
                                 baixoEsquerda = new Jogada(posPeca);
@@ -676,8 +676,8 @@ namespace MaquinaDeRegrasNS
                             pecasComidas.Add(new int[2] { i - 1, j - 1 });
                             Jogada futura = LeiDaMaioriaDamas(tabuleiro, i - 2, j - 2, pecaInimiga, damaInimiga, pecasComidas);
                             if (futura != null){
-                                baixoEsquerda.movimentos.Concat(futura.movimentos);
-                                baixoEsquerda.pecasComidas.Concat(futura.pecasComidas);
+                                concatenaListas(futura.movimentos, baixoEsquerda.movimentos);
+                                concatenaListas(futura.pecasComidas, baixoEsquerda.pecasComidas);
                             }
                             tabuleiro[i, j] = pecaAtual;
                             tabuleiro[i - 2, j - 2] = 0;
@@ -709,7 +709,7 @@ namespace MaquinaDeRegrasNS
                     {
                         if (!contemPeca(pecasComidas,novaPos))
                         {
-                            if ((i - 2 < 8 && j + 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
+                            if ((i - 2 >= 0 && j + 2 < 8) && Tipos.isVazio(tabuleiro[i - 2, j + 2]))
                                 capturaVizinhanca = true;
                         }
                     }
@@ -717,7 +717,7 @@ namespace MaquinaDeRegrasNS
                     {
                         if (!contemPeca(pecasComidas,novaPos))
                         {
-                            if ((i - 2 < 8 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
+                            if ((i - 2 >= 0 && j - 2 >= 0) && Tipos.isVazio(tabuleiro[i - 2, j - 2]))
                             capturaVizinhanca = true;
                         }
                     }
@@ -729,8 +729,8 @@ namespace MaquinaDeRegrasNS
                             Jogada casaVazia = new Jogada(posPeca);
                             copiaJogada(baixoEsquerda, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
-                            casaVazia.movimentos.Concat(possivel.movimentos);
-                            casaVazia.pecasComidas.Concat(possivel.pecasComidas);
+                            concatenaListas(possivel.movimentos, casaVazia.movimentos);
+                            concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
                             jogadasEmCasasVazias.Add(casaVazia);
                         }
                         tabuleiro[x,y] = tabuleiro[i,j];
