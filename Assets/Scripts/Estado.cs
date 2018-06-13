@@ -11,11 +11,13 @@ namespace EstadoNS{
         private int jogadorAtual;
 	    public Jogada ultimaJogada;
 	    public bool gameOver = false;
+        public int jogadasCondicaoEmpate;
 
 	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
             this.tabuleiro = (int[,])tabuleiro.Clone();
             this.jogadorAtual = jogadorAtual;
             this.ultimaJogada = ultimaJogada;
+            this.jogadasCondicaoEmpate = 0;
 	    }
 
 	    public void print(){
@@ -61,8 +63,8 @@ namespace EstadoNS{
             foreach (var peca in acao.pecasComidas){
                 novo.tabuleiro[peca[0], peca[1]] = 0;
             }
-    	
-		    return novo;
+
+            return novo;
 	    }
 
         public void setJogadorAtual(int novoJogador)
