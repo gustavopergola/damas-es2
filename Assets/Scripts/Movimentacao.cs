@@ -124,7 +124,7 @@ public class Movimentacao : MonoBehaviour {
                         }
                         else
                         {
-                            comePecasGraphical(jogadaASerExecutada);
+                            comePecasGraphical(this.pedraSelecionada, jogadaASerExecutada);
                         }
 
                         if (jogadaASerExecutada.virouDama)
@@ -164,20 +164,21 @@ public class Movimentacao : MonoBehaviour {
 		Posicao posicao_inicial_script = posicao_inicial_go.GetComponent<Posicao>();
 		GameObject peca_go = posicao_inicial_script.peca;
 
-		if (!this.estaEmMovimento){
-			movimenta(peca_go, posicao_final_go);
-		}else {
-			this.movimentaAuxFilaPeca = peca_go;
-			this.movimentaAuxFilaPos = posicao_final_go;
-		}
+		// executar movimento visual
+        if(jogada.pecasComidas.Count == 0){
+            movimenta(peca_go, posicao_final_go);
+        }
+        else{
+           comePecasGraphical(peca_go, jogada);
+        }
 	}
 
-    public void comePecasGraphical(Jogada jogada)
+    private void comePecasGraphical(GameObject pedraSelecionada, Jogada jogada)
     {
-        StartCoroutine(comePecasGraphicalAsync(jogada));
+        StartCoroutine(comePecasGraphicalAsync(pedraSelecionada, jogada));
     }
 
-    private IEnumerator comePecasGraphicalAsync(Jogada jogada){
+	private IEnumerator comePecasGraphicalAsync(GameObject pedraSelecionada, Jogada jogada){
         int movimentosRealizados = 0;
         int[] posFinal;
 
@@ -191,9 +192,9 @@ public class Movimentacao : MonoBehaviour {
 
             posFinal = jogada.movimentos[movimentosRealizados];
             GameObject posicaoFinalObj = Tabuleiro.instance.matrizTabuleiroPosicoes[posFinal[0], posFinal[1]];
-           	movimentaPecaPorJogada(jogada);
+            movimenta(pedraSelecionada, posicaoFinalObj);
             movimentosRealizados++;
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.5f);
         }
 	}
 

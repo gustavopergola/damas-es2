@@ -67,13 +67,7 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(3);   
         Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
 
-        // executar movimento visual
-        if(jogada_ia.pecasComidas.Count == 0){
-            script_movimentacao.movimentaPecaPorJogada(jogada_ia);
-        }
-        else{
-            script_movimentacao.comePecasGraphical(jogada_ia);
-        }
+        script_movimentacao.movimentaPecaPorJogada(jogada_ia);
 
         //script_movimentacao.movimentaPecaPorJogada(jogada_ia);
 
