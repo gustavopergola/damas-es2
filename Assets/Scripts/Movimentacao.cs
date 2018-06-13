@@ -179,7 +179,6 @@ public class Movimentacao : MonoBehaviour {
         int[] posFinal;
 
         foreach (int[] peca in jogada.pecasComidas){
-            Debug.Log("TESTE");
 			GameObject posicao_go = Tabuleiro.instance.matrizTabuleiroPosicoes[peca[0], peca[1]];
 			Posicao posicao_script = posicao_go.GetComponent<Posicao>();//posicao destino
 			GameObject peca_go = posicao_script.peca;
