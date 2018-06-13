@@ -29,7 +29,7 @@ public class Movimentacao : MonoBehaviour {
 	private bool clickFlag = false;
 	private List<GameObject> listaHighlight;
 
-    int jogo = 0;
+   	public int jogo = 0;
 	public bool estaEmMovimento = false;
 
     void Start () {
@@ -46,7 +46,7 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	private void processaClique(){
-        if(jogo != 0)
+        if(this.jogo != 0)
         {
             return;
         }
@@ -137,9 +137,6 @@ public class Movimentacao : MonoBehaviour {
                     }else {
 						marcaXVermelhoNoTransform(objeto_resposta.transform);
 					}
-
-
-                    int jogo = GameController.instance.verificaVitoriaEmpate(GameController.instance.estadoAtual);
 				}
 			} else {
 				descelecionarPedraAtual();
@@ -149,7 +146,9 @@ public class Movimentacao : MonoBehaviour {
 	}
 	
 	public void movimentaPecaPorJogada(Jogada jogada){
-
+		if (jogada == null)
+			return;
+			
 		GameObject posicao_inicial_go = Tabuleiro.instance.matrizTabuleiroPosicoes[jogada.posInicial[0], jogada.posInicial[1]];
 		GameObject posicao_final_go = Tabuleiro.instance.matrizTabuleiroPosicoes[jogada.posFinal()[0], jogada.posFinal()[1]];
 		Posicao posicao_inicial_script = posicao_inicial_go.GetComponent<Posicao>();

@@ -43,15 +43,17 @@ public class GameController : MonoBehaviour {
             loadGameMode();
             emJogo = true;
             this.script_movimentacao = GetComponent<Movimentacao>();
-            if (iaxia)
-                passarTurno();
+            
         }
     }
 
     private void Start()
     {
         if (emJogo)
-            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null,0);        
+            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null,0); 
+        
+        if (iaxia)
+            passarTurno();       
     }
 
     public void passarTurno(){
@@ -63,11 +65,13 @@ public class GameController : MonoBehaviour {
             StartCoroutine(IAJogaComAtraso());
         }
 
+        script_movimentacao.jogo = this.verificaVitoriaEmpate(this.estadoAtual);
+
     }
 
     IEnumerator IAJogaComAtraso()
     {
-        yield return new WaitForSeconds(1.5f);   
+        yield return new WaitForSeconds(1.7f);   
         Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
 
         script_movimentacao.movimentaPecaPorJogada(jogada_ia);
@@ -201,7 +205,7 @@ public class GameController : MonoBehaviour {
             return 3;
         }
 
-        //Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
+        Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
         return resultado; 
     }
 
