@@ -57,12 +57,31 @@ public class GameController : MonoBehaviour {
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
 
         if (jogadorAtual.isIA()){
-            Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
-            script_movimentacao.movimentaPecaPorJogada(jogada_ia);
-            passarTurno();
+            StartCoroutine(IAJogaComAtraso());
         }
 
     }
+
+    IEnumerator IAJogaComAtraso()
+    {
+        yield return new WaitForSeconds(3);   
+        Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
+
+        // executar movimento visual
+        if(jogada_ia.pecasComidas.Count == 0){
+            script_movimentacao.movimentaPecaPorJogada(jogada_ia);
+        }
+        else{
+            script_movimentacao.comePecasGraphical(jogada_ia);
+        }
+
+        //script_movimentacao.movimentaPecaPorJogada(jogada_ia);
+
+        this.estadoAtual.tabuleiro = script_movimentacao.alteraMatriz(this.estadoAtual.tabuleiro, jogada_ia);
+        this.estadoAtual.ultimaJogada = jogada_ia;
+        passarTurno();
+    }
+
 	private void setTextoTurno(string new_texto){
 		textIndicator.text = new_texto;
 	}
@@ -182,7 +201,7 @@ public class GameController : MonoBehaviour {
             return 3;
         }
 
-        Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
+        //Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
         return resultado; 
     }
 
