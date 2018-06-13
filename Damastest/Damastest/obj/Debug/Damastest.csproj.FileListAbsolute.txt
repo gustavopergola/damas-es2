@@ -1,0 +1,10 @@
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\obj\Debug\Damastest.csprojResolveAssemblyReference.cache
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\bin\Debug\Damastest.dll
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\bin\Debug\Damastest.pdb
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\bin\Debug\nunit.framework.dll
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\bin\Debug\UnityEngine.dll
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\bin\Debug\nunit.framework.pdb
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\bin\Debug\nunit.framework.xml
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\bin\Debug\UnityEngine.xml
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\obj\Debug\Damastest.dll
+c:\users\victo\documents\visual studio 2017\Projects\Damastest\Damastest\obj\Debug\Damastest.pdb
