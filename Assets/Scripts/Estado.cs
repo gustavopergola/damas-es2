@@ -11,11 +11,13 @@ namespace EstadoNS{
         private int jogadorAtual;
 	    public Jogada ultimaJogada;
 	    public bool gameOver = false;
+        public int jogadasCondicaoEmpate;
 
 	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
             this.tabuleiro = (int[,])tabuleiro.Clone();
             this.jogadorAtual = jogadorAtual;
             this.ultimaJogada = ultimaJogada;
+            this.jogadasCondicaoEmpate = 0;
 	    }
 
 	    public void print(){
@@ -54,15 +56,30 @@ namespace EstadoNS{
             novo.ultimaJogada = acao;
 
             int size = acao.movimentos.Count;
+            int pecaSendoMovimentada = antigo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
+            novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
+            novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = Tipos.vazio;
 
-            novo.tabuleiro[acao.movimentos[size-1][0], acao.movimentos[size-1][1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
-            novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = 0;
-
-            foreach (var peca in acao.pecasComidas){
-                novo.tabuleiro[peca[0], peca[1]] = 0;
+            foreach (int[] peca in acao.pecasComidas){
+                novo.tabuleiro[peca[0], peca[1]] = Tipos.vazio;
             }
-    	
-		    return novo;
+
+            if (acao.virouDama)
+            {
+                int jogadorAtual = Tipos.pegaJogador(novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]]);
+                novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = Tipos.getPecaJogadorX(Tipos.dama, jogadorAtual);
+            }
+
+            if (acao.pecasComidas.Count == 0 && Tipos.isDama(pecaSendoMovimentada))
+            {
+                novo.jogadasCondicaoEmpate++;
+            }
+            else
+            {
+                novo.jogadasCondicaoEmpate = 0;
+            }
+
+            return novo;
 	    }
 
         public void setJogadorAtual(int novoJogador)

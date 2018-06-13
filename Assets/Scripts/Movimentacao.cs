@@ -28,6 +28,8 @@ public class Movimentacao : MonoBehaviour {
 	private bool clickFlag = false;
 	private List<GameObject> listaHighlight;
 
+    int jogo = 0;
+
     void Start () {
         pedraSelecionada = null;
 		listaHighlight = new List<GameObject>();
@@ -66,6 +68,10 @@ public class Movimentacao : MonoBehaviour {
     }
 
 	private void processaClique(){
+        if(jogo != 0)
+        {
+            return;
+        }
         if (Input.GetMouseButtonUp(0) && !clickFlag) {
 			clickFlag = true;
 			if (!GameController.instance.getTurnoJogador()) return; //turno IA
@@ -103,6 +109,13 @@ public class Movimentacao : MonoBehaviour {
 								// Encontrando a jogada procurada temos que a jogada que queríamos fazer é válida, portando mudamos a variavel jogadaASerExecutada
 								{
 									jogadaASerExecutada = jogada;
+                                    if (jogadaASerExecutada.pecasComidas.Count == 0 && Tipos.isDama(pecaSelecionada.tipo))
+                                    {
+                                        GameController.instance.estadoAtual.jogadasCondicaoEmpate++;
+                                    }else
+                                    {
+                                        GameController.instance.estadoAtual.jogadasCondicaoEmpate = 0;
+                                    }
 								}
 							}
 							// TODO 
@@ -146,6 +159,7 @@ public class Movimentacao : MonoBehaviour {
                     }else {
 						marcaXVermelhoNoTransform(objeto_resposta.transform);
 					}
+                    int jogo = GameController.instance.verificaVitoriaEmpate(GameController.instance.estadoAtual);
 				}
 			} else {
 				descelecionarPedraAtual();
@@ -263,15 +277,12 @@ public class Movimentacao : MonoBehaviour {
 		posFim.peca = pecaSelecionada;
         _pecaSelecionada.posicao = posFim;
 
-        if (jogada.pecasComidas.Count > 0)
+        for(int i=0; i < jogada.pecasComidas.Count; i++)
         {
-            for(int i=0; i < jogada.pecasComidas.Count; i++)
-            {
-                int linComida = jogada.pecasComidas[i][0];
-                int colComida = jogada.pecasComidas[i][1];
+            int linComida = jogada.pecasComidas[i][0];
+            int colComida = jogada.pecasComidas[i][1];
 
-                matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
-            }
+            matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
         }
 
 		if(jogada.virouDama){
