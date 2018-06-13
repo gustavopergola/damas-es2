@@ -26,6 +26,8 @@ public class Movimentacao : MonoBehaviour {
 	private bool clickFlag = false;
 	private List<GameObject> listaHighlight;
 
+    int jogo = 0;
+
     void Start () {
         pedraSelecionada = null;
 		listaHighlight = new List<GameObject>();
@@ -64,6 +66,10 @@ public class Movimentacao : MonoBehaviour {
     }
 
 	private void processaClique(){
+        if(jogo != 0)
+        {
+            return;
+        }
         if (Input.GetMouseButtonUp(0) && !clickFlag) {
 			clickFlag = true;
 			if (!GameController.instance.getTurnoJogador()) return; //turno IA
@@ -130,7 +136,6 @@ public class Movimentacao : MonoBehaviour {
 						marcaXVermelhoNoTransform(objeto_resposta.transform);
 					}
                     int jogo = GameController.instance.verificaVitoriaEmpate(GameController.instance.estadoAtual);
-                    Debug.Log("Estado atual do jogo: " + jogo);
 				}
 			} else {
 				descelecionarPedraAtual();
