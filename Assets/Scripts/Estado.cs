@@ -11,11 +11,13 @@ namespace EstadoNS{
         private int jogadorAtual;
 	    public Jogada ultimaJogada;
 	    public bool gameOver = false;
+        public int jogadasCondicaoEmpate;
 
 	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
             this.tabuleiro = (int[,])tabuleiro.Clone();
             this.jogadorAtual = jogadorAtual;
             this.ultimaJogada = ultimaJogada;
+            this.jogadasCondicaoEmpate = 0;
 	    }
 
 	    public void print(){
@@ -67,8 +69,8 @@ namespace EstadoNS{
                 int jogadorAtual = Tipos.pegaJogador(novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]]);
                 novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = Tipos.getPecaJogadorX(Tipos.dama, jogadorAtual);
             }
-    	
-		    return novo;
+
+            return novo;
 	    }
 
         public void setJogadorAtual(int novoJogador)
