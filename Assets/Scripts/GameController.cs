@@ -171,6 +171,11 @@ public class GameController : MonoBehaviour {
             return 1;//jogador 2 sem peças, vitoria do jogador 1
         }
         
+        if(estado.jogadasCondicaoEmpate >= 20)
+        {
+            mudaTexto("EMPATE!!");
+            return 3;
+        }
 
         Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
         return resultado; 
