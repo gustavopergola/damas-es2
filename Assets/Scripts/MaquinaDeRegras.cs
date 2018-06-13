@@ -52,9 +52,11 @@ namespace MaquinaDeRegrasNS
                     if (maiorNumeroPecasComidas < pecasComidasPecaAtual){
                         possiveisJogadas = new List<List<Jogada>>();
                         maiorNumeroPecasComidas = pecasComidasPecaAtual;
-                        List<Jogada> lista_unica_jogada = new List<Jogada>();
-                        lista_unica_jogada.Add(jogadas_peca.First());
-                        possiveisJogadas.Add(lista_unica_jogada);
+                        List<Jogada> lista_jogadas = new List<Jogada>();
+                        foreach(Jogada valida in jogadas_peca)
+                            if( valida.pecasComidas.Count() == maiorNumeroPecasComidas)
+                                lista_jogadas.Add(valida);
+                        possiveisJogadas.Add(lista_jogadas);
                     }else if (pecasComidasPecaAtual == maiorNumeroPecasComidas){
                         possiveisJogadas.Add(jogadas_peca);
                     }
