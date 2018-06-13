@@ -13,6 +13,8 @@ public class Movimentacao : MonoBehaviour {
 	public GameObject preFabXVermelho;
 	private GameObject selectorParticleSystemAtual;
 	public Transform transformInicialPedra;
+    public Sprite damaPreta;
+    public Sprite damaVermelha;
 	
 	public LayerMask layerPosicao;
 
@@ -125,6 +127,18 @@ public class Movimentacao : MonoBehaviour {
                             comePecasGraphical(this.pedraSelecionada, jogadaASerExecutada);
                         }
 
+                        if (jogadaASerExecutada.virouDama)
+                        {
+                            if (GameController.instance.estadoAtual.getJogadorAtual() == 1)
+                            {
+                                pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaPreta;
+                            }
+                            else
+                            {
+                                pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaVermelha;
+                            }
+                            
+                        }
 						descelecionarPedraAtual();
                         GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
                         GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
