@@ -42,6 +42,7 @@ public class GameController : MonoBehaviour {
             loadGameMode();
             emJogo = true;
             this.script_movimentacao = GetComponent<Movimentacao>();
+            passarTurno();
         }
     }
 
@@ -110,7 +111,8 @@ public class GameController : MonoBehaviour {
     private void loadIAvsIAGame(){
         Jogador ia1 = new Jogador("IA 1", new IA(1));
         Jogador ia2 = new Jogador("IA 2", new IA(2));
-        defineJogadores(ia1, ia2);
+        //defineJogadores(ia1, ia2);
+        defineJogadores(ia2, ia1); // ao contrário de proposito pra chamar passar turno
     }
     
     private void loadGameScene(){
