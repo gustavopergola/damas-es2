@@ -66,11 +66,11 @@ namespace EstadoNS{
                 novo.tabuleiro[peca[0], peca[1]] = Tipos.vazio;
             }
 
-            if (acao.virouDama)
-            {
-                int jogadorAtual = Tipos.pegaJogador(novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]]);
-                novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = Tipos.getPecaJogadorX(Tipos.dama, jogadorAtual);
-            }
+            // if (acao.virouDama)
+            // {
+            //     int jogadorAtual = Tipos.pegaJogador(novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]]);
+            //     novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = Tipos.getPecaJogadorX(Tipos.dama, jogadorAtual);
+            // }
 
             if (acao.pecasComidas.Count == 0 && Tipos.isDama(pecaSendoMovimentada))
             {
