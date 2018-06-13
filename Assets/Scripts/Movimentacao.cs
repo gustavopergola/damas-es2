@@ -19,8 +19,8 @@ public class Movimentacao : MonoBehaviour {
 	
 	public LayerMask layerPosicao;
 
-	public float timeToMove = 1f;
-	public float speed = 1f;
+	private float timeToMove = 1f;
+	private float speed = 2.5f;
 
 	private Transform transformPedraEmMovimento;
 	private Vector3 startPosition;
@@ -30,6 +30,10 @@ public class Movimentacao : MonoBehaviour {
 	private List<GameObject> listaHighlight;
 
     int jogo = 0;
+	public bool estaEmMovimento = false;
+
+	public GameObject movimentaAuxFilaPeca = null;
+	public GameObject movimentaAuxFilaPos = null;
 
     void Start () {
         pedraSelecionada = null;
@@ -41,6 +45,14 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
+		Debug.Log(movimentaAuxFilaPeca == null);
+		Debug.Log("esta em movimento? " + this.estaEmMovimento);
+		if (movimentaAuxFilaPeca != null && !this.estaEmMovimento){
+			movimenta(movimentaAuxFilaPeca, movimentaAuxFilaPos);
+			this.movimentaAuxFilaPeca = null;
+			this.movimentaAuxFilaPos  = null;
+		}
+
 		controlaMovimento ();
 	}
 
@@ -105,7 +117,7 @@ public class Movimentacao : MonoBehaviour {
 						}
 					}
                     
-                    if (jogadaASerExecutada != null)//se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar e atualizar o estadoAtual
+                    if (jogadaASerExecutada != null) //se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar e atualizar o estadoAtual
                     {
                         // executar movimento visual
                         if(jogadaASerExecutada.pecasComidas.Count == 0)
@@ -116,7 +128,6 @@ public class Movimentacao : MonoBehaviour {
                         {
                             comePecasGraphical(this.pedraSelecionada, jogadaASerExecutada);
                         }
-
                         if (jogadaASerExecutada.virouDama)
                         {
                             if (GameController.instance.estadoAtual.getJogadorAtual() == 1)
@@ -136,6 +147,8 @@ public class Movimentacao : MonoBehaviour {
                     }else {
 						marcaXVermelhoNoTransform(objeto_resposta.transform);
 					}
+
+
                     int jogo = GameController.instance.verificaVitoriaEmpate(GameController.instance.estadoAtual);
 				}
 			} else {
@@ -152,14 +165,19 @@ public class Movimentacao : MonoBehaviour {
 		Posicao posicao_inicial_script = posicao_inicial_go.GetComponent<Posicao>();
 		GameObject peca_go = posicao_inicial_script.peca;
 
-		movimenta(peca_go, posicao_final_go);
+		if (!this.estaEmMovimento){
+			movimenta(peca_go, posicao_final_go);
+		}else {
+			this.movimentaAuxFilaPeca = peca_go;
+			this.movimentaAuxFilaPos = posicao_final_go;
+		}
+		
 	}
 
     private void comePecasGraphical(GameObject pedraSelecionada, Jogada jogada)
     {
         StartCoroutine(comePecasGraphicalAsync(pedraSelecionada, jogada));
     }
-
 
     private IEnumerator comePecasGraphicalAsync(GameObject pedraSelecionada, Jogada jogada){
         int movimentosRealizados = 0;
@@ -236,6 +254,7 @@ public class Movimentacao : MonoBehaviour {
 	private void movimenta(GameObject go_pedra_selecionada, GameObject go_posicao_alvo){
 		if (go_pedra_selecionada == null)
 			return;
+		this.estaEmMovimento = true;
 		this.startPosition = go_pedra_selecionada.transform.position;
 		this.finalPosition = go_posicao_alvo.transform.position;
 		this.transformPedraEmMovimento = go_pedra_selecionada.transform;
@@ -281,9 +300,12 @@ public class Movimentacao : MonoBehaviour {
 	}
 	private void controlaMovimento(){
 		if (this.timeSpent <= this.timeToMove) {
+			estaEmMovimento = true;
 			this.timeSpent += Time.deltaTime / this.timeToMove;	
-			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * this.speed);
+			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * 1.1f);
 			this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
+		}else {
+			estaEmMovimento = false;
 		}
 	}
 

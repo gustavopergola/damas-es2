@@ -58,10 +58,6 @@ public class GameController : MonoBehaviour {
 
         if (jogadorAtual.isIA()){
             Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
-            Debug.Log("teste calling ia action!");
-            Debug.Log("jogada_ia[0]" + jogada_ia.movimentos[0][0]);
-            Debug.Log("jogada_ia[1]" + jogada_ia.movimentos[0][1]);
-
             script_movimentacao.movimentaPecaPorJogada(jogada_ia);
             passarTurno();
         }
