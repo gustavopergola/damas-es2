@@ -56,12 +56,27 @@ namespace EstadoNS{
             novo.ultimaJogada = acao;
 
             int size = acao.movimentos.Count;
+            int pecaSendoMovimentada = antigo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
+            novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
+            novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = Tipos.vazio;
 
-            novo.tabuleiro[acao.movimentos[size-1][0], acao.movimentos[size-1][1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
-            novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = 0;
+            foreach (int[] peca in acao.pecasComidas){
+                novo.tabuleiro[peca[0], peca[1]] = Tipos.vazio;
+            }
 
-            foreach (var peca in acao.pecasComidas){
-                novo.tabuleiro[peca[0], peca[1]] = 0;
+            if (acao.virouDama)
+            {
+                int jogadorAtual = Tipos.pegaJogador(novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]]);
+                novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = Tipos.getPecaJogadorX(Tipos.dama, jogadorAtual);
+            }
+
+            if (acao.pecasComidas.Count == 0 && Tipos.isDama(pecaSendoMovimentada))
+            {
+                novo.jogadasCondicaoEmpate++;
+            }
+            else
+            {
+                novo.jogadasCondicaoEmpate = 0;
             }
 
             return novo;
