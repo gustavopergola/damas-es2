@@ -32,9 +32,6 @@ public class Movimentacao : MonoBehaviour {
     int jogo = 0;
 	public bool estaEmMovimento = false;
 
-	public GameObject movimentaAuxFilaPeca = null;
-	public GameObject movimentaAuxFilaPos = null;
-
     void Start () {
         pedraSelecionada = null;
 		listaHighlight = new List<GameObject>();
@@ -45,12 +42,6 @@ public class Movimentacao : MonoBehaviour {
 	}
 
 	void FixedUpdate(){
-		if (movimentaAuxFilaPeca != null && !this.estaEmMovimento){
-			movimenta(movimentaAuxFilaPeca, movimentaAuxFilaPos);
-			this.movimentaAuxFilaPeca = null;
-			this.movimentaAuxFilaPos  = null;
-		}
-
 		controlaMovimento ();
 	}
 
