@@ -107,9 +107,12 @@ public class Movimentacao : MonoBehaviour {
 								// Encontrando a jogada procurada temos que a jogada que queríamos fazer é válida, portando mudamos a variavel jogadaASerExecutada
 								{
 									jogadaASerExecutada = jogada;
-                                    if (jogadaASerExecutada.pecasComidas.Count == 0)
+                                    if (jogadaASerExecutada.pecasComidas.Count == 0 && Tipos.isDama(pecaSelecionada.tipo))
                                     {
-                                        GameController.instance.estadoAtual.jogadasSemComer++;
+                                        GameController.instance.estadoAtual.jogadasCondicaoEmpate++;
+                                    }else
+                                    {
+                                        GameController.instance.estadoAtual.jogadasCondicaoEmpate = 0;
                                     }
 								}
 							}

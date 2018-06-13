@@ -163,13 +163,15 @@ public class GameController : MonoBehaviour {
 
         if(qtdPecasJogador1 == 0)
         {
-            mudaTexto("JOGADOR 2 GANHOU!!!!!");
+            mudaTexto("JOGADOR 2 GANHOU!!");
             return 2; //jogador 1 sem peças, vitoria do jogador 2
         }else if(qtdPecasjogador2 == 0)
         {
-            mudaTexto("JOGADOR 1 GANHOU!!!!!");
+            mudaTexto("JOGADOR 1 GANHOU!!");
             return 1;//jogador 2 sem peças, vitoria do jogador 1
         }
+        
+
         Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
         return resultado; 
     }
