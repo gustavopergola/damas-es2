@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using IANS;
 using EstadoNS;
 using TabuleiroNS;
 using TiposNS;
 
 public class GameController : MonoBehaviour {
-
 
     public static GameController instance { get; private set; }
     public Estado estadoAtual;
@@ -28,6 +28,8 @@ public class GameController : MonoBehaviour {
 
     private static bool created = false;
     private bool emJogo = false;
+    
+    private Movimentacao script_movimentacao;
 
 	void Awake (){
         instance = this;
@@ -39,13 +41,14 @@ public class GameController : MonoBehaviour {
             textIndicator = GameObject.Find("TurnoText").GetComponent<Text>();
             loadGameMode();
             emJogo = true;
+            this.script_movimentacao = GetComponent<Movimentacao>();
         }
     }
 
     private void Start()
     {
         if (emJogo)
-            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null);        
+            estadoAtual = new Estado(Tabuleiro.instance.matrizTabuleiroInt, jogadorAtual.getNumeroJogador(), null,0);        
     }
 
     public void passarTurno(){
@@ -53,11 +56,26 @@ public class GameController : MonoBehaviour {
 
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
 
-        if (jogadorAtual.isIA())
-            jogadorAtual.callAIAction();
-        
+        if (jogadorAtual.isIA()){
+            StartCoroutine(IAJogaComAtraso());
+        }
 
     }
+
+    IEnumerator IAJogaComAtraso()
+    {
+        yield return new WaitForSeconds(1.5f);   
+        Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
+
+        script_movimentacao.movimentaPecaPorJogada(jogada_ia);
+
+        //script_movimentacao.movimentaPecaPorJogada(jogada_ia);
+
+        this.estadoAtual.tabuleiro = script_movimentacao.alteraMatriz(this.estadoAtual.tabuleiro, jogada_ia);
+        this.estadoAtual.ultimaJogada = jogada_ia;
+        passarTurno();
+    }
+
 	private void setTextoTurno(string new_texto){
 		textIndicator.text = new_texto;
 	}
@@ -90,8 +108,8 @@ public class GameController : MonoBehaviour {
     }
 
     private void loadIAvsIAGame(){
-        Jogador ia1 = new Jogador("IA 1", new IA());
-        Jogador ia2 = new Jogador("IA 2", new IA());
+        Jogador ia1 = new Jogador("IA 1", new IA(1));
+        Jogador ia2 = new Jogador("IA 2", new IA(2));
         defineJogadores(ia1, ia2);
     }
     
@@ -177,7 +195,7 @@ public class GameController : MonoBehaviour {
             return 3;
         }
 
-        Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
+        //Debug.Log("Qtd Pecas Jogador 1: " + qtdPecasJogador1 + " Qtd Pecas Jogador 2: " + qtdPecasjogador2);
         return resultado; 
     }
 
