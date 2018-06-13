@@ -20,7 +20,7 @@ public class Movimentacao : MonoBehaviour {
 	public LayerMask layerPosicao;
 
 	private float timeToMove = 1f;
-	private float speed = 2.5f;
+	private float speed = 2f;
 
 	private Transform transformPedraEmMovimento;
 	private Vector3 startPosition;
@@ -194,7 +194,7 @@ public class Movimentacao : MonoBehaviour {
             GameObject posicaoFinalObj = Tabuleiro.instance.matrizTabuleiroPosicoes[posFinal[0], posFinal[1]];
             movimenta(pedraSelecionada, posicaoFinalObj);
             movimentosRealizados++;
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(0.5f);
         }
 	}
 
@@ -301,7 +301,7 @@ public class Movimentacao : MonoBehaviour {
 		if (this.timeSpent <= this.timeToMove) {
 			estaEmMovimento = true;
 			this.timeSpent += Time.deltaTime / this.timeToMove;	
-			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * 1.1f);
+			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * this.speed);
 			if (this.transformPedraEmMovimento)
 				this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
 				

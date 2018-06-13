@@ -64,7 +64,7 @@ public class GameController : MonoBehaviour {
 
     IEnumerator IAJogaComAtraso()
     {
-        yield return new WaitForSeconds(3);   
+        yield return new WaitForSeconds(1.5f);   
         Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
 
         script_movimentacao.movimentaPecaPorJogada(jogada_ia);
