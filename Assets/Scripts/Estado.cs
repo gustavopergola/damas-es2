@@ -56,7 +56,7 @@ namespace EstadoNS{
             novo.ultimaJogada = acao;
 
             int size = acao.movimentos.Count;
-
+            int pecaSendoMovimentada = antigo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
             novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]];
             novo.tabuleiro[acao.posInicial[0], acao.posInicial[1]] = Tipos.vazio;
 
@@ -68,6 +68,15 @@ namespace EstadoNS{
             {
                 int jogadorAtual = Tipos.pegaJogador(novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]]);
                 novo.tabuleiro[acao.ultimoMovimento()[0], acao.ultimoMovimento()[1]] = Tipos.getPecaJogadorX(Tipos.dama, jogadorAtual);
+            }
+
+            if (acao.pecasComidas.Count == 0 && Tipos.isDama(pecaSendoMovimentada))
+            {
+                novo.jogadasCondicaoEmpate++;
+            }
+            else
+            {
+                novo.jogadasCondicaoEmpate = 0;
             }
 
             return novo;
