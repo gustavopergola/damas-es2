@@ -65,14 +65,9 @@ namespace EstadoNS{
             foreach (var peca in acao.pecasComidas){
                 novo.tabuleiro[peca[0], peca[1]] = 0;
             }
-
-<<<<<<< HEAD
             novo.contaJogadas++;
 
 		    return novo;
-=======
-            return novo;
->>>>>>> 35034c2524d431f7a20dcb24f94f9420f5fcca0c
 	    }
 
         public void setJogadorAtual(int novoJogador)
