@@ -5,6 +5,7 @@ using TabuleiroNS;
 using TiposNS;
 using MaquinaDeRegrasNS;
 using EstadoNS;
+
 public class Movimentacao : MonoBehaviour {
 
 	public GameObject pedraSelecionada;
@@ -121,6 +122,16 @@ public class Movimentacao : MonoBehaviour {
 			}
 			clickFlag = false;
 		}
+	}
+	
+	public void movimentaPecaPorJogada(Jogada jogada){
+
+		GameObject posicao_inicial_go = Tabuleiro.instance.matrizTabuleiroPosicoes[jogada.posInicial[0], jogada.posInicial[1]];
+		GameObject posicao_final_go = Tabuleiro.instance.matrizTabuleiroPosicoes[jogada.posFinal()[0], jogada.posFinal()[1]];
+		Posicao posicao_inicial_script = posicao_inicial_go.GetComponent<Posicao>();
+		GameObject peca_go = posicao_inicial_script.peca;
+
+		movimenta(peca_go, posicao_final_go);
 	}
 
 	private void comePecasGraphical(List<int []> pecasComidas){

@@ -10,7 +10,6 @@ using TiposNS;
 
 public class GameController : MonoBehaviour {
 
-
     public static GameController instance { get; private set; }
     public Estado estadoAtual;
     public Jogador jogadorAtual; 
@@ -29,6 +28,8 @@ public class GameController : MonoBehaviour {
 
     private static bool created = false;
     private bool emJogo = false;
+    
+    private Movimentacao script_movimentacao;
 
 	void Awake (){
         instance = this;
@@ -40,6 +41,7 @@ public class GameController : MonoBehaviour {
             textIndicator = GameObject.Find("TurnoText").GetComponent<Text>();
             loadGameMode();
             emJogo = true;
+            this.script_movimentacao = GetComponent<Movimentacao>();
         }
     }
 
@@ -54,9 +56,15 @@ public class GameController : MonoBehaviour {
 
         setTextoTurno("Turno: " + jogadorAtual.getNomeJogador());
 
-        if (jogadorAtual.isIA())
-            jogadorAtual.callAIAction();
-        
+        if (jogadorAtual.isIA()){
+            Jogada jogada_ia = jogadorAtual.callAIAction(estadoAtual);
+            Debug.Log("teste calling ia action!");
+            Debug.Log("jogada_ia[0]" + jogada_ia.movimentos[0][0]);
+            Debug.Log("jogada_ia[1]" + jogada_ia.movimentos[0][1]);
+
+            script_movimentacao.movimentaPecaPorJogada(jogada_ia);
+            passarTurno();
+        }
 
     }
 	private void setTextoTurno(string new_texto){

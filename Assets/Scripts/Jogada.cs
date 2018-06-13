@@ -19,4 +19,8 @@ public class Jogada
     {
         return movimentos[movimentos.Count - 1];
     }
+
+    public int[] posFinal(){
+        return this.movimentos[this.movimentos.Count - 1];
+    }
 }

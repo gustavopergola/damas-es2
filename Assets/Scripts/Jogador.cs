@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using IANS;
+using EstadoNS;
 
 public class Jogador {
 
@@ -31,8 +32,8 @@ public class Jogador {
         return this.nome;
     }
 
-    public void callAIAction(){
-        this.ia.getAction();
+    public Jogada callAIAction(Estado estado){
+        return this.ia.alpha_beta_search(estado);
     }
     public int getNumeroJogador(){
         return this.numero;

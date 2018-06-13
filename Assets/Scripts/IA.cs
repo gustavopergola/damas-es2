@@ -40,14 +40,8 @@ namespace IANS
             this.tipo = 1;
         }
 
-        public Jogada getAction(){
-            //return alpha_beta_search(estado atual);
-            return null;
-        }
-
         public Jogada alpha_beta_search(Estado estado)
         {
-
             int v = Int32.MinValue;
             int alfa = Int32.MinValue;
             int beta = Int32.MaxValue;
