@@ -118,18 +118,18 @@ public class Movimentacao : MonoBehaviour {
                             comePecasGraphical(this.pedraSelecionada, jogadaASerExecutada);
                         }
 
-                        if (jogadaASerExecutada.virouDama)
-                        {
-                            if (GameController.instance.estadoAtual.getJogadorAtual() == 1)
-                            {
-                                pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaPreta;
-                            }
-                            else
-                            {
-                                pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaVermelha;
-                            }
+                        // if (jogadaASerExecutada.virouDama)
+                        // {
+                        //     if (GameController.instance.estadoAtual.getJogadorAtual() == 1)
+                        //     {
+                        //         pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaPreta;
+                        //     }
+                        //     else
+                        //     {
+                        //         pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaVermelha;
+                        //     }
                             
-                        }
+                        // }
 						descelecionarPedraAtual();
                         GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
                         GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
@@ -177,10 +177,11 @@ public class Movimentacao : MonoBehaviour {
 			GameObject posicao_go = Tabuleiro.instance.matrizTabuleiroPosicoes[peca[0], peca[1]];
 			Posicao posicao_script = posicao_go.GetComponent<Posicao>();//posicao destino
 			GameObject peca_go = posicao_script.peca;
-			Peca peca_script = peca_go.GetComponent<Peca>();//peca do destino
-			posicao_script.peca = null; // apaga referencia
-			peca_script.destruir(); // apaga game object com fade out
-
+			if (peca_go != null){
+				Peca peca_script = peca_go.GetComponent<Peca>();//peca do destino
+				posicao_script.peca = null; // apaga referencia
+				peca_script.destruir(); // apaga game object com fade out
+			}
             posFinal = jogada.movimentos[movimentosRealizados];
             GameObject posicaoFinalObj = Tabuleiro.instance.matrizTabuleiroPosicoes[posFinal[0], posFinal[1]];
             movimenta(pedraSelecionada, posicaoFinalObj);
@@ -280,11 +281,11 @@ public class Movimentacao : MonoBehaviour {
             matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
         }
 
-		if(jogada.virouDama){
-            int jogador = Tipos.jogador(_pecaSelecionada.tipo);
-            _pecaSelecionada.tipo = Tipos.getPecaJogadorX(Tipos.dama, jogador);
-            matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
-        }
+		// if(jogada.virouDama){
+        //     int jogador = Tipos.jogador(_pecaSelecionada.tipo);
+        //     _pecaSelecionada.tipo = Tipos.getPecaJogadorX(Tipos.dama, jogador);
+        //     matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
+        // }
 
         return matrizTabuleiroInt;
 	}
@@ -316,11 +317,13 @@ public class Movimentacao : MonoBehaviour {
 				int linFinalAtual, colFinalAtual, linFinalDestino, colFinalDestino;
 				foreach(Jogada jogada in jogadas_peca)
 				{
-					linFinalAtual = jogada.ultimoMovimento()[0];
-					colFinalAtual = jogada.ultimoMovimento()[1];
-					GameObject posicao = Tabuleiro.instance.matrizTabuleiroPosicoes[linFinalAtual, colFinalAtual];
-					GameObject new_highlight = Instantiate(highlightParticleSystem, posicao.transform) as GameObject;
-					this.listaHighlight.Add(new_highlight);
+					if (jogada != null){
+						linFinalAtual = jogada.ultimoMovimento()[0];
+						colFinalAtual = jogada.ultimoMovimento()[1];
+						GameObject posicao = Tabuleiro.instance.matrizTabuleiroPosicoes[linFinalAtual, colFinalAtual];
+						GameObject new_highlight = Instantiate(highlightParticleSystem, posicao.transform) as GameObject;
+						this.listaHighlight.Add(new_highlight);
+					}
 				}
 			}
 		}
