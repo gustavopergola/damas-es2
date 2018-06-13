@@ -28,6 +28,7 @@ public class GameController : MonoBehaviour {
 
     private static bool created = false;
     private bool emJogo = false;
+    private bool iaxia = false;
     
     private Movimentacao script_movimentacao;
 
@@ -42,7 +43,8 @@ public class GameController : MonoBehaviour {
             loadGameMode();
             emJogo = true;
             this.script_movimentacao = GetComponent<Movimentacao>();
-            passarTurno();
+            if (iaxia)
+                passarTurno();
         }
     }
 
@@ -74,6 +76,7 @@ public class GameController : MonoBehaviour {
 
         this.estadoAtual.tabuleiro = script_movimentacao.alteraMatriz(this.estadoAtual.tabuleiro, jogada_ia);
         this.estadoAtual.ultimaJogada = jogada_ia;
+        
         passarTurno();
     }
 
@@ -113,6 +116,7 @@ public class GameController : MonoBehaviour {
         Jogador ia2 = new Jogador("IA 2", new IA(2));
         //defineJogadores(ia1, ia2);
         defineJogadores(ia2, ia1); // ao contrário de proposito pra chamar passar turno
+        this.iaxia = true;
     }
     
     private void loadGameScene(){
