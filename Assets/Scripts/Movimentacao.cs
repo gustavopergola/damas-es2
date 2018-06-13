@@ -116,8 +116,15 @@ public class Movimentacao : MonoBehaviour {
                     if (jogadaASerExecutada != null)//se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar e atualizar o estadoAtual
                     {
                         // executar movimento visual
-                        movimenta(this.pedraSelecionada, objeto_resposta);
-						comePecasGraphical(jogadaASerExecutada.pecasComidas);
+                        if(jogadaASerExecutada.pecasComidas.Count == 0)
+                        {
+                            movimenta(this.pedraSelecionada, objeto_resposta);
+                        }
+                        else
+                        {
+                            comePecasGraphical(this.pedraSelecionada, jogadaASerExecutada);
+                        }
+
 						descelecionarPedraAtual();
                         GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
                         GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
@@ -133,18 +140,34 @@ public class Movimentacao : MonoBehaviour {
 		}
 	}
 
-	private void comePecasGraphical(List<int []> pecasComidas){
-		foreach (int[] peca in pecasComidas){
+    private void comePecasGraphical(GameObject pedraSelecionada, Jogada jogada)
+    {
+        StartCoroutine(comePecasGraphicalAsync(pedraSelecionada, jogada));
+    }
+
+
+    private IEnumerator comePecasGraphicalAsync(GameObject pedraSelecionada, Jogada jogada){
+        int movimentosRealizados = 0;
+        int[] posFinal;
+
+        foreach (int[] peca in jogada.pecasComidas){
+            Debug.Log("TESTE");
 			GameObject posicao_go = Tabuleiro.instance.matrizTabuleiroPosicoes[peca[0], peca[1]];
-			Posicao posicao_script = posicao_go.GetComponent<Posicao>();
+			Posicao posicao_script = posicao_go.GetComponent<Posicao>();//posicao destino
 			GameObject peca_go = posicao_script.peca;
-			Peca peca_script = peca_go.GetComponent<Peca>();
+			Peca peca_script = peca_go.GetComponent<Peca>();//peca do destino
 			posicao_script.peca = null; // apaga referencia
 			peca_script.destruir(); // apaga game object com fade out
-		}
+
+            posFinal = jogada.movimentos[movimentosRealizados];
+            GameObject posicaoFinalObj = Tabuleiro.instance.matrizTabuleiroPosicoes[posFinal[0], posFinal[1]];
+            movimenta(pedraSelecionada, posicaoFinalObj);
+            movimentosRealizados++;
+            yield return new WaitForSeconds(0.5f);
+        }
 	}
 
-	private void marcaXVermelhoNoTransform(Transform transformTarget){
+    private void marcaXVermelhoNoTransform(Transform transformTarget){
 		Instantiate(this.preFabXVermelho, transformTarget); // Mostra X de jogada inválida
 	}
 
