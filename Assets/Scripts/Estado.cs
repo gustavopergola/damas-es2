@@ -8,15 +8,17 @@ namespace EstadoNS{
     public class Estado{
 
         public int[,] tabuleiro;
-        private int jogadorAtual;
+        public int jogadorAtual;
 	    public Jogada ultimaJogada;
+        public int contaJogadas;
 	    public bool gameOver = false;
         public int jogadasCondicaoEmpate;
 
-	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada){
+	    public Estado(int[,] tabuleiro, int jogadorAtual, Jogada ultimaJogada, int contaJogadas){
             this.tabuleiro = (int[,])tabuleiro.Clone();
             this.jogadorAtual = jogadorAtual;
             this.ultimaJogada = ultimaJogada;
+            this.contaJogadas = contaJogadas;
             this.jogadasCondicaoEmpate = 0;
 	    }
 
@@ -50,7 +52,7 @@ namespace EstadoNS{
 	    }
 
 	    public static Estado result(Estado antigo, Jogada acao){
-		    Estado novo = new Estado(antigo.tabuleiro, antigo.jogadorAtual, antigo.ultimaJogada);
+		    Estado novo = new Estado(antigo.tabuleiro, antigo.jogadorAtual, antigo.ultimaJogada,antigo.contaJogadas);
 
             novo.jogadorAtual = novo.jogadorAtual == 1 ? 2 : 1;
             novo.ultimaJogada = acao;
@@ -78,8 +80,9 @@ namespace EstadoNS{
             {
                 novo.jogadasCondicaoEmpate = 0;
             }
+            novo.contaJogadas++;
 
-            return novo;
+		    return novo;
 	    }
 
         public void setJogadorAtual(int novoJogador)

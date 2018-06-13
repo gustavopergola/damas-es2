@@ -5,6 +5,7 @@ using TabuleiroNS;
 using TiposNS;
 using MaquinaDeRegrasNS;
 using EstadoNS;
+
 public class Movimentacao : MonoBehaviour {
 
 	public GameObject pedraSelecionada;
@@ -18,8 +19,8 @@ public class Movimentacao : MonoBehaviour {
 	
 	public LayerMask layerPosicao;
 
-	public float timeToMove = 1f;
-	public float speed = 1f;
+	private float timeToMove = 1f;
+	private float speed = 2f;
 
 	private Transform transformPedraEmMovimento;
 	private Vector3 startPosition;
@@ -29,6 +30,7 @@ public class Movimentacao : MonoBehaviour {
 	private List<GameObject> listaHighlight;
 
     int jogo = 0;
+	public bool estaEmMovimento = false;
 
     void Start () {
         pedraSelecionada = null;
@@ -42,30 +44,6 @@ public class Movimentacao : MonoBehaviour {
 	void FixedUpdate(){
 		controlaMovimento ();
 	}
-
-    public void test_result(){
-        // int[,] tabuleiro = { 
-		// 	{0,1,0,1,0,1,0,1},
-        //     {1,0,1,0,1,0,1,0},
-        //     {0,1,0,1,0,1,0,1},
-        //     {0,0,0,0,0,0,0,0},
-        //     {0,0,0,0,0,0,0,0},
-        //     {3,0,3,0,3,0,3,0},
-        //     {0,3,0,3,0,3,0,3},
-        //     {3,0,3,0,3,0,3,0}
-        // };
-
-        // //Estado atual = new Estado(tabuleiro, 1, null);
-        // //atual.print();
-
-        // Jogada mock_acao = new Jogada();
-        // mock_acao.posInicial = new int[] { 2, 1 };
-        // mock_acao.movimentos.Add(new int[] { 3, 2 });
-        // mock_acao.movimentos.Add(new int[] { 4, 1 });
-
-        // //Estado novo = Estado.result(atual, mock_acao);
-		// //novo.print();
-    }
 
 	private void processaClique(){
         if(jogo != 0)
@@ -128,7 +106,7 @@ public class Movimentacao : MonoBehaviour {
 						}
 					}
                     
-                    if (jogadaASerExecutada != null)//se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar e atualizar o estadoAtual
+                    if (jogadaASerExecutada != null) //se a jogada for valida posso movimentar, alterar matriz, passar turno e descelecionar e atualizar o estadoAtual
                     {
                         // executar movimento visual
                         if(jogadaASerExecutada.pecasComidas.Count == 0)
@@ -159,6 +137,8 @@ public class Movimentacao : MonoBehaviour {
                     }else {
 						marcaXVermelhoNoTransform(objeto_resposta.transform);
 					}
+
+
                     int jogo = GameController.instance.verificaVitoriaEmpate(GameController.instance.estadoAtual);
 				}
 			} else {
@@ -167,14 +147,29 @@ public class Movimentacao : MonoBehaviour {
 			clickFlag = false;
 		}
 	}
+	
+	public void movimentaPecaPorJogada(Jogada jogada){
+
+		GameObject posicao_inicial_go = Tabuleiro.instance.matrizTabuleiroPosicoes[jogada.posInicial[0], jogada.posInicial[1]];
+		GameObject posicao_final_go = Tabuleiro.instance.matrizTabuleiroPosicoes[jogada.posFinal()[0], jogada.posFinal()[1]];
+		Posicao posicao_inicial_script = posicao_inicial_go.GetComponent<Posicao>();
+		GameObject peca_go = posicao_inicial_script.peca;
+
+		// executar movimento visual
+        if(jogada.pecasComidas.Count == 0){
+            movimenta(peca_go, posicao_final_go);
+        }
+        else{
+           comePecasGraphical(peca_go, jogada);
+        }
+	}
 
     private void comePecasGraphical(GameObject pedraSelecionada, Jogada jogada)
     {
         StartCoroutine(comePecasGraphicalAsync(pedraSelecionada, jogada));
     }
 
-
-    private IEnumerator comePecasGraphicalAsync(GameObject pedraSelecionada, Jogada jogada){
+	private IEnumerator comePecasGraphicalAsync(GameObject pedraSelecionada, Jogada jogada){
         int movimentosRealizados = 0;
         int[] posFinal;
 
@@ -249,13 +244,14 @@ public class Movimentacao : MonoBehaviour {
 	private void movimenta(GameObject go_pedra_selecionada, GameObject go_posicao_alvo){
 		if (go_pedra_selecionada == null)
 			return;
+		this.estaEmMovimento = true;
 		this.startPosition = go_pedra_selecionada.transform.position;
 		this.finalPosition = go_posicao_alvo.transform.position;
 		this.transformPedraEmMovimento = go_pedra_selecionada.transform;
 		this.timeSpent = 0f;
 	}
 
-	private int[,] alteraMatriz(int[,] matrizTabuleiroInt, Jogada jogada){
+	public int[,] alteraMatriz(int[,] matrizTabuleiroInt, Jogada jogada){
         int linInicio = jogada.posInicial[0];
         int colInicio = jogada.posInicial[1];
         int[] ultimoMovimento = jogada.ultimoMovimento();
@@ -294,9 +290,14 @@ public class Movimentacao : MonoBehaviour {
 	}
 	private void controlaMovimento(){
 		if (this.timeSpent <= this.timeToMove) {
+			estaEmMovimento = true;
 			this.timeSpent += Time.deltaTime / this.timeToMove;	
 			Vector3 aux = Vector3.Lerp (this.startPosition, this.finalPosition, this.timeSpent * this.speed);
-			this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
+			if (this.transformPedraEmMovimento)
+				this.transformPedraEmMovimento.position = new Vector3 (aux.x, aux.y, this.transformInicialPedra.position.z);
+				
+		}else {
+			estaEmMovimento = false;
 		}
 	}
 

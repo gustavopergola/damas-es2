@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TiposNS;
 using EstadoNS;
+using TabuleiroNS;
 
 namespace MaquinaDeRegrasNS
 {
@@ -34,6 +35,19 @@ namespace MaquinaDeRegrasNS
             possiveisJogadas[0] = PossiveisMovimentosUmJogador(tabuleiro, pecasJogador1);
             possiveisJogadas[1] = PossiveisMovimentosUmJogador(tabuleiro, pecasJogador2);
             return possiveisJogadas;
+        }
+
+        public static List<Jogada> PossiveisMovimentos(Estado estado){
+            List<List<Jogada>> temp = PossiveisMovimentosUmJogador(estado.tabuleiro, Tabuleiro.instance.posicoesJogadorX(estado.jogadorAtual));
+            List<Jogada> resultado = new List<Jogada>();
+
+            foreach(List<Jogada> jogada_peca in temp){
+                foreach(Jogada jogada in jogada_peca){
+                    resultado.Add(jogada);
+                }
+            }
+
+            return resultado;
         }
 
         // cada item da lista está relacionado com uma peça
