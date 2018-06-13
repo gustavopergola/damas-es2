@@ -46,8 +46,8 @@ namespace MaquinaDeRegrasNS
             foreach (int[] peca in pecasJogador)
             {
                 List<Jogada> jogadas_peca = PossiveisMovimentosUmaPeca(tabuleiro, peca[0], peca[1]);
-                if (jogadas_peca.Count > 0){
-                    int pecasComidasPecaAtual = jogadas_peca.First().pecasComidas.Count;
+                if (jogadas_peca.Count() > 0){
+                    int pecasComidasPecaAtual = jogadas_peca.First().pecasComidas.Count();
                     // se foi a jogada analisada que mais comeu peça (lei da maioria)
                     if (maiorNumeroPecasComidas < pecasComidasPecaAtual){
                         possiveisJogadas = new List<List<Jogada>>();
@@ -478,7 +478,8 @@ namespace MaquinaDeRegrasNS
                         Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
                         if (possivel != null){                                    
                             Jogada casaVazia = new Jogada(posPeca);
-                            copiaJogada(cimaDireita, casaVazia);
+                            if (cimaDireita != null)
+                                copiaJogada(cimaDireita, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
                             concatenaListas(possivel.movimentos, casaVazia.movimentos);
                             concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
@@ -561,7 +562,8 @@ namespace MaquinaDeRegrasNS
                         Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
                         if (possivel != null){                                    
                             Jogada casaVazia = new Jogada(posPeca);
-                            copiaJogada(cimaEsquerda, casaVazia);
+                            if (cimaEsquerda != null)
+                                copiaJogada(cimaEsquerda, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
                             concatenaListas(possivel.movimentos, casaVazia.movimentos);
                             concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
@@ -644,7 +646,8 @@ namespace MaquinaDeRegrasNS
                         Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
                         if (possivel != null){                                    
                             Jogada casaVazia = new Jogada(posPeca);
-                            copiaJogada(baixoDireita, casaVazia);
+                            if (baixoDireita != null)
+                                copiaJogada(baixoDireita, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
                             concatenaListas(possivel.movimentos, casaVazia.movimentos);
                             concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
@@ -727,7 +730,8 @@ namespace MaquinaDeRegrasNS
                         Jogada possivel = LeiDaMaioriaDamas(tabuleiro, i, j, pecaInimiga, damaInimiga, pecasComidas);
                         if (possivel != null){                                    
                             Jogada casaVazia = new Jogada(posPeca);
-                            copiaJogada(baixoEsquerda, casaVazia);
+                            if (baixoEsquerda != null)
+                                copiaJogada(baixoEsquerda, casaVazia);
                             casaVazia.movimentos.Add(new int[2] {i, j});
                             concatenaListas(possivel.movimentos, casaVazia.movimentos);
                             concatenaListas(possivel.pecasComidas, casaVazia.pecasComidas);
