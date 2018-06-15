@@ -656,12 +656,11 @@ namespace MaquinaDeRegrasNS
         // retorna os possíveis movimentos para dama
         private static List<Jogada> MovimentosDama(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
         {
-            List<Jogada> jogadasPossiveis = null;
+            List<Jogada> jogadasPossiveis = new List<Jogada>();
             List<Jogada> captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
             // se teve alguma jogada com captura / peças comida
             if (captura != null)
             {
-                jogadasPossiveis = new List<Jogada>();
                 foreach (Jogada jogada in captura)
                     jogadasPossiveis.Add(jogada);
                 return jogadasPossiveis;
