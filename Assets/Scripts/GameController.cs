@@ -221,7 +221,9 @@ public class GameController : MonoBehaviour {
            || ((qtdDamasJogador1 == 2 && qtdDamasJogador2 == 1) && qtdPecasNormais == 0)
            || ((qtdDamasJogador1 == 1 && qtdDamasJogador2 == 2) && qtdPecasNormais == 0)
            || ((qtdDamasJogador1 == 2 && qtdDamasJogador2 == 1) && qtdPecasNormaisJogador2 == 1)
-           || ((qtdDamasJogador1 == 1 && qtdDamasJogador2 == 2) && qtdPecasNormaisJogador1 == 1))
+           || ((qtdDamasJogador1 == 1 && qtdDamasJogador2 == 2) && qtdPecasNormaisJogador1 == 1)
+           || ((qtdDamasJogador1 == 1 && qtdDamasJogador2 == 1 && qtdPecasNormais == 0) && estado.jogadasCondicaoEmpate >= 5)
+           || ((qtdDamasJogador1 == 1 && qtdDamasJogador2 == 1 && qtdPecasNormais == 1) && estado.jogadasCondicaoEmpate >= 5))
         {
             mudaTexto("EMPATE!!");
             return 3;
