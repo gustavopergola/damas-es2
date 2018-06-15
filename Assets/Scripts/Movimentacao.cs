@@ -111,19 +111,19 @@ public class Movimentacao : MonoBehaviour {
                             comePecasGraphical(this.pedraSelecionada, jogadaASerExecutada);
                         }
 
-                        // if (jogadaASerExecutada.virouDama)
-                        // {
-                        //     if (GameController.instance.estadoAtual.getJogadorAtual() == 1)
-                        //     {
-                        //         pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaPreta;
-                        //     }
-                        //     else
-                        //     {
-                        //         pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaVermelha;
-                        //     }
-                            
-                        // }
-						descelecionarPedraAtual();
+                        if (jogadaASerExecutada.virouDama)
+                        {
+                            if (GameController.instance.estadoAtual.getJogadorAtual() == 1)
+                            {
+                                pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaPreta;
+                            }
+                            else
+                            {
+                                pedraSelecionada.GetComponent<SpriteRenderer>().sprite = damaVermelha;
+                            }
+
+                        }
+                        descelecionarPedraAtual();
                         GameController.instance.estadoAtual.tabuleiro = alteraMatriz(GameController.instance.estadoAtual.tabuleiro, jogadaASerExecutada);
                         GameController.instance.estadoAtual.ultimaJogada = jogadaASerExecutada; // VERIFICAR
                         GameController.instance.passarTurno();
@@ -273,11 +273,12 @@ public class Movimentacao : MonoBehaviour {
             matrizTabuleiroInt[linComida, colComida] = Tipos.vazio;
         }
 
-		// if(jogada.virouDama){
-        //     int jogador = Tipos.jogador(_pecaSelecionada.tipo);
-        //     _pecaSelecionada.tipo = Tipos.getPecaJogadorX(Tipos.dama, jogador);
-        //     matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
-        // }
+        if (jogada.virouDama)
+        {
+            int jogador = Tipos.jogador(_pecaSelecionada.tipo);
+            _pecaSelecionada.tipo = Tipos.getPecaJogadorX(Tipos.dama, jogador);
+            matrizTabuleiroInt[linFim, colFim] = _pecaSelecionada.tipo;
+        }
 
         return matrizTabuleiroInt;
 	}
