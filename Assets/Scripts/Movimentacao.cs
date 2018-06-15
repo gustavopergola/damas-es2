@@ -96,13 +96,6 @@ public class Movimentacao : MonoBehaviour {
                                     }
 								}
 							}
-							// TODO 
-							//OK 1-verificar se movimentod que estou querendo fazer se encontra nessa lista de jogadas
-							//OK 2.1-impedir movimentação caso não esteja nesta lista de jogadas
-							//OK 2.2 - mostrar indicação visual de movimento inválido
-							//OK 3-mostrar highlight no tabuleiro ==> Assim que selecionar uma peca mostrar o highlight
-							//4-executar movimento visual seguindo as multiplas ações da Jogada
-							//5-Acao usa result de Estado e não manipulsa estado atual manualmente
 						}
 					}
                     

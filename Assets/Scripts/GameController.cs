@@ -175,21 +175,29 @@ public class GameController : MonoBehaviour {
         // 3: empate
         int resultado = 0;
 
-        int qtdPecasJogador1, qtdPecasjogador2;
-        qtdPecasJogador1 = qtdPecasjogador2 = 0;
+        int qtdPecasJogador1, qtdPecasjogador2, qtdDamasJogador1, qtdDamasJogador2, qtdPecasNormaisJogador1, qtdPecasNormaisJogador2;
+        qtdPecasJogador1 = qtdPecasjogador2 = qtdDamasJogador1 = qtdDamasJogador2 = qtdPecasNormaisJogador1 = qtdPecasNormaisJogador2 = 0;
         foreach(int peca in estado.tabuleiro)
         {
             if (Tipos.isJogador1(peca))
             {
+                if (Tipos.isDama(peca))
+                {
+                    qtdDamasJogador1++;
+                }
                 qtdPecasJogador1++;
             }
             else if(Tipos.isJogador2(peca))
             {
+                if (Tipos.isDama(peca))
+                {
+                    qtdDamasJogador2++;
+                }
                 qtdPecasjogador2++;
             }
         }
 
-        if(qtdPecasJogador1 == 0)
+        if (qtdPecasJogador1 == 0)
         {
             mudaTexto("JOGADOR 2 GANHOU!!");
             return 2; //jogador 1 sem peças, vitoria do jogador 2
@@ -198,8 +206,22 @@ public class GameController : MonoBehaviour {
             mudaTexto("JOGADOR 1 GANHOU!!");
             return 1;//jogador 2 sem peças, vitoria do jogador 1
         }
-        
-        if(estado.jogadasCondicaoEmpate >= 20)
+
+        qtdPecasNormaisJogador1 = qtdPecasJogador1 - qtdDamasJogador1;
+        qtdPecasNormaisJogador2 = qtdPecasjogador2 - qtdDamasJogador2;
+        int qtdPecasNormais = qtdPecasNormaisJogador1 + qtdPecasNormaisJogador2;
+
+        // 2 damas contra 2 damas;
+        // 2 damas contra uma;
+        // 2 damas contra uma dama e uma pedra;
+        // uma dama contra uma dama e uma dama contra uma dama e uma pedra, são declarados empatados após 5 lances de cada jogador.
+
+        if (estado.jogadasCondicaoEmpate >= 20
+           || ((qtdDamasJogador1 == 2 && qtdDamasJogador2 == 2)  && qtdPecasNormais == 0)
+           || ((qtdDamasJogador1 == 2 && qtdDamasJogador2 == 1) && qtdPecasNormais == 0)
+           || ((qtdDamasJogador1 == 1 && qtdDamasJogador2 == 2) && qtdPecasNormais == 0)
+           || ((qtdDamasJogador1 == 2 && qtdDamasJogador2 == 1) && qtdPecasNormaisJogador2 == 1)
+           || ((qtdDamasJogador1 == 1 && qtdDamasJogador2 == 2) && qtdPecasNormaisJogador1 == 1))
         {
             mudaTexto("EMPATE!!");
             return 3;
