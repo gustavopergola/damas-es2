@@ -421,7 +421,7 @@ namespace MaquinaDeRegrasNS
                             if (cimaDireita == null)
                                 cimaDireita = new Jogada(new int[2] { x, y });
                             cimaDireita.movimentos.Add(new int[2] { i + 1, j + 1 });
-                            cimaDireita.pecasComidas.Add(new int[2] { i , j });
+                            cimaDireita.pecasComidas.Add(new int[2] { i, j });
                             // atualiza o "estado" do tabuleiro
                             int pecaAtual = tabuleiro[x, y];
                             tabuleiro[x, y] = 0;
@@ -441,6 +441,8 @@ namespace MaquinaDeRegrasNS
                             tabuleiro[i + 1, j + 1] = 0;
                             pecasComidas.RemoveAt(indicePecasComidas);
                         }
+                        // caso onde não pode movimentar mais nessa diagonal
+                        else break;
                     }
                 }
             }
@@ -455,7 +457,7 @@ namespace MaquinaDeRegrasNS
                             if (cimaEsquerda == null)
                                 cimaEsquerda = new Jogada(new int[2] { x, y });
                             cimaEsquerda.movimentos.Add(new int[2] { i + 1, j - 1 });
-                            cimaEsquerda.pecasComidas.Add(new int[2] { i , j });
+                            cimaEsquerda.pecasComidas.Add(new int[2] { i, j });
                             int pecaAtual = tabuleiro[x, y];
                             tabuleiro[x, y] = 0;
                             tabuleiro[i + 1, j - 1] = pecaAtual;
@@ -471,6 +473,7 @@ namespace MaquinaDeRegrasNS
                             tabuleiro[i + 1, j - 1] = 0;
                             pecasComidas.RemoveAt(indicePecasComidas);
                         }
+                        else break;
                     }
                 }
             }
@@ -485,7 +488,7 @@ namespace MaquinaDeRegrasNS
                             if (baixoDireita == null)
                                 baixoDireita = new Jogada(new int[2] { x, y });
                             baixoDireita.movimentos.Add(new int[2] { i - 1, j + 1 });
-                            baixoDireita.pecasComidas.Add(new int[2] { i, j});
+                            baixoDireita.pecasComidas.Add(new int[2] { i, j });
                             int pecaAtual = tabuleiro[x, y];
                             tabuleiro[x, y] = 0;
                             tabuleiro[i - 1, j + 1] = pecaAtual;
@@ -501,6 +504,7 @@ namespace MaquinaDeRegrasNS
                             tabuleiro[i - 1, j + 1] = 0;
                             pecasComidas.RemoveAt(indicePecasComidas);
                         }
+                        else break;
                     }
                 }
             }
@@ -514,8 +518,8 @@ namespace MaquinaDeRegrasNS
                         {
                             if (baixoEsquerda == null)
                                 baixoEsquerda = new Jogada(new int[2] { x, y });
-                            baixoEsquerda.movimentos.Add(new int[2] { i - 1, j - 1});
-                            baixoEsquerda.pecasComidas.Add(new int[2] { i, j});
+                            baixoEsquerda.movimentos.Add(new int[2] { i - 1, j - 1 });
+                            baixoEsquerda.pecasComidas.Add(new int[2] { i, j });
                             int pecaAtual = tabuleiro[x, y];
                             tabuleiro[x, y] = 0;
                             tabuleiro[i - 1, j - 1] = pecaAtual;
@@ -531,6 +535,7 @@ namespace MaquinaDeRegrasNS
                             tabuleiro[i - 1, j - 1] = 0;
                             pecasComidas.RemoveAt(indicePecasComidas);
                         }
+                        else break;
                     }
                 }
             }
