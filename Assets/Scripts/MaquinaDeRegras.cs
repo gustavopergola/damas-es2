@@ -389,20 +389,20 @@ namespace MaquinaDeRegrasNS
             return melhor;
         }
 
-        private static Jogada LeiDaMaioriaDamas(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga, List<int[]> pecasComidas)
+        private static List<Jogada> LeiDaMaioriaDamas(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga, List<int[]> pecasComidas)
         {
             Jogada cimaDireita = null;
             Jogada cimaEsquerda = null;
             Jogada baixoDireita = null;
             Jogada baixoEsquerda = null;
+            // esta lista guarda jogadas alternativas que capturam tantas peças quantas as principais
+            List<Jogada> alternativas = null;
             // lista de jogadas que podem surgir de uma casa vazia
             // olhar if (Tipos.isVazio(tabuleiro[i,j]))
             List<Jogada> jogadasEmCasasVazias = null;
             // inicializa a lista de peças comidas, caso seja a primeira chamada ao método
             if (pecasComidas == null)
-            {
                 pecasComidas = new List<int[]>();
-            }
 
             // percorrer cada diagonal a procura da peças para comer
             int i, j;
@@ -429,12 +429,20 @@ namespace MaquinaDeRegrasNS
                             int indicePecasComidas = pecasComidas.Count();
                             pecasComidas.Add(new int[2] { i, j });
                             // chamada recursiva para olhar as próximas jogadas
-                            Jogada futura = LeiDaMaioriaDamas(tabuleiro, i + 1, j + 1, pecaInimiga, damaInimiga, pecasComidas);
-                            // adiciona o resultado da jogada à jogada anterior
-                            if (futura != null)
+                            List<Jogada> futuras = LeiDaMaioriaDamas(tabuleiro, i + 1, j + 1, pecaInimiga, damaInimiga, pecasComidas);
+                            // adiciona o resultado da(s) jogada(s) à(s) jogada(s) anterior(es)
+                            if (futuras != null)
                             {
-                                concatenaListas(futura.movimentos, cimaDireita.movimentos);
-                                concatenaListas(futura.pecasComidas, cimaDireita.pecasComidas);
+                                concatenaListas(futuras[0].movimentos, cimaDireita.movimentos);
+                                concatenaListas(futuras[0].pecasComidas, cimaDireita.pecasComidas);
+                                int futurasLength = futuras.Count();
+                                if (futurasLength > 1)
+                                {
+                                    if (alternativas == null)
+                                        alternativas = new List<Jogada>();
+                                    for (int k = 1; k < futurasLength; k++)
+                                        alternativas.Add(futuras[k]);
+                                }
                             }
                             // retorna os valores originais do "estado" do tabuleiro
                             tabuleiro[x, y] = pecaAtual;
@@ -463,11 +471,19 @@ namespace MaquinaDeRegrasNS
                             tabuleiro[i + 1, j - 1] = pecaAtual;
                             int indicePecasComidas = pecasComidas.Count();
                             pecasComidas.Add(new int[2] { i, j });
-                            Jogada futura = LeiDaMaioriaDamas(tabuleiro, i + 1, j - 1, pecaInimiga, damaInimiga, pecasComidas);
-                            if (futura != null)
+                            List<Jogada> futuras = LeiDaMaioriaDamas(tabuleiro, i + 1, j - 1, pecaInimiga, damaInimiga, pecasComidas);
+                            if (futuras != null)
                             {
-                                concatenaListas(futura.movimentos, cimaEsquerda.movimentos);
-                                concatenaListas(futura.pecasComidas, cimaEsquerda.pecasComidas);
+                                concatenaListas(futuras[0].movimentos, cimaEsquerda.movimentos);
+                                concatenaListas(futuras[0].pecasComidas, cimaEsquerda.pecasComidas);
+                                int futurasLength = futuras.Count();
+                                if (futurasLength > 1)
+                                {
+                                    if (alternativas == null)
+                                        alternativas = new List<Jogada>();
+                                    for (int k = 1; k < futurasLength; k++)
+                                        alternativas.Add(futuras[k]);
+                                }
                             }
                             tabuleiro[x, y] = pecaAtual;
                             tabuleiro[i + 1, j - 1] = 0;
@@ -494,11 +510,19 @@ namespace MaquinaDeRegrasNS
                             tabuleiro[i - 1, j + 1] = pecaAtual;
                             int indicePecasComidas = pecasComidas.Count();
                             pecasComidas.Add(new int[2] { i, j });
-                            Jogada futura = LeiDaMaioriaDamas(tabuleiro, i - 1, j + 1, pecaInimiga, damaInimiga, pecasComidas);
-                            if (futura != null)
+                            List<Jogada> futuras = LeiDaMaioriaDamas(tabuleiro, i - 1, j + 1, pecaInimiga, damaInimiga, pecasComidas);
+                            if (futuras != null)
                             {
-                                concatenaListas(futura.movimentos, baixoDireita.movimentos);
-                                concatenaListas(futura.pecasComidas, baixoDireita.pecasComidas);
+                                concatenaListas(futuras[0].movimentos, baixoDireita.movimentos);
+                                concatenaListas(futuras[0].pecasComidas, baixoDireita.pecasComidas);
+                                int futurasLength = futuras.Count();
+                                if (futurasLength > 1)
+                                {
+                                    if (alternativas == null)
+                                        alternativas = new List<Jogada>();
+                                    for (int k = 1; k < futurasLength; k++)
+                                        alternativas.Add(futuras[k]);
+                                }
                             }
                             tabuleiro[x, y] = pecaAtual;
                             tabuleiro[i - 1, j + 1] = 0;
@@ -525,11 +549,19 @@ namespace MaquinaDeRegrasNS
                             tabuleiro[i - 1, j - 1] = pecaAtual;
                             int indicePecasComidas = pecasComidas.Count();
                             pecasComidas.Add(new int[2] { i, j });
-                            Jogada futura = LeiDaMaioriaDamas(tabuleiro, i - 1, j - 1, pecaInimiga, damaInimiga, pecasComidas);
-                            if (futura != null)
+                            List<Jogada> futuras = LeiDaMaioriaDamas(tabuleiro, i - 1, j - 1, pecaInimiga, damaInimiga, pecasComidas);
+                            if (futuras != null)
                             {
-                                concatenaListas(futura.movimentos, baixoEsquerda.movimentos);
-                                concatenaListas(futura.pecasComidas, baixoEsquerda.pecasComidas);
+                                concatenaListas(futuras[0].movimentos, baixoEsquerda.movimentos);
+                                concatenaListas(futuras[0].pecasComidas, baixoEsquerda.pecasComidas);
+                                int futurasLength = futuras.Count();
+                                if (futurasLength > 1)
+                                {
+                                    if (alternativas == null)
+                                        alternativas = new List<Jogada>();
+                                    for (int k = 1; k < futurasLength; k++)
+                                        alternativas.Add(futuras[k]);
+                                }
                             }
                             tabuleiro[x, y] = pecaAtual;
                             tabuleiro[i - 1, j - 1] = 0;
@@ -539,22 +571,85 @@ namespace MaquinaDeRegrasNS
                     }
                 }
             }
-
-            Jogada melhor = cimaDireita;
-            if (melhor == null || (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
-                melhor = cimaEsquerda;
-            if (melhor == null || (baixoDireita != null && baixoDireita.pecasComidas.Count() > melhor.pecasComidas.Count()))
-                melhor = baixoDireita;
-            if (melhor == null || (baixoEsquerda != null && baixoEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
-                melhor = baixoEsquerda;
-            if (jogadasEmCasasVazias != null)
+            List<Jogada> melhor = null;
+            int maiorQtdCapturas = 0;
+            if (alternativas != null)
             {
-                foreach (Jogada casaVazia in jogadasEmCasasVazias)
+                foreach(Jogada jogada in alternativas)
                 {
-                    if (melhor == null || (casaVazia.pecasComidas.Count() > melhor.pecasComidas.Count()))
-                        melhor = casaVazia;
+                    if(jogada.pecasComidas.Count() > maiorQtdCapturas)
+                    {
+                        melhor = new List<Jogada>();
+                        melhor.Add(jogada);
+                        maiorQtdCapturas = jogada.pecasComidas.Count();
+                    }
+                    else if (jogada.pecasComidas.Count() > 0 && jogada.pecasComidas.Count() == maiorQtdCapturas)
+                    {
+                        if (melhor == null)
+                            melhor = new List<Jogada>();
+                        melhor.Add(jogada);
+                    }
                 }
             }
+            if (cimaDireita != null && cimaDireita.pecasComidas.Count() > maiorQtdCapturas)
+            {
+                melhor = new List<Jogada>();
+                melhor.Add(cimaDireita);
+                maiorQtdCapturas = cimaDireita.pecasComidas.Count();
+            }
+            else if (cimaDireita != null && cimaDireita.pecasComidas.Count() > 0 && cimaDireita.pecasComidas.Count() == maiorQtdCapturas)
+            {
+                if (melhor == null)
+                    melhor = new List<Jogada>();
+                melhor.Add(cimaDireita);
+            }
+            //
+            if (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > maiorQtdCapturas)
+            {
+                melhor = new List<Jogada>();
+                melhor.Add(cimaEsquerda);
+                maiorQtdCapturas = cimaEsquerda.pecasComidas.Count();
+            }
+            else if (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > 0 && cimaEsquerda.pecasComidas.Count() == maiorQtdCapturas)
+            {
+                if (melhor == null)
+                    melhor = new List<Jogada>();
+                melhor.Add(cimaEsquerda);
+            }
+            //
+            if (baixoDireita != null && baixoDireita.pecasComidas.Count() > maiorQtdCapturas)
+            {
+                melhor = new List<Jogada>();
+                melhor.Add(baixoDireita);
+                maiorQtdCapturas = baixoDireita.pecasComidas.Count();
+            }
+            else if (baixoDireita != null && baixoDireita.pecasComidas.Count() > 0 && baixoDireita.pecasComidas.Count() == maiorQtdCapturas)
+            {
+                if (melhor == null)
+                    melhor = new List<Jogada>();
+                melhor.Add(baixoDireita);
+            }
+            //
+            if (baixoEsquerda != null && baixoEsquerda.pecasComidas.Count() > maiorQtdCapturas)
+            {
+                melhor = new List<Jogada>();
+                melhor.Add(baixoEsquerda);
+                maiorQtdCapturas = baixoEsquerda.pecasComidas.Count();
+            }
+            else if (baixoEsquerda != null && baixoEsquerda.pecasComidas.Count() > 0 && baixoEsquerda.pecasComidas.Count() == maiorQtdCapturas)
+            {
+                if (melhor == null)
+                    melhor = new List<Jogada>();
+                melhor.Add(baixoEsquerda);
+            }
+            //if (jogadasEmCasasVazias != null)
+            //{
+            //    foreach (Jogada casaVazia in jogadasEmCasasVazias)
+            //    {
+            //        if (melhor == null || (casaVazia.pecasComidas.Count() > melhor.pecasComidas.Count()))
+            //            melhor = casaVazia;
+            //    }
+            //}
             return melhor;
         }
 
@@ -562,12 +657,13 @@ namespace MaquinaDeRegrasNS
         private static List<Jogada> MovimentosDama(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
         {
             List<Jogada> jogadasPossiveis = null;
-            Jogada captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
+            List<Jogada> captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
             // se teve alguma jogada com captura / peças comida
             if (captura != null)
             {
                 jogadasPossiveis = new List<Jogada>();
-                jogadasPossiveis.Add(captura);
+                foreach (Jogada jogada in captura)
+                    jogadasPossiveis.Add(jogada);
                 return jogadasPossiveis;
             }
             int[] posPeca = new int[2] { x, y };
