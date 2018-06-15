@@ -397,9 +397,6 @@ namespace MaquinaDeRegrasNS
             Jogada baixoEsquerda = null;
             // esta lista guarda jogadas alternativas que capturam tantas peças quantas as principais
             List<Jogada> alternativas = null;
-            // lista de jogadas que podem surgir de uma casa vazia
-            // olhar if (Tipos.isVazio(tabuleiro[i,j]))
-            List<Jogada> jogadasEmCasasVazias = null;
             // inicializa a lista de peças comidas, caso seja a primeira chamada ao método
             if (pecasComidas == null)
                 pecasComidas = new List<int[]>();
@@ -642,14 +639,6 @@ namespace MaquinaDeRegrasNS
                     melhor = new List<Jogada>();
                 melhor.Add(baixoEsquerda);
             }
-            //if (jogadasEmCasasVazias != null)
-            //{
-            //    foreach (Jogada casaVazia in jogadasEmCasasVazias)
-            //    {
-            //        if (melhor == null || (casaVazia.pecasComidas.Count() > melhor.pecasComidas.Count()))
-            //            melhor = casaVazia;
-            //    }
-            //}
             return melhor;
         }
 
@@ -658,15 +647,78 @@ namespace MaquinaDeRegrasNS
         {
             List<Jogada> jogadasPossiveis = new List<Jogada>();
             List<Jogada> captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
+            int i, j;
             // se teve alguma jogada com captura / peças comida
             if (captura != null)
             {
                 foreach (Jogada jogada in captura)
+                {
                     jogadasPossiveis.Add(jogada);
+                    // o próximo trecho de código capacita a dama a andar para qualquer casa na diagonal após comer uma peça
+                    int[] posUltimaPecaComida = jogada.pecasComidas[jogada.pecasComidas.Count() - 1];
+                    int[] posUltimoMovimento = jogada.movimentos[jogada.movimentos.Count() - 1];
+                    // descobre de qual diagonal veio o ultimo movimento de captura
+                    if ((posUltimoMovimento[0] + 1) == posUltimaPecaComida[0] && posUltimoMovimento[1] + 1 == posUltimaPecaComida[1])
+                    {
+                        // adiciona aos movimentos a diagonal
+                        for (i = posUltimoMovimento[0] - 1, j = posUltimoMovimento[1] - 1; i >= 0 && j >= 0; i--, j--)
+                        {
+                            if (Tipos.isVazio(tabuleiro[i, j]))
+                            {
+                                Jogada novaJogada = new Jogada(jogada.posInicial);
+                                copiaJogada(jogada, novaJogada);
+                                novaJogada.movimentos.Add(new int[2] { i, j });
+                                jogadasPossiveis.Add(novaJogada);
+                            }
+                            else break;
+                        }
+                    }
+                    else if (posUltimoMovimento[0] + 1 == posUltimaPecaComida[0] && posUltimoMovimento[1] - 1 == posUltimaPecaComida[1])
+                    {
+                        for(i = posUltimoMovimento[0] - 1, j = posUltimoMovimento[1] + 1; i >= 0 && j < 8; i--, j++)
+                        {
+                            if (Tipos.isVazio(tabuleiro[i, j]))
+                            {
+                                Jogada novaJogada = new Jogada(jogada.posInicial);
+                                copiaJogada(jogada, novaJogada);
+                                novaJogada.movimentos.Add(new int[2] { i, j });
+                                jogadasPossiveis.Add(novaJogada);
+                            }
+                            else break;
+                        }
+                    }
+                    else if (posUltimoMovimento[0] - 1 == posUltimaPecaComida[0] && posUltimoMovimento[1] + 1 == posUltimaPecaComida[1])
+                    {
+                        for (i = posUltimoMovimento[0] + 1, j = posUltimoMovimento[1] - 1; i < 8 && j >= 0 ; i++, j--)
+                        {
+                            if (Tipos.isVazio(tabuleiro[i, j]))
+                            {
+                                Jogada novaJogada = new Jogada(jogada.posInicial);
+                                copiaJogada(jogada, novaJogada);
+                                novaJogada.movimentos.Add(new int[2] { i, j });
+                                jogadasPossiveis.Add(novaJogada);
+                            }
+                            else break;
+                        }
+                    }
+                    else
+                    {
+                        for (i = posUltimoMovimento[0] + 1, j = posUltimoMovimento[1] + 1; i < 8 && j < 8; i++, j++)
+                        {
+                            if (Tipos.isVazio(tabuleiro[i, j]))
+                            {
+                                Jogada novaJogada = new Jogada(jogada.posInicial);
+                                copiaJogada(jogada, novaJogada);
+                                novaJogada.movimentos.Add(new int[2] { i, j });
+                                jogadasPossiveis.Add(novaJogada);
+                            }
+                            else break;
+                        }
+                    }
+                }
                 return jogadasPossiveis;
             }
             int[] posPeca = new int[2] { x, y };
-            int i, j;
             for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
             {
                 if (Tipos.isVazio(tabuleiro[i, j]))
@@ -734,7 +786,7 @@ namespace MaquinaDeRegrasNS
             origem.posInicial = destino.posInicial;
             foreach(int[] movimento in origem.movimentos)
                 destino.movimentos.Add(new int[2] {movimento[0], movimento[1]});
-            foreach(int[] pecaComida in destino.pecasComidas)
+            foreach(int[] pecaComida in origem.pecasComidas)
                 destino.pecasComidas.Add(new int[2] {pecaComida[0], pecaComida[1]});
         }
 
