@@ -61,7 +61,7 @@ namespace MaquinaDeRegrasNS
             {
                 List<Jogada> jogadas_peca = PossiveisMovimentosUmaPeca(tabuleiro, peca[0], peca[1]);
                 if (jogadas_peca.Count > 0){
-                    Jogada jogadas_pecas_first = jogadas_peca.First();
+                    Jogada jogadas_pecas_first = jogadas_peca[0];
                     List<int[]> pecasComidas = jogadas_pecas_first.pecasComidas;
                     int pecasComidasPecaAtual = pecasComidas.Count;
                     // se foi a jogada analisada que mais comeu peça (lei da maioria)
@@ -90,8 +90,8 @@ namespace MaquinaDeRegrasNS
             int[] valoresPecas = GetValoresPecas(jogador);
 
             // se for dama
-            // if (tabuleiro[x, y] == valoresPecas[0])
-            //     return MovimentosDama(tabuleiro, x, y, valoresPecas[1], valoresPecas[2]);
+            if (tabuleiro[x, y] == valoresPecas[0])
+                return MovimentosDama(tabuleiro, x, y, valoresPecas[1], valoresPecas[2]);
 
             List<Jogada> jogadas = new List<Jogada>();
             List<Jogada> captura = LeiDaMaioria(tabuleiro, x, y, valoresPecas[1], valoresPecas[2], null);
@@ -103,13 +103,11 @@ namespace MaquinaDeRegrasNS
                     int [] ultimoMovimento = jogada.movimentos[jogada.movimentos.Count() - 1];
                     if (jogador == 1){
                         if (ultimoMovimento[0] == 7)
-                            //jogada.virouDama = true;
-                            jogada.virouDama = false;
+                            jogada.virouDama = true;
                     }
                     else
                         if (ultimoMovimento[0] == 0)
-                            //jogada.virouDama = true;
-                            jogada.virouDama = false;
+                        jogada.virouDama = true;
 
                     // adiciona a jogada de captura como jogada possível
                     jogadas.Add(jogada);
@@ -129,8 +127,7 @@ namespace MaquinaDeRegrasNS
                     // verifica se virou dama
                     if (jogador == 1)
                         if (x + 1 == 7)
-                            //novaJogada.virouDama = true;
-                            novaJogada.virouDama = false;
+                            novaJogada.virouDama = true;
 
                 }
                 if ((x + 1 < 8 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x + 1, y - 1]))
@@ -140,8 +137,7 @@ namespace MaquinaDeRegrasNS
                     jogadas.Add(novaJogada);
                     if (jogador == 1)
                         if (x + 1 == 7)
-                            //novaJogada.virouDama = true;
-                            novaJogada.virouDama = false;
+                            novaJogada.virouDama = true;
                 }
             }
             else
@@ -154,8 +150,7 @@ namespace MaquinaDeRegrasNS
                     // verifica se virou dama
                     if (jogador == 2)
                         if (x - 1 == 0)
-                            //novaJogada.virouDama = true;
-                            novaJogada.virouDama = false;
+                            novaJogada.virouDama = true;
                 }
                 if ((x - 1 >= 0 && y - 1 >= 0) && Tipos.isVazio(tabuleiro[x - 1, y - 1]))
                 {
@@ -164,8 +159,7 @@ namespace MaquinaDeRegrasNS
                     jogadas.Add(novaJogada);
                     if (jogador == 2)
                         if (x - 1 == 0)
-                            //novaJogada.virouDama = true;
-                            novaJogada.virouDama = false;
+                            novaJogada.virouDama = true;
                 }
             }
             
@@ -537,7 +531,7 @@ namespace MaquinaDeRegrasNS
         //             }
         //         }
         //     }
-            
+
         //     Jogada melhor = cimaDireita;
         //     if (melhor == null || (cimaEsquerda != null && cimaEsquerda.pecasComidas.Count() > melhor.pecasComidas.Count()))
         //         melhor = cimaEsquerda;
@@ -555,76 +549,79 @@ namespace MaquinaDeRegrasNS
         // }
 
         // retorna os possíveis movimentos para dama
-        // private static List<Jogada> MovimentosDama(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
-        // {
-        //     // TODO chamar LeiDaMaioria aqui
-        //     List<Jogada> jogadas = new List<Jogada>();
-        //     Jogada captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
-        //     // se teve alguma jogada com captura / peças comida
-        //     if (captura != null)
-        //     {
-        //         jogadas.Add(captura);
-        //         return jogadas;
-        //     }
-        //     int[] posPeca = new int[2] { x, y };
-        //     Jogada jogadaCimaDireita = null;
-        //     Jogada jogadaCimaEsquerda = null;
-        //     Jogada jogadaBaixoDireita = null;
-        //     Jogada jogadaBaixoEsquerda = null;
-        //     int i, j;
-        //     for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
-        //     {
-        //         if (Tipos.isVazio(tabuleiro[i, j]))
-        //         {
-        //             if (jogadaCimaDireita == null)
-        //                 jogadaCimaDireita = new Jogada(posPeca);
-        //             jogadaCimaDireita.movimentos.Add(new int[2] { i, j });
-        //         }
-        //         // caso onde achou uma peça aliada
-        //         else break;
+         private static List<Jogada> MovimentosDama(int[,] tabuleiro, int x, int y, int pecaInimiga, int damaInimiga)
+        {
+            List<Jogada> jogadas = new List<Jogada>();
+            //Jogada captura = LeiDaMaioriaDamas(tabuleiro, x, y, pecaInimiga, damaInimiga, null);
+            //// se teve alguma jogada com captura / peças comida
+            //if (captura != null)
+            //{
+            //    jogadas.Add(captura);
+            //    return jogadas;
+            //}
+            int[] posPeca = new int[2] { x, y };
+            Jogada jogadaCimaDireita = null;
+            Jogada jogadaCimaEsquerda = null;
+            Jogada jogadaBaixoDireita = null;
+            Jogada jogadaBaixoEsquerda = null;
+            int i, j;
+            for (i = x + 1, j = y + 1; i < 8 && j < 8; i++, j++)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                    if (jogadaCimaDireita == null)
+                        jogadaCimaDireita = new Jogada(posPeca);
+                    jogadaCimaDireita.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
 
-        //     }
-        //     for (i = x + 1, j = y - 1; i < 8 && j >= 0; i++, j--)
-        //     {
-        //         if (Tipos.isVazio(tabuleiro[i, j]))
-        //         {
-        //             if (jogadaCimaEsquerda == null)
-        //                 jogadaCimaEsquerda = new Jogada(posPeca);
-        //             jogadaCimaEsquerda.movimentos.Add(new int[2] { i, j });
-        //         }
-        //         // caso onde achou uma peça aliada
-        //         else break;
-        //     }
-        //     for (i = x - 1, j = y + 1; i >= 0 && j < 8; i--, j++)
-        //     {
-        //         if (Tipos.isVazio(tabuleiro[i, j]))
-        //         {
-        //             if (jogadaBaixoDireita == null)
-        //                 jogadaBaixoDireita = new Jogada(posPeca);
-        //             jogadaBaixoDireita.movimentos.Add(new int[2] { i, j });
-        //         }
-        //         // caso onde achou uma peça aliada
-        //         else break;
-        //     }
-        //     for (i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
-        //     {
-        //         if (Tipos.isVazio(tabuleiro[i, j]))
-        //         {
-        //             if (jogadaBaixoEsquerda == null)
-        //                 jogadaBaixoEsquerda = new Jogada(posPeca);
-        //             jogadaBaixoEsquerda.movimentos.Add(new int[2] { i, j });
-        //         }
-        //         // caso onde achou uma peça aliada
-        //         else break;
-        //     }
-        //     List<Jogada> jogadasPossiveis = new List<Jogada>();
-        //     jogadasPossiveis.Add(jogadaCimaDireita);
-        //     jogadasPossiveis.Add(jogadaCimaEsquerda);
-        //     jogadasPossiveis.Add(jogadaBaixoDireita);
-        //     jogadasPossiveis.Add(jogadaBaixoEsquerda);
-        //     return jogadasPossiveis;
-        // }
-        
+            }
+            for (i = x + 1, j = y - 1; i < 8 && j >= 0; i++, j--)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                    if (jogadaCimaEsquerda == null)
+                        jogadaCimaEsquerda = new Jogada(posPeca);
+                    jogadaCimaEsquerda.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
+            }
+            for (i = x - 1, j = y + 1; i >= 0 && j < 8; i--, j++)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                    if (jogadaBaixoDireita == null)
+                        jogadaBaixoDireita = new Jogada(posPeca);
+                    jogadaBaixoDireita.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
+            }
+            for (i = x - 1, j = y - 1; i >= 0 && j >= 0; i--, j--)
+            {
+                if (Tipos.isVazio(tabuleiro[i, j]))
+                {
+                    if (jogadaBaixoEsquerda == null)
+                        jogadaBaixoEsquerda = new Jogada(posPeca);
+                    jogadaBaixoEsquerda.movimentos.Add(new int[2] { i, j });
+                }
+                // caso onde achou uma peça aliada
+                else break;
+            }
+            List<Jogada> jogadasPossiveis = new List<Jogada>();
+            if (jogadaCimaDireita != null)
+                jogadasPossiveis.Add(jogadaCimaDireita);
+            if (jogadaCimaEsquerda != null)
+                jogadasPossiveis.Add(jogadaCimaEsquerda);
+            if (jogadaBaixoDireita != null)
+                jogadasPossiveis.Add(jogadaBaixoDireita);
+            if (jogadaBaixoEsquerda != null)
+                jogadasPossiveis.Add(jogadaBaixoEsquerda);
+            return jogadasPossiveis;
+        }
+
         private static  bool contemPeca(List<int[]> lista, int[] peca){
             foreach(int[] peca_lista in lista)
                 if(peca_lista[0] == peca[0] && peca_lista[1] == peca[1])
