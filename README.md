@@ -15,7 +15,7 @@ Trabalho de Engenharia de Software 2
 ### Utilizando a build
   Pegue a última release da build no link abaixo, extraia e execute o Jogo.exe no seu PC normalmente.  
   Disponibilizaremos builds para o sistema operacional Windows apenas.  
-  https://drive.google.com/file/d/1iA2HnBtTENaOfmLuUIkB6Xu0x3qxW8O_/view?usp=sharing
+  https://drive.google.com/file/d/17H56kBReNcq_FVY6avXYS6wANkIBVDR-/view?usp=sharing
   
   
 ## Integrantes do Grupo
